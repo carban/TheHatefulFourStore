@@ -1,4 +1,4 @@
-# ds2
+# TheHatefulFourStore
 
 ## Project setup
 ```
