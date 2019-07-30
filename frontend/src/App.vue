@@ -1,13 +1,14 @@
 <template>
   <v-app class="bg">
 
+    <!-- TOP BANNER -->
     <template>
       <v-toolbar dark fixed color="primary">
         <v-toolbar-side-icon v-on:click="drawer = !drawer"></v-toolbar-side-icon>
 
         <v-toolbar-title class="white--text">
           <v-icon medium>videogame_asset</v-icon>
-          Store
+          The Hateful 4 Store
         </v-toolbar-title>
 
         <v-spacer></v-spacer>
@@ -46,53 +47,55 @@
       </v-toolbar>
     </template>
 
-
+    <!-- CONTENT -->
     <v-content id="acontent">
       <v-container grid-list-xs,sm,md,lg,xl>
         <router-view/>
       </v-container>
     </v-content>
 
-
-
+    <!-- LEFT MENU -->
     <template>
-      <v-layout wrap style="height: 200px;">
-        <v-navigation-drawer v-model="drawer" absolute temporary>
-          <v-list class="pa-1">
-            <v-list-tile avatar>
-              <v-list-tile-avatar>
-                <v-icon medium>videogame_asset</v-icon>
-              </v-list-tile-avatar>
+      <v-navigation-drawer v-model="drawer" absolute temporary>
+        <v-list>
+          <v-list-tile v-for="item in items" :key="item.title" :to="item.url">
+            <v-list-tile-action>
+              <v-icon>{{item.icon}}</v-icon>
+            </v-list-tile-action>
+            <v-list-tile-title>{{item.title}}</v-list-tile-title>
+          </v-list-tile>
 
-              <v-list-tile-content>
-                <v-list-tile-title>Store</v-list-tile-title>
-              </v-list-tile-content>
-            </v-list-tile>
-          </v-list>
+          <v-list-group prepend-icon="book">
+            <template v-slot:activator>
+              <v-list-tile>
+                <v-list-tile-title>Categories</v-list-tile-title>
+              </v-list-tile>
+            </template>
+            <v-list-group v-for="(item, index) in catego" :key="index" no-action sub-group value="true">
+              <template v-slot:activator>
+                <v-list-tile>
+                  <v-list-tile-title :to="item.url">
+                    {{item.title}}
+                  </v-list-tile-title>
+                </v-list-tile>
+              </template>
 
-          <v-list class="pt-0" dense>
-            <v-divider></v-divider>
-
-            <v-list-tile v-for="item in items" :key="item.title" :to="item.url">
-              <v-list-tile-action>
-                <v-icon>{{ item.icon }}</v-icon>
-              </v-list-tile-action>
-
-              <v-list-tile-content>
-                <v-list-tile-title>{{ item.title }}</v-list-tile-title>
-              </v-list-tile-content>
-            </v-list-tile>
-          </v-list>
-        </v-navigation-drawer>
-      </v-layout>
+              <v-list-tile v-for="(sub, i) in subcatego[index]" :key="i" :to="sub.url">
+                <v-list-tile-action>
+                  <v-icon>{{sub.icon}}</v-icon>
+                </v-list-tile-action>
+                <v-list-tile-title>{{sub.title}}</v-list-tile-title>
+              </v-list-tile>
+            </v-list-group>
+          </v-list-group>
+        </v-list>
+      </v-navigation-drawer>
     </template>
-
-
 
     <car/>
 
-
-      <template>
+  <!-- FOOTER -->
+  <template>
       <v-footer dark height="auto">
         <v-card flat tile class="primary lighten-1 white--text text-lg-center ablock">
           <v-card-text class="white--text">
@@ -127,6 +130,21 @@ export default {
         { title: 'Login', icon: 'account_box', url:'/login' },
         { title: 'Register', icon: 'accessibility', url:'/register' }
       ],
+      catego: [
+          { title: 'Cat 1', url: '/' },
+          { title: 'Cat 2', url: '/' },
+          { title: 'Cat 3', url: '/' },
+          { title: 'Cat 4', url: '/' },
+          { title: 'Cat 5', url: '/' },
+        ],
+      subcatego: [
+            [{ title: 'sub 1', icon: 'gamepad', url: '/register' },
+             { title: 'sub 1', icon: 'gamepad', url: '/register' }],
+            [{ title: 'sub 2', icon: 'gamepad', url: '/register' }],
+            [{ title: 'sub 3', icon: 'gamepad', url: '/register' }],
+            [{ title: 'sub 4', icon: 'gamepad', url: '/register' }],
+            [{ title: 'sub 5', icon: 'gamepad', url: '/register' }],
+          ],
       searching: false
     }
   },

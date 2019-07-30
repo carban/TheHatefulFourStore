@@ -12,8 +12,8 @@
                 </v-toolbar>
                 <v-card-text>
                   <v-form>
-                    <v-text-field prepend-icon="person" name="login" label="Login" type="text"></v-text-field>
-                    <v-text-field prepend-icon="lock" name="password" label="Password" id="password" type="password"></v-text-field>
+                    <v-text-field prepend-icon="person" name="login" label="Login" type="text" required></v-text-field>
+                    <v-text-field prepend-icon="lock" name="password" label="Password" id="password" type="password" required></v-text-field>
                   </v-form>
                 </v-card-text>
                 <v-card-actions>

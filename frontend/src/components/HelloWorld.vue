@@ -23,6 +23,7 @@
                   <div class="headline">{{item.title}}</div>
                   <div>{{item.comp}}</div>
                   <div>({{item.year}})</div>
+                  <div>$ 300</div>
                 </div>
               </v-card-title>
 
@@ -54,17 +55,14 @@
 
       <v-dialog v-model="dialog" persistent max-width="900px">
                 <v-card>
-                        <v-card-title>
-                          <span class="headline">User Profile</span>
-                        </v-card-title>
-                        <v-card-text>
-                           <h1>{{current_product}}</h1>
-                        </v-card-text>
-                        <v-card-actions>
-                          <v-spacer></v-spacer>
-                          <v-btn color="blue darken-1" flat @click="dialog = false">Close</v-btn>
-                        </v-card-actions>
-                      </v-card>
+                  <v-card-text>
+                     <h1>{{current_product}}</h1>
+                  </v-card-text>
+                  <v-card-actions>
+                    <v-spacer></v-spacer>
+                    <v-btn color="blue darken-1" flat @click="dialog = false">Close</v-btn>
+                  </v-card-actions>
+                </v-card>
       </v-dialog>
 
 
@@ -86,6 +84,7 @@
         {id: 6, title: 'FIFA 2019', comp: 'Kojima Productions', year: 2019, color: 'red', added: false, rating: 5},
         {id: 7, title: 'Space Invaders', comp: 'Kojima Productions', year: 2019, color: 'dark', added: false, rating: 5},
         {id: 8, title: 'GTA V', comp: 'Kojima Productions', year: 2019, color: 'info', added: false, rating: 5},
+        {id: 8, title: 'GTA V', comp: 'Kojima Productions', year: 2019, color: 'info', added: false, rating: 5}
       ],
       dialog: false,
       current_product: null,
@@ -101,7 +100,7 @@
       },
       setCurrent_product(proc){
         this.dialog = !this.dialog;
-        console.log(proc);
+        // console.log(proc);
         this.current_product = proc.title;
       }
     }
