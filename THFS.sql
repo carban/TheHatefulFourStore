@@ -112,3 +112,25 @@ CREATE TABLE catjuegos
   FOREIGN KEY (juid) REFERENCES juegos(juid),
   FOREIGN KEY (subid) REFERENCES subcategorias(subid)
 );
+
+-- EMPLEADOS
+insert into empleados (emusuario, empassword, emnombre, emrol, emcorreo) VALUES ('Majo_rivera', 12345, 'Maria Jose Rivera', 'Servicio_Al_Cliente', 'majo_r@hatermail.com');
+insert into empleados VALUES ('carban', 12345, 'Carlos Esteban Marillo', 'gfa', 'carban@hatermail.com');
+insert into empleados VALUES ('sanrop', 12345, 'Santiago Rodriguez Penagos', 'gfe', 'sanrop@hatermail.com');
+insert into empleados VALUES ('yizuz', 12345, 'Yizucristo Tu Cñor', 'thebigboss', 'yizuz@hatermail.com');
+insert into empleados VALUES ('nn', 12345, 'nn', 'gerente', 'nn@hatermail.com');
+
+-- CLIENTES
+insert into clientes values ('ratkidnumber1', 54321, 'Manuel SantoDomingo', 'manuelitoSD@coldmail.com', 5, '9/11/2005');
+insert into clientes values ('kukaroto', 54321, 'Hitler De Las Altas Torres', 'hitP@coldmail.com', 5, '9/11/2005');
+insert into clientes values ('pruebitadeamor', 54321, 'Cucho Stemen', 'cucho@coldmail.com', 5, '9/11/2005');
+insert into clientes values ('tugefaconchancleta', 54321, 'tugfa.name', 'tugefa.name@coldmail.com', 1000, '9/11/1970');
+insert into clientes values ('laelfadelfrente', 54321, 'laelfadelfrente.name', 'laelfadelfrente.name@coldmail.com', 0, '9/11/2006');
+insert into clientes values ('fbi', 54321, 'vieneporti', 'fbi@coldmail.com', 1000000, '9/11/1870');
+insert into clientes values ('delivas', 54321, 'Pablo Maltas Leivas', 'deleivas@coldmail.com', 40, '10/05/1994');
+insert into clientes values ('edmorando3', 54321, 'Antonia Torriente Morando', 'edmorando3@coldmail.com', 45, '12/09/2000');
+insert into clientes values ('fparriaga15', 54321, 'Octavia Flores Arriaga', 'fparriaga15@coldmail.com', 56, '08/09/1994');
+
+-- JUEGOS | aun no esta bien implementado le incremento secuencial en el juid.
+
+--CATEGORIAS  
