@@ -1,6 +1,6 @@
 const express = require('express')
 const router = express.Router()
-const pg = require('../db/database.js');
+const pg = require('../db/database.js').getPool();
 
 
 //Consultar todas las categorias existentes
