@@ -35,45 +35,45 @@ CREATE TABLE empleados
 
 CREATE TABLE juegos
 (
-  juid INT NOT NULL,
+  juid SERIAL NOT NULL, -- Cambiado a serial para que el id sea incremental.
   junombre VARCHAR(128) NOT NULL,
-  juprecio INT NOT NULL,
+  juprecio MONEY NOT NULL,
   PRIMARY KEY (juid)
 );
-DROP SEQUENCE IF EXISTS juid_sequence CASCADE;
-CREATE SEQUENCE juid_sequence
-  start 1
-  increment 1;
+DROP SEQUENCE IF EXISTS juid_sequence CASCADE; -- probablemente inecesario
+CREATE SEQUENCE juid_sequence -- probablemente inecesario
+  start 1 -- probablemente inecesario
+  increment 1;  -- probablemente inecesario
 
 CREATE TABLE categorias
 (
-  catid INT NOT NULL,
+  catid SERIAL NOT NULL, -- Cambiado a serial para que el id sea incremental.
   catnombre VARCHAR(64) NOT NULL,
   catdescripcion VARCHAR(256),
   PRIMARY KEY (catid)
 );
-DROP SEQUENCE IF EXISTS catid_sequence CASCADE;
-CREATE SEQUENCE catid_sequence
-  start 1
-  increment 1;
+DROP SEQUENCE IF EXISTS catid_sequence CASCADE;  --Probablemente innecesario.
+CREATE SEQUENCE catid_sequence --Probablemente innecesario.
+  start 1 --Probablemente innecesario.
+  increment 1; --Probablemente innecesario.
 
 CREATE TABLE subcategorias
 (
-  subid INT NOT NULL,
+  subid SERIAl NOT NULL, -- Cambiado a serial para que el id sea incremental.
   subnombre VARCHAR(64) NOT NULL,
   subdescripcion VARCHAR(256),
   catid INT NOT NULL,
   PRIMARY KEY (subid),
   FOREIGN KEY (catid) REFERENCES categorias(catid)
 );
-DROP SEQUENCE IF EXISTS subid_sequence CASCADE;
-CREATE SEQUENCE subid_sequence
-  start 1
-  increment 1;
+DROP SEQUENCE IF EXISTS subid_sequence CASCADE;  --Probablemente innecesario.
+CREATE SEQUENCE subid_sequence --Probablemente innecesario.
+  start 1 --Probablemente innecesario.
+  increment 1; --Probablemente innecesario.
 
 CREATE TABLE librerias
 (
-  idcompra INT NOT NULL,
+  idcompra SERIAL NOT NULL, -- Cambiado a serial para que el id sea incremental.
   fechacompra DATE NOT NULL,
   valorcompra INT NOT NULL,
   esvalida BOOLEAN NOT NULL,
@@ -83,14 +83,14 @@ CREATE TABLE librerias
   FOREIGN KEY (cliusuario) REFERENCES clientes(cliusuario),
   FOREIGN KEY (juid) REFERENCES juegos(juid)
 );
-DROP SEQUENCE IF EXISTS idcompra_sequence CASCADE;
-CREATE SEQUENCE idcompra_sequence
-  start 1
-  increment 1;
+DROP SEQUENCE IF EXISTS idcompra_sequence CASCADE;  --Probablemente innecesario.
+CREATE SEQUENCE idcompra_sequence --Probablemente innecesario.
+  start 1 --Probablemente innecesario.
+  increment 1; --Probablemente innecesario.
 
 CREATE TABLE userservice
 (
-  serid INT NOT NULL,
+  serid SERIAL NOT NULL, -- Cambiado a serial para que el id sea incremental.
   serfecha DATE NOT NULL,
   serdescripcion VARCHAR(256) NOT NULL,
   cliusuario VARCHAR(64) NOT NULL,
@@ -99,10 +99,10 @@ CREATE TABLE userservice
   FOREIGN KEY (cliusuario) REFERENCES clientes(cliusuario),
   FOREIGN KEY (emusuario) REFERENCES empleados(emusuario)
 );
-DROP SEQUENCE IF EXISTS serid_sequence CASCADE;
-CREATE SEQUENCE serid_sequence
-  start 1
-  increment 1;
+DROP SEQUENCE IF EXISTS serid_sequence CASCADE; --Probablemente innecesario.
+CREATE SEQUENCE serid_sequence --Probablemente innecesario.
+  start 1 --Probablemente innecesario.
+  increment 1; --Probablemente innecesario.
 
 CREATE TABLE catjuegos
 (
@@ -132,5 +132,17 @@ insert into clientes values ('edmorando3', 54321, 'Antonia Torriente Morando', '
 insert into clientes values ('fparriaga15', 54321, 'Octavia Flores Arriaga', 'fparriaga15@coldmail.com', 56, '08/09/1994');
 
 -- JUEGOS | aun no esta bien implementado le incremento secuencial en el juid.
-
+--  | problema solucionado agregando tipo de dato "serial" en lugar de "int"
+insert into juegos (junombre, juprecio) values ('Metal Gear Solid V', 5.59);
+insert into juegos (junombre, juprecio) values ('PES', 38.59);
+insert into juegos (junombre, juprecio) values ('Minecraft', 20.45);
+insert into juegos (junombre, juprecio) values ('P.T.', 10000000);
+insert into juegos (junombre, juprecio) values ('GTA V', 12.89);
+insert into juegos (junombre, juprecio) values ('NieR: Automata', 22.29);
+insert into juegos (junombre, juprecio) values ('Rise of Tomb Rider', 9.49);
+insert into juegos (junombre, juprecio) values ('Cyberpunk 2077', 48.89);
+insert into juegos (junombre, juprecio) values ('BORDERLANDS 3', 49.89);
+insert into juegos (junombre, juprecio) values ('Moster Hunter:World', 22.39);
+insert into juegos (junombre, juprecio) values ('DOOM ETERNAL', 38.89);
+insert into juegos (junombre, juprecio) values ('DOOM ETERNAL', 38.89);
 --CATEGORIAS  
