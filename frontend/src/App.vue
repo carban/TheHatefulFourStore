@@ -87,20 +87,20 @@
                 <v-list-tile-title>Categories</v-list-tile-title>
               </v-list-tile>
             </template>
-            <v-list-group v-for="(item, index) in catego" :key="index" no-action sub-group value="true">
+            <v-list-group v-for="(item, index) in categos" :key="index" no-action sub-group value="true">
               <template v-slot:activator>
                 <v-list-tile>
-                  <v-list-tile-title :to="item.url">
-                    {{item.title}}
+                  <v-list-tile-title @click="searchBy(item.catnombre)">
+                    {{item.catnombre}}
                   </v-list-tile-title>
                 </v-list-tile>
               </template>
 
-              <v-list-tile v-for="(sub, i) in subcatego[index]" :key="i" :to="sub.url">
+              <v-list-tile v-for="(sub, i) in subcategos[index]" :key="i" @click="searchBy(sub.subnombre)">
                 <v-list-tile-action>
-                  <v-icon>{{sub.icon}}</v-icon>
+                  <v-icon>gamepad</v-icon>
                 </v-list-tile-action>
-                <v-list-tile-title>{{sub.title}}</v-list-tile-title>
+                <v-list-tile-title>{{sub.subnombre}}</v-list-tile-title>
               </v-list-tile>
             </v-list-group>
           </v-list-group>
@@ -138,10 +138,17 @@ export default {
     },
     logged(){
       return this.$store.getters.loggedIn;
+    },
+    categos(){
+      return this.$store.getters.catego;
+    },
+    subcategos(){
+      return this.$store.getters.subcatego;
     }
   },
   beforeCreate(){
     this.$store.dispatch('getCategories');
+    this.$store.dispatch('getSubcategories');
   },
   data () {
     return {
@@ -153,21 +160,21 @@ export default {
         { title: 'Login', icon: 'account_box', url:'/login' },
         { title: 'Register', icon: 'accessibility', url:'/register' }
       ],
-      catego: [
-          { title: 'Cat 1', url: '/' },
-          { title: 'Cat 2', url: '/' },
-          { title: 'Cat 3', url: '/' },
-          { title: 'Cat 4', url: '/' },
-          { title: 'Cat 5', url: '/' },
-        ],
-      subcatego: [
-            [{ title: 'sub 1', icon: 'gamepad', url: '/register' },
-             { title: 'sub 1', icon: 'gamepad', url: '/register' }],
-            [{ title: 'sub 2', icon: 'gamepad', url: '/register' }],
-            [{ title: 'sub 3', icon: 'gamepad', url: '/register' }],
-            [{ title: 'sub 4', icon: 'gamepad', url: '/register' }],
-            [{ title: 'sub 5', icon: 'gamepad', url: '/register' }],
-          ],
+      // catego: [
+      //     { title: 'Cat 1', url: '/' },
+      //     { title: 'Cat 2', url: '/' },
+      //     { title: 'Cat 3', url: '/' },
+      //     { title: 'Cat 4', url: '/' },
+      //     { title: 'Cat 5', url: '/' },
+      //   ],
+      // subcatego: [
+      //       [{ title: 'sub 1', icon: 'gamepad', url: '/register' },
+      //        { title: 'sub 1', icon: 'gamepad', url: '/register' }],
+      //       [{ title: 'sub 2', icon: 'gamepad', url: '/register' }],
+      //       [{ title: 'sub 3', icon: 'gamepad', url: '/register' }],
+      //       [{ title: 'sub 4', icon: 'gamepad', url: '/register' }],
+      //       [{ title: 'sub 5', icon: 'gamepad', url: '/register' }],
+      //     ],
       searching: false,
       logout() {
         this.$store.dispatch("logout");
@@ -178,6 +185,9 @@ export default {
   methods: {
     commitSheet(){
       this.$store.commit('sheet');
+    },
+    searchBy(title){
+      console.log(title);
     }
   }
 }

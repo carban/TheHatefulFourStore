@@ -12,6 +12,9 @@ export default new Vuex.Store({
     sheet: false,
     theCar: [],
     profile: {cliusuario: null, clinombre: null, clicorreo: null, clifondos: null, clifechanac: null},
+    catego: [],
+    subcatego: [],
+    games: []
   },
   getters: {
     token: state => {
@@ -29,8 +32,17 @@ export default new Vuex.Store({
     sheet: state => {
       return state.sheet;
     },
+    games: state => {
+      return state.games;
+    },
     car: state => {
       return state.theCar;
+    },
+    catego: state => {
+      return state.catego;
+    },
+    subcatego: state => {
+      return state.subcatego;
     }
   },
   mutations: {
@@ -61,6 +73,15 @@ export default new Vuex.Store({
     },
     sheet: state => {
       state.sheet = !state.sheet;
+    },
+    setGames: (state, games) => {
+      state.games = games;
+    },
+    setCatego: (state, cats) => {
+      state.catego = cats;
+    },
+    setSubcatego: (state, subcats) => {
+      state.subcatego = subcats;
     },
     setProfile: (state, pro) => {
       state.profile = pro;
@@ -126,11 +147,28 @@ export default new Vuex.Store({
           })
       });
     },
+    getGames: context => {
+      axios.get('http://localhost:8001/user/games')
+        .then(res => {
+          context.commit('setGames', res.data.games);
+        })
+        .catch(err => {
+          console.log(err);
+        })
+    },
     getCategories: context => {
       axios.get('http://localhost:8001/user/categories')
         .then(res => {
-          console.log(res.data);
-          // context.commit('setProfile', res.data.profileInfo);
+          context.commit('setCatego', res.data.cats);
+        })
+        .catch(err => {
+          console.log(err);
+        })
+    },
+    getSubcategories: context => {
+      axios.get('http://localhost:8001/user/subcategories')
+        .then(res => {
+          context.commit('setSubcatego', res.data.subcats);
         })
         .catch(err => {
           console.log(err);

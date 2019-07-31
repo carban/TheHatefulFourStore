@@ -119,5 +119,15 @@ CREATE TABLE catjuegos
 --insert into clientes values ('hola', 'password', 'xd', 'xd@mail.com', 1000, '01/05/1998');
 --insert into categorias values (1, 'Sports', 'Sports games');
 --insert into categorias values (2, 'Sci-fi', 'Sci-fi games');
+--insert into subcategorias values (1, 'soccer', 'Soccer games', 1);
+--insert into subcategorias values (2, 'Tenis', 'Tenis games', 1);
+--insert into subcategorias values (3, 'CyberPunk', 'CyberPunk games', 2);
+--insert into subcategorias values (4, 'Aliens', 'Alien games', 2);
 
+
+insert into juegos values (1, 'PES 2019', 1000);
+insert into juegos values (2, 'Death Stranding', 1000);
+
+insert into catjuegos values (1, 1);
+insert into catjuegos values (2, 4);
 

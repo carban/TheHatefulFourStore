@@ -24,11 +24,48 @@ router.get('/categories', async (req, res) => {
     text: 'select * from categorias',
   }
   const prof = await pg.query(myquery);
-  console.log({'profileInfo':prof.rows});
-  res.json({'profileInfo':prof.rows});
+  res.json({'cats':prof.rows});
 });
 // QQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQ
 
+// QQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQ
+router.get('/subcategories', async (req, res) => {
+  const {username} = req.body;
+  const myquery = {
+    text: 'select subid, subnombre, catid from subcategorias order by catid;',
+  }
+  const prof = await pg.query(myquery);
+  var answ = [];
+  var aux = [];
+  var x = prof.rows[0].catid;
+  for (var i = 0; i < prof.rows.length; i++) {
+    if (prof.rows[i].catid != x) {
+      answ.push(aux);
+      aux = [];
+      x = prof.rows[i].catid;
+    }
+    aux.push(prof.rows[i]);
+  }
+  answ.push(aux);
+  res.json({'subcats':answ});
+});
+// QQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQ
+
+// QQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQ
+router.get('/games', async (req, res) => {
+  const {username} = req.body;
+  const myquery = {
+    text: 'select * from catjuegos natural join juegos order by subid',
+  }
+  var colors = ['red', 'dark', 'accent', 'success', 'info', 'warning'];
+  const prof = await pg.query(myquery);
+  for (var i = 0; i < prof.rows.length; i++) {
+    prof.rows[i].added = false;
+    prof.rows[i].color = colors[Math.floor(Math.random() * ((colors.length - 1) - 0) + 0)];
+  }
+  res.json({'games':prof.rows});
+});
+// QQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQ
 
 // CONSULTAR USUARIO
 router.post('/profile', async (req, res) => {

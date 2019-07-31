@@ -13,17 +13,17 @@
 
         <!-- <v-card v-for="(item, index) in products" :key="index" dark
         :color=item.color :style="{'width': item.width, 'margin-right': '10px', 'margin-bottom':'10px'}"> -->
-        <v-card v-for="(item, index) in products" :key="index" dark
+        <v-card v-for="(item, index) in allgames" :key="index" dark
         :color=item.color :style="{'width':'350px', 'margin-right': '10px', 'margin-bottom':'10px'}">
 
           <v-layout class="product" v-on:click="setCurrent_product(item)" justify-space-between>
             <v-flex xs8>
               <v-card-title primary-title>
                 <div>
-                  <div class="headline">{{item.title}}</div>
-                  <div>{{item.comp}}</div>
-                  <div>({{item.year}})</div>
-                  <div>$ 300</div>
+                  <div class="headline">{{item.junombre}}</div>
+                  <!-- <div>{{item.comp}}</div> -->
+                  <!-- <div>({{item.year}})</div> -->
+                  <div>${{item.juprecio}}</div>
                 </div>
               </v-card-title>
 
@@ -74,29 +74,37 @@
 
 <script>
   export default {
+    beforeCreate(){
+      this.$store.dispatch('getGames');
+    },
+    computed: {
+      allgames(){
+        return this.$store.getters.games;
+      }
+    },
     data: () => ({
-      products: [
-        {id: 1, title: 'Death Stranding', comp: 'Kojima Productions', year: 2019, color: 'dark', added: false, rating: 5},
-        {id: 2, title: 'Uncharted', comp: 'Kojima Productions', year: 2019, color: 'red', added: false, rating: 5},
-        {id: 3, title: 'The Last of Us', comp: 'Kojima Productions', year: 2019, color: 'dark', added: false, rating: 5},
-        {id: 4, title: 'God of War', comp: 'Kojima Productions', year: 2019, color: 'accent', added: false, rating: 5},
-        {id: 5, title: 'PES 2019', comp: 'Kojima Productions', year: 2019, color: 'success', added: false, rating: 5},
-        {id: 6, title: 'FIFA 2019', comp: 'Kojima Productions', year: 2019, color: 'red', added: false, rating: 5},
-        {id: 7, title: 'Space Invaders', comp: 'Kojima Productions', year: 2019, color: 'dark', added: false, rating: 5},
-        {id: 8, title: 'GTA V', comp: 'Kojima Productions', year: 2019, color: 'info', added: false, rating: 5},
-        {id: 8, title: 'GTA V', comp: 'Kojima Productions', year: 2019, color: 'info', added: false, rating: 5}
-      ],
+      // allgames: [
+      //   {id: 1, title: 'Death Stranding', comp: 'Kojima Productions', year: 2019, color: 'dark', added: false, rating: 5},
+      //   {id: 2, title: 'Uncharted', comp: 'Kojima Productions', year: 2019, color: 'red', added: false, rating: 5},
+      //   {id: 3, title: 'The Last of Us', comp: 'Kojima Productions', year: 2019, color: 'dark', added: false, rating: 5},
+      //   {id: 4, title: 'God of War', comp: 'Kojima Productions', year: 2019, color: 'accent', added: false, rating: 5},
+      //   {id: 5, title: 'PES 2019', comp: 'Kojima Productions', year: 2019, color: 'success', added: false, rating: 5},
+      //   {id: 6, title: 'FIFA 2019', comp: 'Kojima Productions', year: 2019, color: 'red', added: false, rating: 5},
+      //   {id: 7, title: 'Space Invaders', comp: 'Kojima Productions', year: 2019, color: 'dark', added: false, rating: 5},
+      //   {id: 8, title: 'GTA V', comp: 'Kojima Productions', year: 2019, color: 'info', added: false, rating: 5},
+      //   {id: 8, title: 'GTA V', comp: 'Kojima Productions', year: 2019, color: 'info', added: false, rating: 5}
+      // ],
       dialog: false,
       current_product: null,
     }),
     methods: {
       addItem(index){
-        this.products[index].added = true;
-        this.$store.commit('AdditemsOnCar', this.products[index]);
+        this.allgames[index].added = true;
+        this.$store.commit('AdditemsOnCar', this.allgames[index]);
       },
       removeItem(index){
-        this.products[index].added = false;
-        this.$store.commit('RemoveitemsOnCar', this.products[index].id);
+        this.allgames[index].added = false;
+        this.$store.commit('RemoveitemsOnCar', this.allgames[index].id);
       },
       setCurrent_product(proc){
         this.dialog = !this.dialog;
