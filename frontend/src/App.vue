@@ -26,7 +26,7 @@
           ></v-text-field>
         </v-flex>
 
-        <v-btn icon v-on:click="commitSheet()">
+        <v-btn icon v-if="logged" v-on:click="commitSheet()">
           <v-badge left color="red">
             <template v-slot:badge>
               <span>{{itemsOnCar}}</span>
@@ -41,9 +41,23 @@
           <v-icon>refresh</v-icon>
         </v-btn>
 
-        <v-btn icon>
-          <v-icon>more_vert</v-icon>
-        </v-btn>
+        <v-menu offset-y>
+          <template v-slot:activator="{ on }">
+            <v-btn v-on="on" icon>
+              <v-icon>more_vert</v-icon>
+            </v-btn>
+          </template>
+              <v-list v-if="logged">
+                <v-list-tile>
+                  <v-list-tile-title  class="outme" v-on="on" @click="logout()">
+                    Logout
+                  </v-list-tile-title>
+                </v-list-tile>
+              </v-list>
+         </v-menu>
+
+
+
       </v-toolbar>
     </template>
 
@@ -58,7 +72,9 @@
     <template>
       <v-navigation-drawer v-model="drawer" absolute temporary>
         <v-list>
-          <v-list-tile v-for="item in items" :key="item.title" :to="item.url">
+          <!-- logged ? : true -->
+          <!-- item.title == 'Login' && item.title == 'Register' -->
+          <v-list-tile v-for="item in items" :key="item.title" :to="item.url" v-if="logged ? (item.title != 'Login' && item.title != 'Register') : true">
             <v-list-tile-action>
               <v-icon>{{item.icon}}</v-icon>
             </v-list-tile-action>
@@ -119,13 +135,20 @@ export default {
     },
     sheet(){
       return this.$store.getters.sheet;
+    },
+    logged(){
+      return this.$store.getters.loggedIn;
     }
+  },
+  beforeCreate(){
+    this.$store.dispatch('getCategories');
   },
   data () {
     return {
       drawer: null,
       items: [
         { title: 'Home', icon: 'dashboard', url: '/' },
+        { title: 'Profile', icon: 'person', url: '/profile' },
         { title: 'About', icon: 'question_answer', url:'/myabout' },
         { title: 'Login', icon: 'account_box', url:'/login' },
         { title: 'Register', icon: 'accessibility', url:'/register' }
@@ -145,7 +168,11 @@ export default {
             [{ title: 'sub 4', icon: 'gamepad', url: '/register' }],
             [{ title: 'sub 5', icon: 'gamepad', url: '/register' }],
           ],
-      searching: false
+      searching: false,
+      logout() {
+        this.$store.dispatch("logout");
+        this.$router.push({name: 'Hello'});
+      }
     }
   },
   methods: {
@@ -162,5 +189,8 @@ export default {
   }
   #acontent{
     margin-top: 50px;
+  }
+  .outme{
+    cursor: pointer;
   }
 </style>

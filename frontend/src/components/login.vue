@@ -3,6 +3,12 @@
     <v-app id="inspire">
       <!-- <v-content> -->
         <v-container >
+          <v-snackbar v-model="snack" top right multi-line :timeout=6000 color="error">
+            Please check your input
+            <v-btn color="white" flat @click="snack = false">
+              Close
+            </v-btn>
+          </v-snackbar>
           <v-layout align-center justify-center >
             <v-flex xs12 sm10 md6 >
               <v-card class="elevation-20" >
@@ -12,14 +18,14 @@
                 </v-toolbar>
                 <v-card-text>
                   <v-form>
-                    <v-text-field prepend-icon="person" name="login" label="Login" type="text" required></v-text-field>
-                    <v-text-field prepend-icon="lock" name="password" label="Password" id="password" type="password" required></v-text-field>
+                    <v-text-field v-model="access.user" prepend-icon="person" name="login" label="Login" type="text" required></v-text-field>
+                    <v-text-field v-model="access.password" prepend-icon="lock" name="password" label="Password" id="password" type="password" required></v-text-field>
+                    <v-card-actions>
+                      <v-spacer></v-spacer>
+                      <v-btn @click="login()" color="success">Login</v-btn>
+                    </v-card-actions>
                   </v-form>
                 </v-card-text>
-                <v-card-actions>
-                  <v-spacer></v-spacer>
-                  <v-btn color="success">Login</v-btn>
-                </v-card-actions>
               </v-card>
             </v-flex>
           </v-layout>
@@ -31,6 +37,27 @@
 
 <script>
 export default {
+  data(){
+    return {
+      access: {
+        user: null,
+        password: null
+      },
+      err: false,
+      snack: false,
+    }
+  },
+  methods: {
+    login(){
+      this.$store.dispatch('api_login', this.access)
+        .then(response => {
+          this.$router.push({name: 'profile'})
+        })
+        .catch(err => {
+          this.snack = true;
+        });
+    }
+  }
 }
 </script>
 

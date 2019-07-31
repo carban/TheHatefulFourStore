@@ -17,15 +17,39 @@ router.get('/', async (req, res) => {
   }
 })
 
+// QQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQ
+router.get('/categories', async (req, res) => {
+  const {username} = req.body;
+  const myquery = {
+    text: 'select * from categorias',
+  }
+  const prof = await pg.query(myquery);
+  console.log({'profileInfo':prof.rows});
+  res.json({'profileInfo':prof.rows});
+});
+// QQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQ
+
+
+// CONSULTAR USUARIO
+router.post('/profile', async (req, res) => {
+  const {username} = req.body;
+  const myquery = {
+    text: 'select cliusuario, clinombre, clicorreo, clifondos, clifechanac from clientes where cliusuario = $1',
+    values: [username]
+  }
+  const prof = await pg.query(myquery);
+  res.json({'profileInfo':prof.rows[0]});
+});
+
 
 //login
-router.get('/login',async(req,res) => {
+router.post('/login',async(req,res) => {
   const {cliusuario,clipassword} = req.body;
   if(cliusuario == '' || clipassword == ''){
     res.json({
       msg:'Hay algun campo vacio'
     })
-    return;
+    // return;
   }
   else {
     const query = {
@@ -38,7 +62,7 @@ router.get('/login',async(req,res) => {
         res.json({
           msg:'El usuario '+cliusuario+' no esta registrado'
         })
-        return;
+        // return;
       }else if (clipassword == user.rows[0].clipassword) {
         const userExistent = user.rows[0].cliusuario;
         const token = jwt.sign({userExistent},'mySecretKey');
@@ -63,34 +87,37 @@ router.get('/login',async(req,res) => {
 //registro de usuarios
 router.post('/signup',async(req,res) => {
   const {cliusuario,clipassword,clinombre,clicorreo,clifondos,clifechanac} = req.body;
-  console.log(cliusuario+clipassword+clinombre+clicorreo+clifondos+clifechanac);
-
-  if(cliusuario == '' || clipassword == '' || clinombre == '' || clicorreo == '' || clifondos == '' || clifechanac == ''){
+  console.log(cliusuario, clipassword, clinombre, clicorreo, clifondos, clifechanac);
+  /*
+  if(cliusuario == ' ' || clipassword == ' ' || clinombre == ' ' || clicorreo == ' ' || clifondos == ' ' || clifechanac == ' '){
+    console.log('Hay algun campo vacio' );
     res.status(400).json({
       msg:'Hay algun campo vacio'
     })
-    return;
+    // return;
   }
   else{
-    const query = {
-      text:'INSERT INTO clientes(cliusuario,clipassword,clinombre,clicorreo,clifondos,clifechanac) Values ($1,$2,$3,$4,$5,$6)',
-      values:[cliusuario,clipassword,clinombre,clicorreo,clifondos,clifechanac]
-    }
-    try {
-      await pg.query(query)
-      res.status(200).json({
-        msg:'Usuario registrado satisfactoriamente'
-      })
-    } catch (err) {
-      res.status(400).json({
-        msg:err
-      })
-    }
+
+  }
+  */
+  const query = {
+    text:'INSERT INTO clientes(cliusuario,clipassword,clinombre,clicorreo,clifondos,clifechanac) Values ($1,$2,$3,$4,$5,$6)',
+    values:[cliusuario,clipassword,clinombre,clicorreo,clifondos,clifechanac]
+  }
+  try {
+    await pg.query(query)
+    res.status(200).json({
+      msg:'Usuario registrado satisfactoriamente'
+    })
+  } catch (err) {
+    res.status(400).json({
+      msg:err
+    })
   }
 })
 
 //modificar usuario
-router.put('/',async(req,res) => {
+router.put('/updateProfile',async(req,res) => {
   const {cliusuario,clipassword,clinombre,clicorreo,clifondos,clifechanac} = req.body;
   if(cliusuario == '' || clipassword == '' || clinombre == '' || clicorreo == '' || clifondos == '' || clifechanac == ''){
     res.status(400).json({
@@ -133,7 +160,7 @@ router.delete('/:id',async(req,res) => {
       msg:'No se pudo eliminar el usuario'
     });
     console.log(error);
-    
+
   }
 })
 

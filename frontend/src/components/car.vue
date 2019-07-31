@@ -52,25 +52,13 @@
         </v-card-text>
       </v-card>
 
-        <v-btn
-          color="primary"
-          @click="e1 = 2"
-        >
-          Continue
-        </v-btn>
-
-        <v-btn flat>Cancel</v-btn>
+        <v-btn color="primary" @click="e1 = 2">Continue</v-btn>
       </v-stepper-content>
 
       <v-stepper-content step="2">
-        <v-card
-          height="200px"
-        ></v-card>
+        <v-card height="100px"></v-card>
 
-        <v-btn
-          color="primary"
-          @click="e1 = 3"
-        >
+        <v-btn color="primary" @click="e1 = 3">
           Continue
         </v-btn>
 
@@ -78,18 +66,12 @@
       </v-stepper-content>
 
       <v-stepper-content step="3">
-        <v-card
-          height="200px"
-        ></v-card>
+        <v-card height="100px"></v-card>
 
-        <v-btn
-          color="primary"
-          @click="e1 = 1"
-        >
+        <v-btn color="primary" v-on:click="finishBuy()">
           Continue
         </v-btn>
 
-        <v-btn flat>Cancel</v-btn>
       </v-stepper-content>
     </v-stepper-items>
   </v-stepper>
@@ -124,6 +106,11 @@ export default {
     removeItem(index){
       this.car[index].added = false;
       this.$store.commit('RemoveitemsOnCar', this.car[index].id);
+    },
+    finishBuy(){
+      this.e1 = 1;
+      this.commitSheet();
+      this.$store.commit('setEmptyCar');
     }
   }
 }
