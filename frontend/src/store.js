@@ -151,7 +151,7 @@ export default new Vuex.Store({
         // console.log(decoded);
         axios.post('http://localhost:8001/user/profile', {"username": decoded.userExistent})
           .then(res => {
-            // console.log(res.data);
+            console.log(res.data.profileInfo.clifechanac);
             context.commit('setProfile', res.data.profileInfo);
             resolve(res);
           })
@@ -161,6 +161,7 @@ export default new Vuex.Store({
       });
     },
     getGames: context => {
+
       if (context.getters.loggedIn) {
         const decoded = jwtDecode(context.getters.token);
         axios.post('http://localhost:8001/user/gamesForClient', {"username": decoded.userExistent})
@@ -218,6 +219,28 @@ export default new Vuex.Store({
           console.log(err);
         })
     },
+    getCategoriesCombo: context => {
+      return new Promise((resolve, reject) => {
+        axios.get('http://localhost:8001/user/categories')
+          .then(res => {
+            resolve(res.data.cats);
+          })
+          .catch(err => {
+            reject(err)
+          })
+      })
+    },
+    getSubcategoriesCombo: context => {
+      return new Promise((resolve, reject) => {
+        axios.get('http://localhost:8001/subcategory/')
+          .then(res => {
+            resolve(res.data);
+          })
+          .catch(err => {
+            reject(err)
+          })
+      })
+    },
     createCategory: (context, cat) => {
       return new Promise((resolve, reject) => {
         axios.post('http://localhost:8001/user/createcategory', {'catname': cat})
@@ -242,6 +265,18 @@ export default new Vuex.Store({
     createSubcategory: (context, be) => {
       return new Promise((resolve, reject) => {
         axios.post('http://localhost:8001/user/createsubcategory', be)
+          .then(res => {
+            resolve(res);
+          })
+          .catch(err => {
+            console.log(err);
+          })
+      });
+
+    },
+    createGame: (context, game) => {
+      return new Promise((resolve, reject) => {
+        axios.post('http://localhost:8001/game/crearGame', game)
           .then(res => {
             resolve(res);
           })

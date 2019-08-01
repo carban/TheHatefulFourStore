@@ -63,6 +63,7 @@ router.get('/games', async (req, res) => {
     prof.rows[i].added = false;
     prof.rows[i].color = colors[Math.floor(Math.random() * ((colors.length - 1) - 0) + 0)];
   }
+  console.log(prof.rows);
   res.json({'games':prof.rows});
 });
 // QQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQ
@@ -137,10 +138,9 @@ router.post('/searchGamesByForClient', async (req, res) => {
 // QQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQ
 router.post('/createcategory', async (req, res) => {
   const {catname} = req.body;
-  var rand = Math.floor(Math.random() * (100 - 5)) + 5;
   const myquery = {
-    text: "insert into categorias values ($1, $2, 'description')",
-    values: [rand, catname]
+    text: "insert into categorias (catnombre, catdescripcion) values ($1, 'description');",
+    values: [catname]
   }
   const prof = await pg.query(myquery);
   res.json({'msg':'created'});
@@ -150,7 +150,7 @@ router.post('/createcategory', async (req, res) => {
 // QQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQ
 router.post('/createsubcategory', async (req, res) => {
   const {cate, sub} = req.body;
-  var rand = Math.floor(Math.random() * (100 - 5)) + 5;
+  console.log(cate, sub);
   const myquery = {
     text: "select catid from categorias where catnombre = $1",
     values: [cate]
@@ -158,8 +158,8 @@ router.post('/createsubcategory', async (req, res) => {
   const prof = await pg.query(myquery);
   var id = prof.rows[0].catid;
   const myquery2 = {
-    text: "insert into subcategorias values ($1, $2, 'description', $3)",
-    values: [rand, sub, id]
+    text: "insert into subcategorias (subnombre, subdescripcion, catid) values ($1, 'description', $2)",
+    values: [sub, id]
   }
   const prof2 = await pg.query(myquery2);
   res.json({'msg':'created'});

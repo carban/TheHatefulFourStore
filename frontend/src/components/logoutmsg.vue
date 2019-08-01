@@ -1,6 +1,6 @@
 <template lang="html">
   <div class="">
-    <h1>See you soon space cowboy</h1>
+    <h1>See you space cowboy</h1>
     <router-link :to="{ name: 'Hello', params: {} }"><h2>Home</h2></router-link>
   </div>
 </template>

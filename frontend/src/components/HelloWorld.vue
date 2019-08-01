@@ -20,9 +20,9 @@
               <v-card-title primary-title>
                 <div>
                   <div class="headline">{{item.junombre}}</div>
-                  <!-- <div>{{item.comp}}</div> -->
-                  <!-- <div>({{item.year}})</div> -->
-                  <div>${{item.juprecio}}</div>
+                  <div>{{item.jucompany}}</div>
+                  <div>({{item.juyear}})</div>
+                  <div>{{item.juprecio}}</div>
                 </div>
               </v-card-title>
 
@@ -42,9 +42,9 @@
             </v-btn>
             <v-spacer></v-spacer>
             <span class="grey--text text--lighten-2 caption mr-2">
-              ({{item.rating}})
+              ({{item.jurating}})
             </span>
-            <v-rating v-model="item.rating" background-color="white" color="yellow accent-4" dense half-increments hover size="18">
+            <v-rating v-model="item.jurating" background-color="white" color="yellow accent-4" dense half-increments hover size="18">
             </v-rating>
           </v-card-actions>
 
@@ -59,7 +59,9 @@
       <v-dialog v-model="dialog" persistent max-width="900px">
                 <v-card>
                   <v-card-text>
-                     <h1>{{current_product}}</h1>
+                     <h1>{{current_product.junombre}}</h1>
+                     <h3>{{current_product.judescription}}</h3>
+
                   </v-card-text>
                   <v-card-actions>
                     <v-spacer></v-spacer>
@@ -101,7 +103,7 @@
       //   {id: 8, title: 'GTA V', comp: 'Kojima Productions', year: 2019, color: 'info', added: false, rating: 5}
       // ],
       dialog: false,
-      current_product: null,
+      current_product: {junombre: null, judescription: null},
     }),
     methods: {
       addItem(index){
@@ -114,7 +116,7 @@
       },
       setCurrent_product(proc){
         this.dialog = !this.dialog;
-        this.current_product = proc.junombre;
+        this.current_product = proc;
       }
     }
   }

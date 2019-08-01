@@ -54,7 +54,7 @@ export default {
         username: null,
         name: null,
         email: null,
-        date: '1998-01-05',
+        date: null,
         password: null,
         fondos: 0
       },

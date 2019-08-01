@@ -68,15 +68,17 @@
             <v-card class="elevation-20" >
               <v-card-text>
                 <v-form>
-                  <v-text-field  v-model="game.name" name="login" label="Game name" type="text" required></v-text-field>
-                  <v-text-field  v-model="game.comp" name="login" label="Company of game" type="text" required></v-text-field>
-                  <v-text-field  v-model="game.year" name="login" label="Year of game" type="text" required></v-text-field>
-                  <v-text-field  v-model="game.rating" name="login" label="Rating" type="text" required></v-text-field>
-                  <v-combobox v-model="game.sub" :items="categos" label="Select Sub-category"></v-combobox>
+                  <v-text-field  v-model="game.junombre" name="login" label="Game name" type="text" required></v-text-field>
+                  <v-text-field  v-model="game.juprecio" name="login" label="Game Price" type="text" required></v-text-field>
+                  <v-text-field  v-model="game.jucompany" name="login" label="Company of game" type="text" required></v-text-field>
+                  <v-text-field  v-model="game.juyear" name="login" label="Year of game" type="text" required></v-text-field>
+                  <v-text-field  v-model="game.jurating" name="login" label="Rating" type="text" required></v-text-field>
+                  <v-textarea color="primary" label="Description" v-model="game.judescription"></v-textarea>
+                  <v-combobox v-model="game.subnombre" :items="itemssub" label="Select Sub-category"></v-combobox>
                   <v-btn color="info">Add Pic </v-btn>
                   <v-card-actions>
                     <v-spacer></v-spacer>
-                    <v-btn color="success">CREATE</v-btn>
+                    <v-btn color="success" @click="createGame()">CREATE</v-btn>
                   </v-card-actions>
                 </v-form>
               </v-card-text>
@@ -95,15 +97,17 @@
             <v-card class="elevation-20" >
               <v-card-text>
                 <v-form>
-                  <v-text-field  v-model="game.name" name="login" label="Game name" type="text" required></v-text-field>
-                  <v-text-field  v-model="game.comp" name="login" label="Company of game" type="text" required></v-text-field>
-                  <v-text-field  v-model="game.year" name="login" label="Year of game" type="text" required></v-text-field>
-                  <v-text-field  v-model="game.rating" name="login" label="Rating" type="text" required></v-text-field>
-                  <v-combobox v-model="game.sub" :items="items" label="Select Sub-category"></v-combobox>
+                  <v-text-field  v-model="game.junombre" name="login" label="Game name" type="text" required></v-text-field>
+                  <v-text-field  v-model="game.juprecio" name="login" label="Game Price" type="text" required></v-text-field>
+                  <v-text-field  v-model="game.jucompany" name="login" label="Company of game" type="text" required></v-text-field>
+                  <v-text-field  v-model="game.juyear" name="login" label="Year of game" type="text" required></v-text-field>
+                  <v-text-field  v-model="game.jurating" name="login" label="Rating" type="text" required></v-text-field>
+                  <v-textarea color="primary" label="Description" v-model="game.judescription"></v-textarea>
+                  <v-combobox v-model="game.subnombre" :items="itemssub" label="Select Sub-category"></v-combobox>
                   <v-btn color="info">Add Pic </v-btn>
                   <v-card-actions>
                     <v-spacer></v-spacer>
-                    <v-btn color="warning">EDIT</v-btn>
+                    <v-btn color="success" @click="createGame()">CREATE</v-btn>
                   </v-card-actions>
                 </v-form>
               </v-card-text>
@@ -150,12 +154,8 @@ export default {
 
   },
   created(){
-    var cats = this.$store.getters.catego;
-    var ele = [];
-    for (var i = 0; i < cats.length; i++) {
-      ele.push(cats[i].catnombre);
-    }
-    this.items = ele;
+    this.getCatsforCombo();
+    this.getSubCatsforCombo();
   },
   data(){
     return{
@@ -163,17 +163,19 @@ export default {
       snack: false,
       snack2: false,
       game : {
-        name: 'empty',
-        comp: 'empty',
-        year: 'empty',
-        rating: 'empty',
-        sub: 'empty',
-        pic: 'empty'
+        junombre: '',
+        juprecio: '',
+        jucompany: '',
+        juyear: '',
+        judescription: '',
+        jurating: '',
+        subnombre: '',
       },
       cate: null,
       com: ' ',
       sub: ' ',
-      items: []
+      items: [],
+      itemssub: []
     }
   },
 
@@ -184,6 +186,33 @@ export default {
           this.snack2 = true;
           this.cate = '';
           this.$store.dispatch('getCategories');
+          this.getCatsforCombo();
+        })
+        .catch(err => {
+          console.log(err);
+        })
+    },
+    getCatsforCombo(){
+      this.$store.dispatch('getCategoriesCombo')
+        .then(res => {
+          var ele = [];
+          for (var i = 0; i < res.length; i++) {
+            ele.push(res[i].catnombre);
+          }
+          this.items = ele;
+        })
+        .catch(err => {
+          console.log(err);
+        })
+    },
+    getSubCatsforCombo(){
+      this.$store.dispatch('getSubcategoriesCombo')
+        .then(res => {
+          var ele = [];
+          for (var i = 0; i < res.length; i++) {
+            ele.push(res[i].subnombre);
+          }
+          this.itemssub = ele;
         })
         .catch(err => {
           console.log(err);
@@ -197,6 +226,7 @@ export default {
           this.com = '';
           this.sub = '';
           this.$store.dispatch('getSubcategories');
+          this.getSubCatsforCombo();
         })
         .catch(err => {
           console.log(err);
@@ -204,6 +234,21 @@ export default {
     },
     combo(){
       console.log(this.com);
+    },
+    createGame(){
+      this.$store.dispatch('createGame', this.game)
+        .then(r => {
+          this.snack2 = true;
+          this.game.junombre = '';
+          this.game.jucompany = '';
+          this.game.judescription = '';
+          this.game.juyear = '';
+          this.game.jurating = '';
+          this.game.subnombre = '';
+        })
+        .catch(err => {
+          console.log(err);
+        })
     }
 
   }
