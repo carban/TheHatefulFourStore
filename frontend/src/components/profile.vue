@@ -27,6 +27,41 @@
       <v-tab-item>
         <v-card flat>
           <h1>MY GAMES</h1>
+          <v-layout row wrap>
+
+            <!-- <v-card v-for="(item, index) in products" :key="index" dark
+            :color=item.color :style="{'width': item.width, 'margin-right': '10px', 'margin-bottom':'10px'}"> -->
+            <v-card v-for="(item, index) in mygames" :key="index" dark
+            :color=item.color :style="{'width':'350px', 'margin-right': '10px', 'margin-bottom':'10px'}">
+
+              <v-layout class="product" justify-space-between>
+                <v-flex xs8>
+                  <v-card-title primary-title>
+                    <div>
+                      <div class="headline">{{item.junombre}}</div>
+                      <!-- <div>{{item.comp}}</div> -->
+                      <!-- <div>({{item.year}})</div> -->
+                      <div>${{item.juprecio}}</div>
+                    </div>
+                  </v-card-title>
+
+                </v-flex>
+                <v-img class="shrink ma-2" contain height="125px" src="https://res.cloudinary.com/teepublic/image/private/s--xeppzKEN--/t_Preview/b_rgb:191919,t_Watermark/c_limit,f_jpg,h_630,q_90,w_630/v1540525490/production/designs/3389495_0.jpg"
+                  style="flex-basis: 125px"
+                ></v-img>
+              </v-layout>
+
+              <v-divider dark></v-divider>
+              <v-card-actions class="pa-3">
+                <v-btn color="info">
+                  CLAIM
+                </v-btn>
+                <v-spacer></v-spacer>
+              </v-card-actions>
+
+
+            </v-card>
+          </v-layout>
         </v-card>
       </v-tab-item>
       <v-tab>
@@ -47,6 +82,9 @@ export default {
     user(){
       console.log(this.$store.getters.profile.clifechanac);
       return this.$store.getters.profile;
+    },
+    mygames(){
+      return this.$store.getters.myGames;
     }
   },
   data(){
@@ -56,6 +94,7 @@ export default {
   },
   beforeCreate(){
     //Consult Profile Info
+    this.$store.dispatch('getGames');
     this.$store.dispatch('profileInfo')
 
   },

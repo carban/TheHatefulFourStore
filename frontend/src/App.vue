@@ -74,7 +74,7 @@
         <v-list>
           <!-- logged ? : true -->
           <!-- item.title == 'Login' && item.title == 'Register' -->
-          <v-list-tile v-for="item in items" :key="item.title" :to="item.url" v-if="logged ? (item.title != 'Login' && item.title != 'Register') : true">
+          <v-list-tile v-for="item in items" :key="item.title" :to="item.url" v-if="logged ? (item.title != 'Login' && item.title != 'Register') : item.title != 'Profile'">
             <v-list-tile-action>
               <v-icon>{{item.icon}}</v-icon>
             </v-list-tile-action>
@@ -90,7 +90,7 @@
             <v-list-group v-for="(item, index) in categos" :key="index" no-action sub-group value="true">
               <template v-slot:activator>
                 <v-list-tile>
-                  <v-list-tile-title @click="searchBy(item.catnombre)">
+                  <v-list-tile-title>
                     {{item.catnombre}}
                   </v-list-tile-title>
                 </v-list-tile>
@@ -149,6 +149,7 @@ export default {
   beforeCreate(){
     this.$store.dispatch('getCategories');
     this.$store.dispatch('getSubcategories');
+    this.$store.dispatch('getGames');
   },
   data () {
     return {
@@ -176,8 +177,10 @@ export default {
       //       [{ title: 'sub 5', icon: 'gamepad', url: '/register' }],
       //     ],
       searching: false,
+      snack: false,
       logout() {
         this.$store.dispatch("logout");
+        this.$store.dispatch('getGames');
         this.$router.push({name: 'Hello'});
       }
     }
@@ -187,7 +190,12 @@ export default {
       this.$store.commit('sheet');
     },
     searchBy(title){
-      console.log(title);
+      if (this.logged) {
+
+      }else{
+        this.$store.dispatch('getGamesSearchBy', title);
+      }
+
     }
   }
 }

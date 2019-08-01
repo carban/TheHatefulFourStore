@@ -1,6 +1,5 @@
 <template>
   <div class="">
-    <h1>Top 20</h1>
     <v-container grid-list-xs,sm,md,lg,xl>
       <!-- <v-snackbar v-model="snackbar" top right multi-line timeout="6000" color="success">
         hola
@@ -35,10 +34,10 @@
 
           <v-divider dark></v-divider>
           <v-card-actions class="pa-3">
-            <v-btn absolute v-if="!item.added" color="primary" v-on:click="addItem(index)" >
+            <v-btn absolute v-if="!item.added && logged" color="primary" v-on:click="addItem(index)" >
               <v-icon>add_shopping_cart</v-icon>
             </v-btn>
-            <v-btn absolute v-if="item.added" color="warning" v-on:click="removeItem(index)">
+            <v-btn absolute v-if="item.added && logged" color="warning" v-on:click="removeItem(index)">
               <v-icon>cancel</v-icon>
             </v-btn>
             <v-spacer></v-spacer>
@@ -80,7 +79,10 @@
     computed: {
       allgames(){
         return this.$store.getters.games;
-      }
+      },
+      logged(){
+        return this.$store.getters.loggedIn;
+      },
     },
     data: () => ({
       // allgames: [
@@ -108,8 +110,7 @@
       },
       setCurrent_product(proc){
         this.dialog = !this.dialog;
-        // console.log(proc);
-        this.current_product = proc.title;
+        this.current_product = proc.junombre;
       }
     }
   }

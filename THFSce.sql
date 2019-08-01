@@ -115,19 +115,40 @@ CREATE TABLE catjuegos
 
 
 
---insert into clientes values ('carban', 'password', 'Carlos', 'carlos@mail.com', 1000, '01/05/1998');
---insert into clientes values ('hola', 'password', 'xd', 'xd@mail.com', 1000, '01/05/1998');
---insert into categorias values (1, 'Sports', 'Sports games');
---insert into categorias values (2, 'Sci-fi', 'Sci-fi games');
---insert into subcategorias values (1, 'soccer', 'Soccer games', 1);
---insert into subcategorias values (2, 'Tenis', 'Tenis games', 1);
---insert into subcategorias values (3, 'CyberPunk', 'CyberPunk games', 2);
---insert into subcategorias values (4, 'Aliens', 'Alien games', 2);
+insert into clientes values ('carban', 'password', 'Carlos', 'carlos@mail.com', 1000, '01/05/1998');
+insert into clientes values ('hola', 'password', 'xd', 'xd@mail.com', 1000, '01/05/1998');
 
+insert into categorias values (1, 'Sports', 'Sports games');
+insert into categorias values (2, 'Sci-fi', 'Sci-fi games');
+insert into categorias values (3, 'Adventure', 'Adventure games');
+
+insert into subcategorias values (1, 'soccer', 'Soccer games', 1);
+insert into subcategorias values (2, 'Tenis', 'Tenis games', 1);
+insert into subcategorias values (3, 'CyberPunk', 'CyberPunk games', 2);
+insert into subcategorias values (4, 'Aliens', 'Alien games', 2);
+insert into subcategorias values (5, 'Gore', 'Gore games', 3);
+insert into subcategorias values (6, 'Cars', 'Cars games', 1);
 
 insert into juegos values (1, 'PES 2019', 1000);
 insert into juegos values (2, 'Death Stranding', 1000);
+insert into juegos values (3, 'FIFA 2019', 1000);
+insert into juegos values (4, 'Uncharted 4', 1000);
+insert into juegos values (5, 'God of War', 1000);
+insert into juegos values (6, 'Need for speed', 1000);
+insert into juegos values (7, 'Sokoban', 1000);
+insert into juegos values (8, 'HEX', 1000);
 
 insert into catjuegos values (1, 1);
 insert into catjuegos values (2, 4);
+insert into catjuegos values (3, 1);
+insert into catjuegos values (4, 4);
+insert into catjuegos values (5, 5);
+insert into catjuegos values (6, 6);
+insert into catjuegos values (7, 5);
+insert into catjuegos values (8, 5);
+
+insert into librerias values(1, '2019-07-04', 2000, true, 'carban', 2);
+insert into librerias values(1, '2019-07-04', 2000, true, 'carban', 5);
+
+
 

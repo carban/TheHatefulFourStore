@@ -14,7 +14,8 @@ export default new Vuex.Store({
     profile: {cliusuario: null, clinombre: null, clicorreo: null, clifondos: null, clifechanac: null},
     catego: [],
     subcatego: [],
-    games: []
+    games: [],
+    myGames: []
   },
   getters: {
     token: state => {
@@ -34,6 +35,9 @@ export default new Vuex.Store({
     },
     games: state => {
       return state.games;
+    },
+    myGames: state => {
+      return state.myGames;
     },
     car: state => {
       return state.theCar;
@@ -76,6 +80,9 @@ export default new Vuex.Store({
     },
     setGames: (state, games) => {
       state.games = games;
+    },
+    setmyGames: (state, myGames) => {
+      state.myGames = myGames;
     },
     setCatego: (state, cats) => {
       state.catego = cats;
@@ -133,7 +140,6 @@ export default new Vuex.Store({
     },
     profileInfo: context => {
       return new Promise((resolve, reject) => {
-        console.log('Profile consulted');
         const decoded = jwtDecode(context.getters.token);
         // console.log(decoded);
         axios.post('http://localhost:8001/user/profile', {"username": decoded.userExistent})
@@ -148,13 +154,39 @@ export default new Vuex.Store({
       });
     },
     getGames: context => {
-      axios.get('http://localhost:8001/user/games')
-        .then(res => {
-          context.commit('setGames', res.data.games);
-        })
-        .catch(err => {
-          console.log(err);
-        })
+      if (context.getters.loggedIn) {
+        const decoded = jwtDecode(context.getters.token);
+        axios.post('http://localhost:8001/user/gamesForClient', {"username": decoded.userExistent})
+          .then(res => {
+            context.commit('setGames', res.data.allgames);
+            context.commit('setmyGames', res.data.yourgames);
+          })
+          .catch(err => {
+            console.log(err);
+          })
+      }else{
+        axios.get('http://localhost:8001/user/games')
+          .then(res => {
+            context.commit('setGames', res.data.games);
+          })
+          .catch(err => {
+            console.log(err);
+          })
+      }
+
+    },
+    getGamesSearchBy: (context, value) => {
+      return new Promise((resolve, reject) => {
+        axios.post('http://localhost:8001/user/searchGamesBy', {"subcat": value})
+          .then(res => {
+            context.commit('setGames', res.data.games);
+            resolve(res);
+          })
+          .catch(err => {
+            reject(err);
+          })
+      });
+
     },
     getCategories: context => {
       axios.get('http://localhost:8001/user/categories')
