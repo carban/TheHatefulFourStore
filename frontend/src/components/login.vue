@@ -49,13 +49,22 @@ export default {
   },
   methods: {
     login(){
-      this.$store.dispatch('api_login', this.access)
-        .then(response => {
-          this.$router.push({name: 'profile'})
-        })
-        .catch(err => {
-          this.snack = true;
-        });
+      if (this.access.user == 'admin' && this.access.password == 'admin') {
+        //TEMPORALY TRUCK, DONT DO THIS AGAIN
+        this.$store.commit('setAdmin', true);
+        localStorage.setItem('access_token', 'admin');
+        this.$store.commit('tokenMutation', 'admin');
+        this.$router.push({name: 'profileAdmin'});
+      }else{
+        this.$store.dispatch('api_login', this.access)
+          .then(response => {
+            this.$router.push({name: 'profile'})
+          })
+          .catch(err => {
+            this.snack = true;
+          });
+      }
+
     }
   }
 }

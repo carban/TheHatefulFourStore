@@ -45,7 +45,7 @@
                 <v-avatar>
                   <img src="https://res.cloudinary.com/teepublic/image/private/s--xeppzKEN--/t_Preview/b_rgb:191919,t_Watermark/c_limit,f_jpg,h_630,q_90,w_630/v1540525490/production/designs/3389495_0.jpg" alt="trevor">
                 </v-avatar>
-                <v-list-tile-title>{{ item.title }}</v-list-tile-title>
+                <v-list-tile-title>{{ item.junombre }}</v-list-tile-title>
               </v-chip>
             </div>
           </v-list-tile>

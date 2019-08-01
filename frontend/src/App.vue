@@ -26,7 +26,7 @@
           ></v-text-field>
         </v-flex>
 
-        <v-btn icon v-if="logged" v-on:click="commitSheet()">
+        <v-btn icon v-if="logged && !addd" v-on:click="commitSheet()">
           <v-badge left color="red">
             <template v-slot:badge>
               <span>{{itemsOnCar}}</span>
@@ -37,7 +37,7 @@
           </v-badge>
         </v-btn>
 
-        <v-btn icon>
+        <v-btn @click="getGamess()" icon>
           <v-icon>refresh</v-icon>
         </v-btn>
 
@@ -144,6 +144,10 @@ export default {
     },
     subcategos(){
       return this.$store.getters.subcatego;
+    },
+    addd(){
+      console.log(this.$store.getters.admin);
+      return this.$store.getters.admin;
     }
   },
   beforeCreate(){
@@ -156,7 +160,7 @@ export default {
       drawer: null,
       items: [
         { title: 'Home', icon: 'dashboard', url: '/' },
-        { title: 'Profile', icon: 'person', url: '/profile' },
+        { title: 'Profile', icon: 'person', url: '/profile'},
         { title: 'About', icon: 'question_answer', url:'/myabout' },
         { title: 'Login', icon: 'account_box', url:'/login' },
         { title: 'Register', icon: 'accessibility', url:'/register' }
@@ -181,7 +185,8 @@ export default {
       logout() {
         this.$store.dispatch("logout");
         this.$store.dispatch('getGames');
-        this.$router.push({name: 'Hello'});
+        this.$store.commit('setAdmin', false);
+        this.$router.push({name: 'logoutmsg'});
       }
     }
   },
@@ -190,12 +195,10 @@ export default {
       this.$store.commit('sheet');
     },
     searchBy(title){
-      if (this.logged) {
-
-      }else{
-        this.$store.dispatch('getGamesSearchBy', title);
-      }
-
+      this.$store.dispatch('getGamesSearchBy', title);
+    },
+    getGamess(){
+      this.$store.dispatch('getGames');
     }
   }
 }

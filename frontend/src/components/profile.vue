@@ -65,11 +65,12 @@
         </v-card>
       </v-tab-item>
       <v-tab>
-        FIGHTS
+        CLAIMS
       </v-tab>
       <v-tab-item>
         <v-card flat>
-          <h1>FIGHTS</h1>
+          <h1>CLAIMS</h1>
+          <center><h2>Coming soon</h2></center>
         </v-card>
       </v-tab-item>
     </v-tabs>
@@ -80,7 +81,6 @@
 export default {
   computed:{
     user(){
-      console.log(this.$store.getters.profile.clifechanac);
       return this.$store.getters.profile;
     },
     mygames(){

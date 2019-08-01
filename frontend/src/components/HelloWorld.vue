@@ -8,7 +8,7 @@
         </v-btn>
       </v-snackbar> -->
 
-      <v-layout row wrap>
+      <v-layout v-if="allgames.length > 0" row wrap>
 
         <!-- <v-card v-for="(item, index) in products" :key="index" dark
         :color=item.color :style="{'width': item.width, 'margin-right': '10px', 'margin-bottom':'10px'}"> -->
@@ -50,6 +50,10 @@
 
 
         </v-card>
+      </v-layout>
+
+      <v-layout v-if="allgames.length == 0" row wrap>
+        <h1>No Results</h1>
       </v-layout>
 
       <v-dialog v-model="dialog" persistent max-width="900px">

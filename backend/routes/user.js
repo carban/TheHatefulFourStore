@@ -57,7 +57,7 @@ router.get('/games', async (req, res) => {
   const myquery = {
     text: 'select * from catjuegos natural join juegos order by subid',
   }
-  var colors = ['red', 'dark', 'accent', 'success', 'info', 'yellow'];
+  var colors = ['red', 'dark', 'accent', 'success', 'info', 'orange'];
   const prof = await pg.query(myquery);
   for (var i = 0; i < prof.rows.length; i++) {
     prof.rows[i].added = false;
@@ -80,7 +80,7 @@ router.post('/gamesForClient', async (req, res) => {
     values: [username]
   }
 
-  var colors = ['red', 'dark', 'accent', 'success', 'info', 'yellow'];
+  var colors = ['red', 'dark', 'accent', 'success', 'info', 'orange'];
 
   const answ = await pg.query(myquery);
   for (var i = 0; i < answ.rows.length; i++) {
@@ -102,10 +102,10 @@ router.post('/gamesForClient', async (req, res) => {
 router.post('/searchGamesBy', async (req, res) => {
   const {subcat} = req.body;
   const myquery = {
-    text: 'select * from subcategorias natural join (select * from catjuegos natural join juegos order by subid) as col where subnombre = $1 order by col.subid;',
+    text: 'select * from subcategorias natural join (select * from catjuegos natural join juegos order by subid) as col where subnombre = $1 order by col.subid',
     values: [subcat]
   }
-  var colors = ['red', 'dark', 'accent', 'success', 'info', 'yellow'];
+  var colors = ['red', 'dark', 'accent', 'success', 'info', 'orange'];
   const prof = await pg.query(myquery);
   for (var i = 0; i < prof.rows.length; i++) {
     prof.rows[i].added = false;
@@ -116,18 +116,53 @@ router.post('/searchGamesBy', async (req, res) => {
 // QQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQ
 
 // QQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQ
-router.post('/searchGamesBy_ForClient', async (req, res) => {
-  const {username} = req.body;
+router.post('/searchGamesByForClient', async (req, res) => {
+  const {username, subcat} = req.body;
   const myquery = {
-    text: 'select * from catjuegos natural join juegos order by subid',
+    text: 'select * from subcategorias natural join (select * from catjuegos natural join ( select * from juegos except (select * from (select juid from librerias where cliusuario = $1) as ids natural join juegos)) as cli order by subid) as col where subnombre = $2 order by col.subid',
+    values: [username, subcat]
   }
-  var colors = ['red', 'dark', 'accent', 'success', 'info', 'yellow'];
+  var colors = ['red', 'dark', 'accent', 'success', 'info', 'orange'];
   const prof = await pg.query(myquery);
   for (var i = 0; i < prof.rows.length; i++) {
     prof.rows[i].added = false;
     prof.rows[i].color = colors[Math.floor(Math.random() * ((colors.length - 1) - 0) + 0)];
   }
   res.json({'games':prof.rows});
+});
+// QQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQ
+
+
+
+// QQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQ
+router.post('/createcategory', async (req, res) => {
+  const {catname} = req.body;
+  var rand = Math.floor(Math.random() * (100 - 5)) + 5;
+  const myquery = {
+    text: "insert into categorias values ($1, $2, 'description')",
+    values: [rand, catname]
+  }
+  const prof = await pg.query(myquery);
+  res.json({'msg':'created'});
+});
+// QQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQ
+
+// QQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQ
+router.post('/createsubcategory', async (req, res) => {
+  const {cate, sub} = req.body;
+  var rand = Math.floor(Math.random() * (100 - 5)) + 5;
+  const myquery = {
+    text: "select catid from categorias where catnombre = $1",
+    values: [cate]
+  }
+  const prof = await pg.query(myquery);
+  var id = prof.rows[0].catid;
+  const myquery2 = {
+    text: "insert into subcategorias values ($1, $2, 'description', $3)",
+    values: [rand, sub, id]
+  }
+  const prof2 = await pg.query(myquery2);
+  res.json({'msg':'created'});
 });
 // QQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQ
 

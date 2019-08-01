@@ -6,6 +6,8 @@ import myabout from './components/myabout.vue'
 import login from './components/login.vue'
 import register from './components/register.vue'
 import profile from './components/profile.vue'
+import logoutmsg from './components/logoutmsg.vue'
+import profileAdmin from './components/profileAdmin.vue'
 
 Vue.use(Router)
 
@@ -43,6 +45,22 @@ export default new Router({
       path: '/profile',
       name: 'profile',
       component: profile,
+      meta: {
+        requiresAuth: true
+      }
+    },
+    {
+      path: '/logoutmsg',
+      name: 'logoutmsg',
+      component: logoutmsg,
+      meta: {
+        requiresVisitor: true
+      }
+    },
+    {
+      path: '/profileAdmin',
+      name: 'profileAdmin',
+      component: profileAdmin,
       meta: {
         requiresAuth: true
       }
