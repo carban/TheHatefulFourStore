@@ -1,21 +1,28 @@
 const express = require('express')
 const router = express.Router()
 const pg = require('../db/database.js').getPool();
-// const productMO = require('../models/product');
+const productMO = require('../models/juegos');
 
 //Consultar todos los productos
 router.get('/', async (req, res) => {
-  const myquery = {
-    text: 'select * from catjuegos natural join juegos order by subid',
-  }
+  // const myquery = {
+  //   text: 'select * from catjuegos natural join juegos order by subid',
+  // }
   var colors = ['red', 'dark', 'accent', 'success', 'info', 'orange'];
-  const prof = await pg.query(myquery);
-  for (var i = 0; i < prof.rows.length; i++) {
-    prof.rows[i].added = false;
-    prof.rows[i].color = colors[Math.floor(Math.random() * ((colors.length - 1) - 0) + 0)];
+  // const prof = await pg.query(myquery);
+  try {
+    const prof = await productMO.findAll({raw: true});
+    for (var i = 0; i < prof.length; i++) {
+      prof[i].added = false;
+      prof[i].color = colors[Math.floor(Math.random() * ((colors.length - 1) - 0) + 0)];
+    }
+    console.log(prof);
+    res.json({'games':prof});
+  } catch (e) {
+    console.log(e);
+    res.json({'error': e})
   }
-  console.log(prof.rows);
-  res.json({'games':prof.rows});
+
 });
 
 
@@ -39,6 +46,7 @@ router.post('/gamesForClient', async (req, res) => {
     answ.rows[i].color = colors[Math.floor(Math.random() * ((colors.length - 1) - 0) + 0)];
   }
   const answ2 = await pg.query(myotherquery);
+  // const answ2 = await productMO.find();
   for (var i = 0; i < answ2.rows.length; i++) {
     answ2.rows[i].added = false;
     answ2.rows[i].color = colors[Math.floor(Math.random() * ((colors.length - 1) - 0) + 0)];

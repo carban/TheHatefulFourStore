@@ -2,7 +2,7 @@ const express = require('express')
 const router = express.Router()
 const pg = require('../db/database.js').getPool();
 const jwt = require('jsonwebtoken');
-
+const clientesMO = require('../models/clientes');
 //Consultar todos los clientes existentes(ESTE ES SOLO PARA PRUEBAS)
 router.get('/', async (req, res) => {
   const query = 'SELECT * FROM clientes';
@@ -19,12 +19,18 @@ router.get('/', async (req, res) => {
 // CONSULTAR USUARIO
 router.post('/profile', async (req, res) => {
   const {username} = req.body;
-  const myquery = {
-    text: 'select cliusuario, clinombre, clicorreo, clifondos, clifechanac from clientes where cliusuario = $1',
-    values: [username]
-  }
-  const prof = await pg.query(myquery);
-  res.json({'profileInfo':prof.rows[0]});
+  // const myquery = {
+  //   text: 'select cliusuario, clinombre, clicorreo, clifondos, clifechanac from clientes where cliusuario = $1',
+  //   values: [username]
+  // }
+  // const prof = await pg.query(myquery);
+  const prof = await clientesMO.findAll({
+    attributes: ['cliusuario', 'clinombre', 'clicorreo', 'clifondos', 'clifechanac'],
+    where: {cliusuario: username},
+    raw: true
+  })
+  // res.json({'profileInfo':prof.rows[0]});
+  res.json({'profileInfo':prof[0]});
 });
 
 
@@ -38,19 +44,24 @@ router.post('/login',async(req,res) => {
     // return;
   }
   else {
-    const query = {
-      text:'SELECT cliusuario,clipassword from clientes WHERE cliusuario=$1',
-      values:[cliusuario]
-    }
+    // const query = {
+    //   text:'SELECT cliusuario,clipassword from clientes WHERE cliusuario=$1',
+    //   values:[cliusuario]
+    // }
     try{
-      const user = await pg.query(query);
-      if(user.rows.length == 0){
+      // const user = await pg.query(query);
+      const user = await clientesMO.findAll({
+        attributes: ['cliusuario', 'clipassword'],
+        where: {'cliusuario': cliusuario, 'clipassword': clipassword},
+        raw: true
+      })
+      if(user.length == 0){
         res.json({
           msg:'El usuario '+cliusuario+' no esta registrado'
         })
         // return;
-      }else if (clipassword == user.rows[0].clipassword) {
-        const userExistent = user.rows[0].cliusuario;
+      }else if (clipassword == user[0].clipassword) {
+        const userExistent = user[0].cliusuario;
         const token = jwt.sign({userExistent},'mySecretKey');
         res.status(200).json({
           token
