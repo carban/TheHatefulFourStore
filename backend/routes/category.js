@@ -8,7 +8,7 @@ router.get('/', async (req, res) => {
   const query = 'SELECT * FROM categorias';
   try {
     const cat = await pg.query(query);
-    res.status(200).send(cat.rows);
+    res.status(200).send({'cats': cat.rows});
   } catch (e) {
     console.log(e);
     res.sendStatus(400);
@@ -17,29 +17,15 @@ router.get('/', async (req, res) => {
 
 //Crear una nueva categoria
 router.post('/', async (req, res) => {
-  const { catnombre, catdescripcion } = req.body;
-  if (catnombre == '' || catdescripcion == '') {
-    res.status(400).json({
-      msg: 'Hay algun campo vacio'
-    });
-  } else {
-    const query = {
-      text: 'INSERT INTO categorias(catnombre, catdescripcion) VALUES ($1,$2)',
-      values: [catnombre, catdescripcion]
-    }
-    try {
-      await pg.query(query);
-      res.status(200).json({
-        msg: 'Categoria creada con exito'
-      });
-    } catch (error) {
-      res.status(400).json({
-        msg: 'No se pudo crear la categoria'
-      });
-      console.log(error);
-    }
+  const {catname} = req.body;
+  console.log(catname);
+  const myquery = {
+    text: "insert into categorias (catnombre, catdescripcion) values ($1, 'description');",
+    values: [catname]
   }
-})
+  const prof = await pg.query(myquery);
+  res.json({'msg':'created'});
+});
 
 //Modificar una categoria
 router.put('/', async (req, res) => {

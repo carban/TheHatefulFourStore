@@ -58,6 +58,7 @@
 
       <v-dialog v-model="dialog" persistent max-width="900px">
                 <v-card>
+                  <iframe width="100%" height="480" src="https://www.youtube.com/embed/piIgkJWDuQg" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
                   <v-card-text>
                      <h1>{{current_product.junombre}}</h1>
                      <h3>{{current_product.judescription}}</h3>

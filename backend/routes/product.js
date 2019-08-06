@@ -1,18 +1,82 @@
 const express = require('express')
 const router = express.Router()
 const pg = require('../db/database.js').getPool();
-
+// const productMO = require('../models/product');
 
 //Consultar todos los productos
 router.get('/', async (req, res) => {
-    const query = 'SELECT * FROM juegos';
-    try {
-        const juegos = await pg.query(query);
-        res.status(200).json(juegos.rows);
-    } catch (error) {
-        res.sendStatus(400);
-    }
-})
+  const myquery = {
+    text: 'select * from catjuegos natural join juegos order by subid',
+  }
+  var colors = ['red', 'dark', 'accent', 'success', 'info', 'orange'];
+  const prof = await pg.query(myquery);
+  for (var i = 0; i < prof.rows.length; i++) {
+    prof.rows[i].added = false;
+    prof.rows[i].color = colors[Math.floor(Math.random() * ((colors.length - 1) - 0) + 0)];
+  }
+  console.log(prof.rows);
+  res.json({'games':prof.rows});
+});
+
+
+router.post('/gamesForClient', async (req, res) => {
+  const {username} = req.body;
+  console.log(username);
+  const myquery = {
+    text: 'select * from juegos except (select * from (select juid from librerias where cliusuario = $1) as ids natural join juegos)',
+    values: [username]
+  }
+  const myotherquery = {
+    text: 'select * from (select juid from librerias where cliusuario = $1) as ids natural join juegos',
+    values: [username]
+  }
+
+  var colors = ['red', 'dark', 'accent', 'success', 'info', 'orange'];
+
+  const answ = await pg.query(myquery);
+  for (var i = 0; i < answ.rows.length; i++) {
+    answ.rows[i].added = false;
+    answ.rows[i].color = colors[Math.floor(Math.random() * ((colors.length - 1) - 0) + 0)];
+  }
+  const answ2 = await pg.query(myotherquery);
+  for (var i = 0; i < answ2.rows.length; i++) {
+    answ2.rows[i].added = false;
+    answ2.rows[i].color = colors[Math.floor(Math.random() * ((colors.length - 1) - 0) + 0)];
+  }
+
+  res.json({'allgames':answ.rows, 'yourgames':answ2.rows});
+  // res.json({'allgames':answ.rows});
+});
+
+router.post('/searchGamesBy', async (req, res) => {
+  const {subcat} = req.body;
+  const myquery = {
+    text: 'select * from subcategorias natural join (select * from catjuegos natural join juegos order by subid) as col where subnombre = $1 order by col.subid',
+    values: [subcat]
+  }
+  var colors = ['red', 'dark', 'accent', 'success', 'info', 'orange'];
+  const prof = await pg.query(myquery);
+  for (var i = 0; i < prof.rows.length; i++) {
+    prof.rows[i].added = false;
+    prof.rows[i].color = colors[Math.floor(Math.random() * ((colors.length - 1) - 0) + 0)];
+  }
+  res.json({'games':prof.rows});
+});
+
+router.post('/searchGamesByForClient', async (req, res) => {
+  const {username, subcat} = req.body;
+  const myquery = {
+    text: 'select * from subcategorias natural join (select * from catjuegos natural join ( select * from juegos except (select * from (select juid from librerias where cliusuario = $1) as ids natural join juegos)) as cli order by subid) as col where subnombre = $2 order by col.subid',
+    values: [username, subcat]
+  }
+  var colors = ['red', 'dark', 'accent', 'success', 'info', 'orange'];
+  const prof = await pg.query(myquery);
+  for (var i = 0; i < prof.rows.length; i++) {
+    prof.rows[i].added = false;
+    prof.rows[i].color = colors[Math.floor(Math.random() * ((colors.length - 1) - 0) + 0)];
+  }
+  res.json({'games':prof.rows});
+});
 
 //Crear un nuevo juego
 router.post('/crearGame', async (req, res) => {

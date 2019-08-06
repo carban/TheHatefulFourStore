@@ -3,8 +3,6 @@ const router = express.Router()
 const pg = require('../db/database.js').getPool();
 const jwt = require('jsonwebtoken');
 
-
-
 //Consultar todos los clientes existentes(ESTE ES SOLO PARA PRUEBAS)
 router.get('/', async (req, res) => {
   const query = 'SELECT * FROM clientes';
@@ -16,155 +14,6 @@ router.get('/', async (req, res) => {
     res.sendStatus(400);
   }
 })
-
-// QQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQ
-router.get('/categories', async (req, res) => {
-  const {username} = req.body;
-  const myquery = {
-    text: 'select * from categorias',
-  }
-  const prof = await pg.query(myquery);
-  res.json({'cats':prof.rows});
-});
-// QQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQ
-
-// QQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQ
-router.get('/subcategories', async (req, res) => {
-  const {username} = req.body;
-  const myquery = {
-    text: 'select subid, subnombre, catid from subcategorias order by catid;',
-  }
-  const prof = await pg.query(myquery);
-  var answ = [];
-  var aux = [];
-  var x = prof.rows[0].catid;
-  for (var i = 0; i < prof.rows.length; i++) {
-    if (prof.rows[i].catid != x) {
-      answ.push(aux);
-      aux = [];
-      x = prof.rows[i].catid;
-    }
-    aux.push(prof.rows[i]);
-  }
-  answ.push(aux);
-  res.json({'subcats':answ});
-});
-// QQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQ
-
-// QQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQ
-router.get('/games', async (req, res) => {
-  const {username} = req.body;
-  const myquery = {
-    text: 'select * from catjuegos natural join juegos order by subid',
-  }
-  var colors = ['red', 'dark', 'accent', 'success', 'info', 'orange'];
-  const prof = await pg.query(myquery);
-  for (var i = 0; i < prof.rows.length; i++) {
-    prof.rows[i].added = false;
-    prof.rows[i].color = colors[Math.floor(Math.random() * ((colors.length - 1) - 0) + 0)];
-  }
-  console.log(prof.rows);
-  res.json({'games':prof.rows});
-});
-// QQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQ
-
-// QQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQ
-router.post('/gamesForClient', async (req, res) => {
-  const {username} = req.body;
-  console.log(username);
-  const myquery = {
-    text: 'select * from juegos except (select * from (select juid from librerias where cliusuario = $1) as ids natural join juegos)',
-    values: [username]
-  }
-  const myotherquery = {
-    text: 'select * from (select juid from librerias where cliusuario = $1) as ids natural join juegos',
-    values: [username]
-  }
-
-  var colors = ['red', 'dark', 'accent', 'success', 'info', 'orange'];
-
-  const answ = await pg.query(myquery);
-  for (var i = 0; i < answ.rows.length; i++) {
-    answ.rows[i].added = false;
-    answ.rows[i].color = colors[Math.floor(Math.random() * ((colors.length - 1) - 0) + 0)];
-  }
-  const answ2 = await pg.query(myotherquery);
-  for (var i = 0; i < answ2.rows.length; i++) {
-    answ2.rows[i].added = false;
-    answ2.rows[i].color = colors[Math.floor(Math.random() * ((colors.length - 1) - 0) + 0)];
-  }
-
-  res.json({'allgames':answ.rows, 'yourgames':answ2.rows});
-  // res.json({'allgames':answ.rows});
-});
-// QQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQ
-
-// QQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQ
-router.post('/searchGamesBy', async (req, res) => {
-  const {subcat} = req.body;
-  const myquery = {
-    text: 'select * from subcategorias natural join (select * from catjuegos natural join juegos order by subid) as col where subnombre = $1 order by col.subid',
-    values: [subcat]
-  }
-  var colors = ['red', 'dark', 'accent', 'success', 'info', 'orange'];
-  const prof = await pg.query(myquery);
-  for (var i = 0; i < prof.rows.length; i++) {
-    prof.rows[i].added = false;
-    prof.rows[i].color = colors[Math.floor(Math.random() * ((colors.length - 1) - 0) + 0)];
-  }
-  res.json({'games':prof.rows});
-});
-// QQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQ
-
-// QQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQ
-router.post('/searchGamesByForClient', async (req, res) => {
-  const {username, subcat} = req.body;
-  const myquery = {
-    text: 'select * from subcategorias natural join (select * from catjuegos natural join ( select * from juegos except (select * from (select juid from librerias where cliusuario = $1) as ids natural join juegos)) as cli order by subid) as col where subnombre = $2 order by col.subid',
-    values: [username, subcat]
-  }
-  var colors = ['red', 'dark', 'accent', 'success', 'info', 'orange'];
-  const prof = await pg.query(myquery);
-  for (var i = 0; i < prof.rows.length; i++) {
-    prof.rows[i].added = false;
-    prof.rows[i].color = colors[Math.floor(Math.random() * ((colors.length - 1) - 0) + 0)];
-  }
-  res.json({'games':prof.rows});
-});
-// QQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQ
-
-
-
-// QQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQ
-router.post('/createcategory', async (req, res) => {
-  const {catname} = req.body;
-  const myquery = {
-    text: "insert into categorias (catnombre, catdescripcion) values ($1, 'description');",
-    values: [catname]
-  }
-  const prof = await pg.query(myquery);
-  res.json({'msg':'created'});
-});
-// QQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQ
-
-// QQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQ
-router.post('/createsubcategory', async (req, res) => {
-  const {cate, sub} = req.body;
-  console.log(cate, sub);
-  const myquery = {
-    text: "select catid from categorias where catnombre = $1",
-    values: [cate]
-  }
-  const prof = await pg.query(myquery);
-  var id = prof.rows[0].catid;
-  const myquery2 = {
-    text: "insert into subcategorias (subnombre, subdescripcion, catid) values ($1, 'description', $2)",
-    values: [sub, id]
-  }
-  const prof2 = await pg.query(myquery2);
-  res.json({'msg':'created'});
-});
-// QQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQ
 
 
 // CONSULTAR USUARIO
@@ -225,18 +74,7 @@ router.post('/login',async(req,res) => {
 router.post('/signup',async(req,res) => {
   const {cliusuario,clipassword,clinombre,clicorreo,clifondos,clifechanac} = req.body;
   console.log(cliusuario, clipassword, clinombre, clicorreo, clifondos, clifechanac);
-  /*
-  if(cliusuario == ' ' || clipassword == ' ' || clinombre == ' ' || clicorreo == ' ' || clifondos == ' ' || clifechanac == ' '){
-    console.log('Hay algun campo vacio' );
-    res.status(400).json({
-      msg:'Hay algun campo vacio'
-    })
-    // return;
-  }
-  else{
 
-  }
-  */
   const query = {
     text:'INSERT INTO clientes(cliusuario,clipassword,clinombre,clicorreo,clifondos,clifechanac) Values ($1,$2,$3,$4,$5,$6)',
     values:[cliusuario,clipassword,clinombre,clicorreo,clifondos,clifechanac]

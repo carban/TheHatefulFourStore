@@ -164,7 +164,7 @@ export default new Vuex.Store({
 
       if (context.getters.loggedIn) {
         const decoded = jwtDecode(context.getters.token);
-        axios.post('http://localhost:8001/user/gamesForClient', {"username": decoded.userExistent})
+        axios.post('http://localhost:8001/game/gamesForClient', {"username": decoded.userExistent})
           .then(res => {
             context.commit('setGames', res.data.allgames);
             context.commit('setmyGames', res.data.yourgames);
@@ -173,7 +173,7 @@ export default new Vuex.Store({
             console.log(err);
           })
       }else{
-        axios.get('http://localhost:8001/user/games')
+        axios.get('http://localhost:8001/game')
           .then(res => {
             context.commit('setGames', res.data.games);
           })
@@ -187,7 +187,7 @@ export default new Vuex.Store({
       if (context.getters.loggedIn) {
         const decoded = jwtDecode(context.getters.token);
         return new Promise((resolve, reject) => {
-          axios.post('http://localhost:8001/user/searchGamesByForClient', {"username": decoded.userExistent, "subcat": value})
+          axios.post('http://localhost:8001/game/searchGamesByForClient', {"username": decoded.userExistent, "subcat": value})
             .then(res => {
               console.log(res.data.games);
               context.commit('setGames', res.data.games);
@@ -199,7 +199,7 @@ export default new Vuex.Store({
         });
       }else{
         return new Promise((resolve, reject) => {
-          axios.post('http://localhost:8001/user/searchGamesBy', {"subcat": value})
+          axios.post('http://localhost:8001/game/searchGamesBy', {"subcat": value})
             .then(res => {
               context.commit('setGames', res.data.games);
               resolve(res);
@@ -211,7 +211,8 @@ export default new Vuex.Store({
       }
     },
     getCategories: context => {
-      axios.get('http://localhost:8001/user/categories')
+      // axios.get('http://localhost:8001/user/categories')
+      axios.get('http://localhost:8001/category/')
         .then(res => {
           context.commit('setCatego', res.data.cats);
         })
@@ -221,7 +222,7 @@ export default new Vuex.Store({
     },
     getCategoriesCombo: context => {
       return new Promise((resolve, reject) => {
-        axios.get('http://localhost:8001/user/categories')
+        axios.get('http://localhost:8001/category/')
           .then(res => {
             resolve(res.data.cats);
           })
@@ -232,7 +233,7 @@ export default new Vuex.Store({
     },
     getSubcategoriesCombo: context => {
       return new Promise((resolve, reject) => {
-        axios.get('http://localhost:8001/subcategory/')
+        axios.get('http://localhost:8001/subcategory/combo')
           .then(res => {
             resolve(res.data);
           })
@@ -243,7 +244,7 @@ export default new Vuex.Store({
     },
     createCategory: (context, cat) => {
       return new Promise((resolve, reject) => {
-        axios.post('http://localhost:8001/user/createcategory', {'catname': cat})
+        axios.post('http://localhost:8001/category/', {'catname': cat})
           .then(res => {
             resolve(res);
           })
@@ -254,7 +255,7 @@ export default new Vuex.Store({
 
     },
     getSubcategories: context => {
-      axios.get('http://localhost:8001/user/subcategories')
+      axios.get('http://localhost:8001/subcategory')
         .then(res => {
           context.commit('setSubcatego', res.data.subcats);
         })
@@ -264,7 +265,7 @@ export default new Vuex.Store({
     },
     createSubcategory: (context, be) => {
       return new Promise((resolve, reject) => {
-        axios.post('http://localhost:8001/user/createsubcategory', be)
+        axios.post('http://localhost:8001/subcategory', be)
           .then(res => {
             resolve(res);
           })

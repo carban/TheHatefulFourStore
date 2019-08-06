@@ -5,6 +5,27 @@ const pg = require('../db/database.js').getPool();
 
 //Consultar todas las subcategorias existentes
 router.get('/', async (req, res) => {
+  const {username} = req.body;
+  const myquery = {
+    text: 'select subid, subnombre, catid from subcategorias order by catid;',
+  }
+  const prof = await pg.query(myquery);
+  var answ = [];
+  var aux = [];
+  var x = prof.rows[0].catid;
+  for (var i = 0; i < prof.rows.length; i++) {
+    if (prof.rows[i].catid != x) {
+      answ.push(aux);
+      aux = [];
+      x = prof.rows[i].catid;
+    }
+    aux.push(prof.rows[i]);
+  }
+  answ.push(aux);
+  res.json({'subcats':answ});
+})
+
+router.get('/combo', async (req, res) => {
   const query = 'SELECT * FROM subcategorias';
   try {
     const subcat = await pg.query(query);
@@ -17,28 +38,20 @@ router.get('/', async (req, res) => {
 
 //Crear una nueva subcategoria
 router.post('/', async (req, res) => {
-  const { subnombre, subdescripcion, catid } = req.body; 
-  if (subnombre == '' || subdescripcion == '' ) {
-    res.status(400).json({
-      msg: 'Hay algun campo vacio'
-    });
-  } else {
-    const query = {
-      text: 'INSERT INTO subcategorias(subnombre,subdescripcion,catid) VALUES ($1,$2,$3)',
-      values: [subnombre, subdescripcion, catid]
-    }
-    try {
-      await pg.query(query);
-      res.status(200).json({
-        msg: 'Subcategoria creada con exito'
-      });
-    } catch (error) {
-      res.status(400).json({
-        msg: 'No se pudo crear la subcategoria'
-      });
-      console.log(error);
-    }
+  const {cate, sub} = req.body;
+  console.log(cate, sub);
+  const myquery = {
+    text: "select catid from categorias where catnombre = $1",
+    values: [cate]
   }
+  const prof = await pg.query(myquery);
+  var id = prof.rows[0].catid;
+  const myquery2 = {
+    text: "insert into subcategorias (subnombre, subdescripcion, catid) values ($1, 'description', $2)",
+    values: [sub, id]
+  }
+  const prof2 = await pg.query(myquery2);
+  res.json({'msg':'created'});
 })
 
 //Modificar una subcategoria
