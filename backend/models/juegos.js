@@ -1,7 +1,7 @@
 const Sequelize = require('sequelize')
 //import {sequelize} from '../database/connection.js'
 const sequelize = require('../db/connection.js');
-
+// const catjuegos = require('../models/catjuegos');
 //Creacion de los modelos
 const juegos = sequelize.define('juegos', {
     juid:{
@@ -11,7 +11,7 @@ const juegos = sequelize.define('juegos', {
         autoIncrement:true
     },
     junombre:{
-        type:Sequelize.INTEGER,
+        type:Sequelize.STRING,
         allowNull:false
     },
     juprecio:{
@@ -23,11 +23,11 @@ const juegos = sequelize.define('juegos', {
         allowNull:false
     },
     juyear:{
-        type:Sequelize.STRING,
+        type:Sequelize.INTEGER,
         allowNull:false
     },
     jurating:{
-        type: Sequelize.DATE,
+        type: Sequelize.INTEGER,
         allowNull: false
     },
     judescription:{
@@ -37,6 +37,9 @@ const juegos = sequelize.define('juegos', {
 },{
     timestamps: false
 });
+// juegos.belongsTo(catjuegos);
+// juegos.hasOne(catjuegos);
+// catjuegos.hasMany(juegos);
 
 //export default clientes;
 module.exports = juegos;

@@ -1,7 +1,7 @@
 const Sequelize = require('sequelize')
 //import {sequelize} from '../database/connection.js'
 const sequelize = require('../db/connection.js');
-
+// const catjuegos = require('./catjuegos')
 //Creacion de los modelos
 const subcategorias = sequelize.define('subcategorias', {
     subid:{
@@ -11,20 +11,20 @@ const subcategorias = sequelize.define('subcategorias', {
         autoIncrement:true
     },
     subnombre:{
-        type:Sequelize.INTEGER,
+        type:Sequelize.STRING,
         allowNull:false
     },
     subdescripcion:{
-        type:Sequelize.DECIMAL,
+        type:Sequelize.STRING,
         allowNull:false
     },
     catid:{ //FOREIGN KEY
-        type:Sequelize.STRING,
+        type:Sequelize.INTEGER,
         allowNull:false
     },
 },{
     timestamps: false
 });
-
+// subcategorias.belongsTo(catjuegos);
 //export default clientes;
 module.exports = subcategorias;

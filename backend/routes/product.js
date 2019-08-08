@@ -2,6 +2,9 @@ const express = require('express')
 const router = express.Router()
 const pg = require('../db/database.js').getPool();
 const productMO = require('../models/juegos');
+const libreriasMO = require('../models/librerias');
+const catjuegosMO = require('../models/catjuegos');
+const Sequelize = require('sequelize');
 
 //Consultar todos los productos
 router.get('/', async (req, res) => {
@@ -11,7 +14,10 @@ router.get('/', async (req, res) => {
   var colors = ['red', 'dark', 'accent', 'success', 'info', 'orange'];
   // const prof = await pg.query(myquery);
   try {
-    const prof = await productMO.findAll({raw: true});
+    const prof = await productMO.findAll({
+      raw: true,
+      order: [['juid', 'ASC']]
+    });
     for (var i = 0; i < prof.length; i++) {
       prof[i].added = false;
       prof[i].color = colors[Math.floor(Math.random() * ((colors.length - 1) - 0) + 0)];
@@ -33,6 +39,7 @@ router.post('/gamesForClient', async (req, res) => {
     text: 'select * from juegos except (select * from (select juid from librerias where cliusuario = $1) as ids natural join juegos)',
     values: [username]
   }
+
   const myotherquery = {
     text: 'select * from (select juid from librerias where cliusuario = $1) as ids natural join juegos',
     values: [username]
@@ -41,9 +48,21 @@ router.post('/gamesForClient', async (req, res) => {
   var colors = ['red', 'dark', 'accent', 'success', 'info', 'orange'];
 
   const answ = await pg.query(myquery);
+  // /@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+  // const answ = await productMO.findAll({
+  //   where: {
+  //     [Sequelize.Op.notIn]: [{cliusuario: username}]
+  //   },
+  //   include: [libreriasMO]
+  // })
+
   for (var i = 0; i < answ.rows.length; i++) {
     answ.rows[i].added = false;
     answ.rows[i].color = colors[Math.floor(Math.random() * ((colors.length - 1) - 0) + 0)];
+  }
+  for (var i = 0; i < answ.length; i++) {
+    answ[i].added = false;
+    answ[i].color = colors[Math.floor(Math.random() * ((colors.length - 1) - 0) + 0)];
   }
   const answ2 = await pg.query(myotherquery);
   // const answ2 = await productMO.find();
@@ -111,12 +130,18 @@ router.post('/crearGame', async (req, res) => {
         const goo = await pg.query(query4);
         console.log('holi'+goo);
         const subid = goo.rows[0].subid;
+        //
+        // const query3 = {
+        //     text: 'insert into catjuegos values ($1, $2)',
+        //     values: [juid, subid]
+        // };
+        // await pg.query(query3)
+        // @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+        await catjuegosMO.create({
+          'juid': juid,
+          'subid': subid
+        })
 
-        const query3 = {
-            text: 'insert into catjuegos values ($1, $2)',
-            values: [juid, subid]
-        };
-        await pg.query(query3)
         res.status(200).json({
             msg: 'Juego creado satisfactoriamente'
         });

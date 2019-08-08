@@ -19,10 +19,15 @@ const catjuegos = sequelize.define('catjuegos', {
     timestamps: false
 });
 
-catjuegos.hasMany(juegos);
-juegos.belongsTo(catjuegos);
-catjuegos.hasMany(subcategorias);
-subcategorias.belongsTo(catjuegos);
+catjuegos.associate = (mods) => {
+  catjuegos.hasMany(mods.juegos);
+  catjuegos.hasMany(mods.subcategorias);
+  catjuegos.belongsTo(mods.juegos);
+  catjuegos.belongsTo(mods.subcategorias);
+  // catjuegos.hasMany(juegos);
+  // catjuegos.hasMany(subcategorias);
+}
+
 
 //export default clientes;
-module.exports = clientes;
+module.exports = catjuegos;

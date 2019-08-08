@@ -86,12 +86,20 @@ router.post('/signup',async(req,res) => {
   const {cliusuario,clipassword,clinombre,clicorreo,clifondos,clifechanac} = req.body;
   console.log(cliusuario, clipassword, clinombre, clicorreo, clifondos, clifechanac);
 
-  const query = {
-    text:'INSERT INTO clientes(cliusuario,clipassword,clinombre,clicorreo,clifondos,clifechanac) Values ($1,$2,$3,$4,$5,$6)',
-    values:[cliusuario,clipassword,clinombre,clicorreo,clifondos,clifechanac]
-  }
+  // const query = {
+  //   text:'INSERT INTO clientes(cliusuario,clipassword,clinombre,clicorreo,clifondos,clifechanac) Values ($1,$2,$3,$4,$5,$6)',
+  //   values:[cliusuario,clipassword,clinombre,clicorreo,clifondos,clifechanac]
+  // }
   try {
-    await pg.query(query)
+    // await pg.query(query)
+    await clientesMO.create({
+      'cliusuario': cliusuario,
+      'clipassword': clipassword,
+      'clinombre': clinombre,
+      'clicorreo': clicorreo,
+      'clifondos': clifondos,
+      'clifechanac': clifechanac
+    })
     res.status(200).json({
       msg:'Usuario registrado satisfactoriamente'
     })
