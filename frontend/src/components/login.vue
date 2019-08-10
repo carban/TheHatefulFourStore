@@ -22,7 +22,7 @@
                     <v-text-field v-model="access.password" prepend-icon="lock" name="password" label="Password" id="password" type="password" required></v-text-field>
                     <v-card-actions>
                       <v-spacer></v-spacer>
-                      <v-btn @click="login()" color="success">Login</v-btn>
+                      <v-btn @click="login()" color="pink">Login</v-btn>
                     </v-card-actions>
                   </v-form>
                 </v-card-text>

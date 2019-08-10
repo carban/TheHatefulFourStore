@@ -1,6 +1,6 @@
 <template lang="html">
 
-  <div>
+  <v-container grid-list-xs,sm,md,lg,xl>
     <v-snackbar v-model="snack" top right multi-line :timeout=6000 color="error">
       Please check your input
       <v-btn color="white" flat @click="snack = false">
@@ -13,7 +13,7 @@
         Close
       </v-btn>
     </v-snackbar>
-    <v-tabs v-model="active" color="white" slider-color="primary">
+    <v-tabs v-model="active" color="dark" slider-color="primary">
       <v-tab>
         Create Category
       </v-tab>
@@ -145,7 +145,7 @@
         </v-card>
       </v-tab-item>
     </v-tabs>
-  </div>
+  </v-container>
 </template>
 
 <script>

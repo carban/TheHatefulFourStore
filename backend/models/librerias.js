@@ -1,8 +1,8 @@
 const Sequelize = require('sequelize')
 //import {sequelize} from '../database/connection.js'
 const sequelize = require('../db/connection.js');
-// const clientes = require('./clientes');
-// const juegos = require('./juegos');
+const clientes = require('./clientes');
+const juegos = require("./juegos");
 //Creacion de los modelos
 const librerias = sequelize.define('librerias', {
     idcompra:{
@@ -36,13 +36,13 @@ const librerias = sequelize.define('librerias', {
     timestamps: false
 });
 
-// librerias.associate = (mods) => {
-//   librerias.hasMany(mods.clientes);
-//   librerias.hasMany(mods.juegos);
-//   librerias.belongsTo(mods.clientes);
-//   librerias.belongsTo(mods.juegos);
-//
-// }
+librerias.associate = (mods) => {
+  librerias.hasMany(mods.clientes);
+  librerias.hasMany(mods.juegos);
+  mods.clientes.belongsTo(librerias);
+  mods.juegos.belongsTo(librerias);
+
+}
 
 //export default clientes;
 module.exports = librerias;

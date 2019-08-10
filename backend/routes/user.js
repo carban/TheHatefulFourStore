@@ -4,26 +4,11 @@ const pg = require('../db/database.js').getPool();
 const jwt = require('jsonwebtoken');
 const clientesMO = require('../models/clientes');
 //Consultar todos los clientes existentes(ESTE ES SOLO PARA PRUEBAS)
-router.get('/', async (req, res) => {
-  const query = 'SELECT * FROM clientes';
-  try {
-    const cli = await pg.query(query);
-    res.status(200).send(cli.rows);
-  } catch (e) {
-    console.log(e);
-    res.sendStatus(400);
-  }
-})
-
 
 // CONSULTAR USUARIO
 router.post('/profile', async (req, res) => {
   const {username} = req.body;
-  // const myquery = {
-  //   text: 'select cliusuario, clinombre, clicorreo, clifondos, clifechanac from clientes where cliusuario = $1',
-  //   values: [username]
-  // }
-  // const prof = await pg.query(myquery);
+
   const prof = await clientesMO.findAll({
     attributes: ['cliusuario', 'clinombre', 'clicorreo', 'clifondos', 'clifechanac'],
     where: {cliusuario: username},
@@ -44,10 +29,7 @@ router.post('/login',async(req,res) => {
     // return;
   }
   else {
-    // const query = {
-    //   text:'SELECT cliusuario,clipassword from clientes WHERE cliusuario=$1',
-    //   values:[cliusuario]
-    // }
+
     try{
       // const user = await pg.query(query);
       const user = await clientesMO.findAll({
@@ -86,10 +68,6 @@ router.post('/signup',async(req,res) => {
   const {cliusuario,clipassword,clinombre,clicorreo,clifondos,clifechanac} = req.body;
   console.log(cliusuario, clipassword, clinombre, clicorreo, clifondos, clifechanac);
 
-  // const query = {
-  //   text:'INSERT INTO clientes(cliusuario,clipassword,clinombre,clicorreo,clifondos,clifechanac) Values ($1,$2,$3,$4,$5,$6)',
-  //   values:[cliusuario,clipassword,clinombre,clicorreo,clifondos,clifechanac]
-  // }
   try {
     // await pg.query(query)
     await clientesMO.create({
@@ -111,31 +89,37 @@ router.post('/signup',async(req,res) => {
 })
 
 //modificar usuario
-router.put('/updateProfile',async(req,res) => {
-  const {cliusuario,clipassword,clinombre,clicorreo,clifondos,clifechanac} = req.body;
-  if(cliusuario == '' || clipassword == '' || clinombre == '' || clicorreo == '' || clifondos == '' || clifechanac == ''){
-    res.status(400).json({
-      msg:'Hay algun campo vacio'
+router.post('/updateProfile',async(req,res) => {
+  const {cliusuario,clinombre,clicorreo,clifechanac} = req.body;
+
+  try {
+    const client = await clientesMO.findAll({
+      attributes: ['cliusuario','clinombre','clicorreo','clifechanac'],
+      where: {'cliusuario': cliusuario}
     })
-    return;
-  }
-  else{
-    const query = {
-      text:'UPDATE clientes SET cliusuario = $1, clipassword = $2, clinombre = $3, clifondos = $5, clifechanac = $6  WHERE clicorreo = $4',
-      values:[cliusuario,clipassword,clinombre,clicorreo,clifondos,clifechanac]
-    }
-    try {
-      await pg.query(query)
-      res.status(200).json({
-        msg:'Usuario modificado satisfactoriamente'
-      })
-    } catch (err) {
-      res.status(400).json({
-        msg:err
+
+    if (client.length > 0) {
+      await client[0].update({
+        'cliusuario': cliusuario,
+        'clinombre': clinombre,
+        'clicorreo': clicorreo,
+        'clifechanac': clifechanac
       })
     }
+    res.status(200).json({
+      msg:'Usuario modificado satisfactoriamente'
+    })
+  } catch (err) {
+    res.status(400).json({
+      msg:err
+    })
   }
 })
+
+
+
+
+
 
 //eliminar usuario
 router.delete('/:id',async(req,res) => {

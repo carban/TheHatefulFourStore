@@ -1,5 +1,4 @@
 const Sequelize = require('sequelize')
-//import {sequelize} from '../database/connection.js'
 const sequelize = require('../db/connection.js');
 const juegos = require('./juegos.js')
 const subcategorias = require('./subcategorias.js')
@@ -22,10 +21,8 @@ const catjuegos = sequelize.define('catjuegos', {
 catjuegos.associate = (mods) => {
   catjuegos.hasMany(mods.juegos);
   catjuegos.hasMany(mods.subcategorias);
-  catjuegos.belongsTo(mods.juegos);
-  catjuegos.belongsTo(mods.subcategorias);
-  // catjuegos.hasMany(juegos);
-  // catjuegos.hasMany(subcategorias);
+  mods.juegos.belongsTo(catjuegos);
+  mods.subcategorias.belongsTo(catjuegos);
 }
 
 

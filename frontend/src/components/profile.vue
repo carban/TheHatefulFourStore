@@ -1,8 +1,19 @@
 <template lang="html">
 
-  <div>
-
-    <v-tabs v-model="active" color="white" slider-color="primary">
+  <v-container grid-list-xs,sm,md,lg,xl>
+    <v-snackbar v-model="snack" top right multi-line :timeout=6000 color="success">
+      Updated!
+      <v-btn color="white" flat @click="snack = false">
+        Close
+      </v-btn>
+    </v-snackbar>
+    <v-snackbar v-model="snack2" top right multi-line :timeout=6000 color="error">
+      Please check your input
+      <v-btn color="white" flat @click="snack = false">
+        Close
+      </v-btn>
+    </v-snackbar>
+    <v-tabs v-model="active" color="dark" slider-color="primary">
       <v-tab>
         Profile
       </v-tab>
@@ -74,7 +85,7 @@
         </v-card>
       </v-tab-item>
     </v-tabs>
-  </div>
+  </v-container>
 </template>
 
 <script>
@@ -90,6 +101,8 @@ export default {
   data(){
     return{
       active: null,
+      snack: false,
+      snack2: false,
     }
   },
   beforeCreate(){
@@ -99,29 +112,26 @@ export default {
 
   },
   methods: {
+
     updateProfile(){
-      console.log(this.user);
-    }
-    /*
-    updateProfileInfo(){
       var newProfile = {
-        cliusuario: this.user.username,
-        clinombre: this.user.name,
-        clicorreo: this.user.email,
-        clifechanac: this.user.date,
-        clipassword: this.user.password
-        clifondos: this.user.fondos
+        cliusuario: this.user.cliusuario,
+        clinombre: this.user.clinombre,
+        clicorreo: this.user.clicorreo,
+        clifechanac: this.user.clifechanac
       }
       this.$store.dispatch('updateProfileInfo', newProfile)
         .then(res => {
           console.log(res.data.msg);
           this.$store.dispatch('profileInfo')
             .then(res => {
-              this.flashalert = true;
-              this.flashMe({ message: 'Profile Updated', variant: 'success' });
+              this.snack = true;
             })
-        })
-    },*/
+            .catch(err => {
+              this.snack2 = true;
+          })
+       })
+    },
 
   }
 }

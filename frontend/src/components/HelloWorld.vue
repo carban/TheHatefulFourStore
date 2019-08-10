@@ -7,13 +7,18 @@
           Close
         </v-btn>
       </v-snackbar> -->
+      <v-carousel v-if="banner" hide-controls>
+        <v-carousel-item
+          v-for="(item,i) in pics" :key="i" :src="item.src">
+        </v-carousel-item>
+      </v-carousel>
 
       <v-layout v-if="allgames.length > 0" row wrap>
 
         <!-- <v-card v-for="(item, index) in products" :key="index" dark
         :color=item.color :style="{'width': item.width, 'margin-right': '10px', 'margin-bottom':'10px'}"> -->
         <v-card v-for="(item, index) in allgames" :key="index" dark
-        :color=item.color :style="{'width':'350px', 'margin-right': '10px', 'margin-bottom':'10px'}">
+        :color=item.color :style="{'width':'369px', 'margin-right': '10px', 'margin-bottom':'10px'}">
 
           <v-layout class="product" v-on:click="setCurrent_product(item)" justify-space-between>
             <v-flex xs8>
@@ -56,7 +61,7 @@
         <h1>No Results</h1>
       </v-layout>
 
-      <v-dialog v-model="dialog" persistent max-width="900px">
+      <v-dialog light v-model="dialog" persistent max-width="900px">
                 <v-card>
                   <iframe width="100%" height="480" src="https://www.youtube.com/embed/piIgkJWDuQg" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
                   <v-card-text>
@@ -90,19 +95,16 @@
       logged(){
         return this.$store.getters.loggedIn;
       },
+      banner(){
+        return this.$store.getters.banner;
+      }
     },
     data: () => ({
-      // allgames: [
-      //   {id: 1, title: 'Death Stranding', comp: 'Kojima Productions', year: 2019, color: 'dark', added: false, rating: 5},
-      //   {id: 2, title: 'Uncharted', comp: 'Kojima Productions', year: 2019, color: 'red', added: false, rating: 5},
-      //   {id: 3, title: 'The Last of Us', comp: 'Kojima Productions', year: 2019, color: 'dark', added: false, rating: 5},
-      //   {id: 4, title: 'God of War', comp: 'Kojima Productions', year: 2019, color: 'accent', added: false, rating: 5},
-      //   {id: 5, title: 'PES 2019', comp: 'Kojima Productions', year: 2019, color: 'success', added: false, rating: 5},
-      //   {id: 6, title: 'FIFA 2019', comp: 'Kojima Productions', year: 2019, color: 'red', added: false, rating: 5},
-      //   {id: 7, title: 'Space Invaders', comp: 'Kojima Productions', year: 2019, color: 'dark', added: false, rating: 5},
-      //   {id: 8, title: 'GTA V', comp: 'Kojima Productions', year: 2019, color: 'info', added: false, rating: 5},
-      //   {id: 8, title: 'GTA V', comp: 'Kojima Productions', year: 2019, color: 'info', added: false, rating: 5}
-      // ],
+      pics: [
+        {src: 'https://i.imgur.com/S7CV4nw.gif'},
+        {src: 'https://www.symmetrymagazine.org/sites/default/files/styles/2015_hero/public/images/standard/FINAL_gaming_031919.jpg'},
+        {src: 'https://www.desktophut.com/wp-content/uploads/2018/12/anime-girl.jpg'}
+      ],
       dialog: false,
       current_product: {junombre: null, judescription: null},
     }),

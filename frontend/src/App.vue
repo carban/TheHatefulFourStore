@@ -1,5 +1,5 @@
 <template>
-  <v-app class="bg">
+  <v-app dark class="bg">
 
     <!-- TOP BANNER -->
     <template>
@@ -63,14 +63,15 @@
 
     <!-- CONTENT -->
     <v-content id="acontent">
-      <v-container grid-list-xs,sm,md,lg,xl>
-        <router-view/>
-      </v-container>
+      <!-- <v-container grid-list-xs,sm,md,lg,xl>
+
+      </v-container> -->
+      <router-view/>
     </v-content>
 
     <!-- LEFT MENU -->
     <template>
-      <v-navigation-drawer v-model="drawer" absolute temporary>
+      <v-navigation-drawer light v-model="drawer" absolute temporary>
         <v-list>
           <!-- logged ? : true -->
           <!-- item.title == 'Login' && item.title == 'Register' -->
@@ -146,7 +147,7 @@ export default {
       return this.$store.getters.subcatego;
     },
     addd(){
-      console.log(this.$store.getters.admin);
+      // console.log(this.$store.getters.admin);
       return this.$store.getters.admin;
     }
   },
@@ -185,6 +186,7 @@ export default {
       logout() {
         this.$store.dispatch("logout");
         this.$store.dispatch('getGames');
+        this.$store.commit('setbanner', true);
         this.$store.commit('setAdmin', false);
         this.$router.push({name: 'logoutmsg'});
       }
@@ -195,9 +197,11 @@ export default {
       this.$store.commit('sheet');
     },
     searchBy(title){
+      this.$store.commit('setbanner', false);
       this.$store.dispatch('getGamesSearchBy', title);
     },
     getGamess(){
+      this.$store.commit('setbanner', true);
       this.$store.dispatch('getGames');
     }
   }
@@ -209,7 +213,7 @@ export default {
     width: 100%;
   }
   #acontent{
-    margin-top: 50px;
+    margin-top: 5%;
   }
   .outme{
     cursor: pointer;

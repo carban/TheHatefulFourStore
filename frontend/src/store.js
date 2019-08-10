@@ -13,6 +13,7 @@ export default new Vuex.Store({
     theCar: [],
     profile: {cliusuario: null, clinombre: null, clicorreo: null, clifondos: null, clifechanac: null},
     admin: false,
+    banner: true,
     catego: [],
     subcatego: [],
     games: [],
@@ -45,6 +46,9 @@ export default new Vuex.Store({
     },
     car: state => {
       return state.theCar;
+    },
+    banner: state => {
+      return state.banner;
     },
     catego: state => {
       return state.catego;
@@ -90,6 +94,9 @@ export default new Vuex.Store({
     },
     setmyGames: (state, myGames) => {
       state.myGames = myGames;
+    },
+    setbanner: (state, ban) => {
+      state.banner = ban;
     },
     setCatego: (state, cats) => {
       state.catego = cats;
@@ -153,6 +160,20 @@ export default new Vuex.Store({
           .then(res => {
             console.log(res.data.profileInfo.clifechanac);
             context.commit('setProfile', res.data.profileInfo);
+            resolve(res);
+          })
+          .catch(err => {
+            reject(err);
+          })
+      });
+    },
+    updateProfileInfo: (context, info) => {
+      return new Promise((resolve, reject) => {
+        const decoded = jwtDecode(context.getters.token);
+        // console.log(decoded);
+        axios.post('http://localhost:8001/user/updateProfile', info)
+          .then(res => {
+            // context.commit('setProfile', res.data.profileInfo);
             resolve(res);
           })
           .catch(err => {

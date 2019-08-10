@@ -11,7 +11,7 @@ router.get('/', async (req, res) => {
   // const myquery = {
   //   text: 'select * from catjuegos natural join juegos order by subid',
   // }
-  var colors = ['red', 'dark', 'accent', 'success', 'info', 'orange'];
+  var colors = ['red', 'dark', 'accent', 'success', 'info', 'info'];
   // const prof = await pg.query(myquery);
   try {
     const prof = await productMO.findAll({
@@ -45,7 +45,7 @@ router.post('/gamesForClient', async (req, res) => {
     values: [username]
   }
 
-  var colors = ['red', 'dark', 'accent', 'success', 'info', 'orange'];
+  var colors = ['red', 'dark', '#F50057', 'success', 'info', 'info'];
 
   const answ = await pg.query(myquery);
   // /@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
@@ -81,7 +81,7 @@ router.post('/searchGamesBy', async (req, res) => {
     text: 'select * from subcategorias natural join (select * from catjuegos natural join juegos order by subid) as col where subnombre = $1 order by col.subid',
     values: [subcat]
   }
-  var colors = ['red', 'dark', 'accent', 'success', 'info', 'orange'];
+  var colors = ['red', 'dark', '#F50057', 'success', 'info', 'orange'];
   const prof = await pg.query(myquery);
   for (var i = 0; i < prof.rows.length; i++) {
     prof.rows[i].added = false;
@@ -96,7 +96,7 @@ router.post('/searchGamesByForClient', async (req, res) => {
     text: 'select * from subcategorias natural join (select * from catjuegos natural join ( select * from juegos except (select * from (select juid from librerias where cliusuario = $1) as ids natural join juegos)) as cli order by subid) as col where subnombre = $2 order by col.subid',
     values: [username, subcat]
   }
-  var colors = ['red', 'dark', 'accent', 'success', 'info', 'orange'];
+  var colors = ['red', 'dark', '#F50057', 'success', 'info', 'info'];
   const prof = await pg.query(myquery);
   for (var i = 0; i < prof.rows.length; i++) {
     prof.rows[i].added = false;

@@ -35,7 +35,7 @@
                 </v-card-text>
                 <v-card-actions>
                   <v-spacer></v-spacer>
-                  <v-btn color="success" @click="register()">Register</v-btn>
+                  <v-btn color="pink" @click="register()">Register</v-btn>
                 </v-card-actions>
               </v-card>
             </v-flex>

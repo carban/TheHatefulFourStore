@@ -1,7 +1,7 @@
 const Sequelize = require('sequelize')
 //import {sequelize} from '../database/connection.js'
 const sequelize = require('../db/connection.js');
-
+const subcategorias = require('./subcategorias.js')
 //Creacion de los modelos
 const categorias = sequelize.define('categorias', {
     catid:{
@@ -21,6 +21,10 @@ const categorias = sequelize.define('categorias', {
 },{
     timestamps: false
 });
+
+categorias.hasMany(subcategorias);
+subcategorias.belongsTo(categorias);
+
 
 //export default clientes;
 module.exports = categorias;
