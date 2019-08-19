@@ -33,6 +33,9 @@ const juegos = sequelize.define('juegos', {
     judescription:{
       type: Sequelize.STRING,
       allowNull: false
+    },
+    juimage:{
+      type: Sequelize.STRING
     }
 },{
     timestamps: false

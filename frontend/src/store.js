@@ -77,9 +77,10 @@ export default new Vuex.Store({
       state.theCar = [];
     },
     RemoveitemsOnCar: (state, id) => {
+
       var index = null;
-      for(let i=0; i<=state.theCar.length; i++){
-        if (state.theCar[i].id==id) {
+      for(var i=0; i<state.theCar.length; i++){
+        if (state.theCar[i].juid==id) {
           index = i;
           break;
         }
@@ -265,7 +266,7 @@ export default new Vuex.Store({
     },
     createCategory: (context, cat) => {
       return new Promise((resolve, reject) => {
-        axios.post('http://localhost:8001/category/', {'catname': cat})
+        axios.post('http://localhost:8001/category/', {'list': cat})
           .then(res => {
             resolve(res);
           })
@@ -273,7 +274,17 @@ export default new Vuex.Store({
             console.log(err);
           })
       });
-
+    },
+    editCategory: (context, cat) => {
+      return new Promise((resolve, reject) => {
+        axios.put('http://localhost:8001/category/', cat)
+          .then(res => {
+            resolve(res);
+          })
+          .catch(err => {
+            console.log(err);
+          })
+      });
     },
     getSubcategories: context => {
       axios.get('http://localhost:8001/subcategory')
@@ -286,7 +297,7 @@ export default new Vuex.Store({
     },
     createSubcategory: (context, be) => {
       return new Promise((resolve, reject) => {
-        axios.post('http://localhost:8001/subcategory', be)
+        axios.post('http://localhost:8001/subcategory', {'list': be})
           .then(res => {
             resolve(res);
           })
@@ -295,6 +306,17 @@ export default new Vuex.Store({
           })
       });
 
+    },
+    editSubcategory: (context, sub) => {
+      return new Promise((resolve, reject) => {
+        axios.put('http://localhost:8001/subcategory/', sub)
+          .then(res => {
+            resolve(res);
+          })
+          .catch(err => {
+            console.log(err);
+          })
+      });
     },
     createGame: (context, game) => {
       return new Promise((resolve, reject) => {

@@ -32,7 +32,7 @@
               </v-card-title>
 
             </v-flex>
-            <v-img class="shrink ma-2" contain height="125px" src="https://res.cloudinary.com/teepublic/image/private/s--xeppzKEN--/t_Preview/b_rgb:191919,t_Watermark/c_limit,f_jpg,h_630,q_90,w_630/v1540525490/production/designs/3389495_0.jpg"
+            <v-img class="shrink ma-2" contain height="125px" :src="item.juimage"
               style="flex-basis: 125px"
             ></v-img>
           </v-layout>
@@ -102,8 +102,8 @@
     data: () => ({
       pics: [
         {src: 'https://i.imgur.com/S7CV4nw.gif'},
+        {src: 'https://i.imgur.com/N0haYzT.gif'},
         {src: 'https://www.symmetrymagazine.org/sites/default/files/styles/2015_hero/public/images/standard/FINAL_gaming_031919.jpg'},
-        {src: 'https://www.desktophut.com/wp-content/uploads/2018/12/anime-girl.jpg'}
       ],
       dialog: false,
       current_product: {junombre: null, judescription: null},
@@ -115,7 +115,7 @@
       },
       removeItem(index){
         this.allgames[index].added = false;
-        this.$store.commit('RemoveitemsOnCar', this.allgames[index].id);
+        this.$store.commit('RemoveitemsOnCar', this.allgames[index].juid);
       },
       setCurrent_product(proc){
         this.dialog = !this.dialog;

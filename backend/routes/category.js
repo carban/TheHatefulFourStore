@@ -5,7 +5,7 @@ const pg = require('../db/database.js').getPool();
 
 //Consultar todas las categorias existentes
 router.get('/', async (req, res) => {
-  const query = 'SELECT * FROM categorias';
+  const query = 'SELECT * FROM categorias ORDER BY catid';
   try {
     const cat = await pg.query(query);
     res.status(200).send({'cats': cat.rows});
@@ -15,41 +15,43 @@ router.get('/', async (req, res) => {
   }
 })
 
-//Crear una nueva categoria
+//Crear nuevas categorias
 router.post('/', async (req, res) => {
-  const {catname} = req.body;
-  console.log(catname);
-  const myquery = {
-    text: "insert into categorias (catnombre, catdescripcion) values ($1, 'description');",
-    values: [catname]
+  const {list} = req.body;
+  try {
+    for (var i = 0; i < list.length; i++) {
+      const myquery = {
+        text: "insert into categorias (catnombre, catdescripcion) values ($1, 'description');",
+        values: [list[i].title]
+      }
+      const prof = await pg.query(myquery);
+    }
+
+  } catch (e) {
+    console.log(e);
   }
-  const prof = await pg.query(myquery);
+
   res.json({'msg':'created'});
 });
 
 //Modificar una categoria
 router.put('/', async (req, res) => {
-  const { catid, catnombre, catdescripcion } = req.body;
-  if (catnombre == '' || catdescripcion == '') {
-    res.status(400).json({
-      msg: 'Hay algun campo vacio'
+  const { catid, catnombre} = req.body;
+  console.log(catid, catnombre);
+  const query = {
+    text: 'UPDATE categorias SET catnombre=$2 WHERE catid=$1',
+    values: [catid, catnombre]
+  }
+  try {
+    await pg.query(query);
+    res.status(200).json({
+      msg: 'Categoria modificada con exito'
     });
-  } else {
-    const query = {
-      text: 'UPDATE categorias SET catnombre=$2, catdescripcion=$3 WHERE catid=$1',
-      values: [catid, catnombre, catdescripcion]
-    }
-    try {
-      await pg.query(query);
-      res.status(200).json({
-        msg: 'Categoria modificada con exito'
-      });
-    } catch (error) {
-      res.status(400).json({
-        msg: 'No se pudo modificar la categoria'
-      });
-      console.log(error);
-    }
+  } catch (error) {
+    res.status(400).json({
+      msg: 'No se pudo modificar la categoria'
+    });
+    console.log(error);
   }
 })
 

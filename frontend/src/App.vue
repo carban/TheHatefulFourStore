@@ -49,7 +49,7 @@
           </template>
               <v-list v-if="logged">
                 <v-list-tile>
-                  <v-list-tile-title  class="outme" v-on="on" @click="logout()">
+                  <v-list-tile-title  class="outme" @click="logout()">
                     Logout
                   </v-list-tile-title>
                 </v-list-tile>
