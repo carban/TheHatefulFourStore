@@ -10,6 +10,7 @@ export default new Vuex.Store({
     token: localStorage.getItem('access_token') || null,
     openMenu: null,
     sheet: false,
+    wordSearch: '',
     theCar: [],
     profile: {cliusuario: null, clinombre: null, clicorreo: null, clifondos: null, clifechanac: null},
     admin: false,
@@ -28,6 +29,9 @@ export default new Vuex.Store({
     },
     profile: state => {
       return state.profile;
+    },
+    getWordSearch: state => {
+      return state.wordSearch;
     },
     admin: state => {
       return state.admin;
@@ -66,6 +70,17 @@ export default new Vuex.Store({
     },
     setProfile: (state, pro) => {
       state.profile = pro;
+    },
+    setWordSearch: (state, word) => {
+
+      if (word!='') {
+        state.banner = false;
+      }else{
+        state.banner = true;
+      }
+
+      state.wordSearch = word;
+
     },
     setAdmin: (state, val) => {
       state.admin = val;

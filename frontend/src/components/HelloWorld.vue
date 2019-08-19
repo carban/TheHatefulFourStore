@@ -90,7 +90,11 @@
     },
     computed: {
       allgames(){
-        return this.$store.getters.games;
+        return this.$store.getters.games.filter((game) => {
+          let low_game = game.junombre.toLowerCase();
+          return low_game.match(this.$store.getters.getWordSearch.toLowerCase());
+        })
+        // return this.$store.getters.games;
       },
       logged(){
         return this.$store.getters.loggedIn;

@@ -23,6 +23,8 @@
         <v-flex v-if="searching">
           <v-text-field dark color="white"
             label="Search"
+            v-model="wordSearch"
+            v-on:keyup="setWordSearch()"
           ></v-text-field>
         </v-flex>
 
@@ -183,6 +185,7 @@ export default {
       //     ],
       searching: false,
       snack: false,
+      wordSearch: '',
       logout() {
         this.$store.dispatch("logout");
         this.$store.dispatch('getGames');
@@ -193,6 +196,9 @@ export default {
     }
   },
   methods: {
+    setWordSearch(){
+      this.$store.commit('setWordSearch', this.wordSearch);
+    },
     commitSheet(){
       this.$store.commit('sheet');
     },
