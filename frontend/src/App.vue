@@ -24,7 +24,7 @@
           <v-text-field dark color="white"
             label="Search"
             v-model="wordSearch"
-            v-on:keyup="setWordSearch()"
+            v-on:keyup.enter="setWordSearch()"
           ></v-text-field>
         </v-flex>
 
@@ -49,7 +49,7 @@
               <v-icon>more_vert</v-icon>
             </v-btn>
           </template>
-              <v-list v-if="logged">
+              <v-list v-if="logged || logged_admin">
                 <v-list-tile>
                   <v-list-tile-title  class="outme" @click="logout()">
                     Logout
@@ -63,21 +63,14 @@
       </v-toolbar>
     </template>
 
-    <!-- CONTENT -->
-    <v-content id="acontent">
-      <!-- <v-container grid-list-xs,sm,md,lg,xl>
-
-      </v-container> -->
-      <router-view/>
-    </v-content>
-
     <!-- LEFT MENU -->
     <template>
-      <v-navigation-drawer light v-model="drawer" absolute temporary>
+      <v-navigation-drawer light v-model="drawer" fixed temporary>
         <v-list>
           <!-- logged ? : true -->
           <!-- item.title == 'Login' && item.title == 'Register' -->
-          <v-list-tile v-for="item in items" :key="item.title" :to="item.url" v-if="logged ? (item.title != 'Login' && item.title != 'Register') : item.title != 'Profile'">
+          <v-list-tile v-for="item in items" :key="item.title" :to="item.url"
+          v-if="admin ? (item.title != 'Login' && item.title != 'Register' && item.title != 'Home') : logged ? (item.title != 'Login' && item.title != 'Register') : item.title != 'Profile'">
             <v-list-tile-action>
               <v-icon>{{item.icon}}</v-icon>
             </v-list-tile-action>
@@ -111,6 +104,14 @@
       </v-navigation-drawer>
     </template>
 
+    <!-- CONTENT -->
+    <v-content id="acontent">
+      <!-- <v-container grid-list-xs,sm,md,lg,xl>
+
+      </v-container> -->
+      <router-view/>
+    </v-content>
+
     <car/>
 
   <!-- FOOTER -->
@@ -139,8 +140,15 @@ export default {
     sheet(){
       return this.$store.getters.sheet;
     },
+    admin(){
+      // console.log(this.$store.getters.admin);
+      return this.$store.getters.loggedIn_admin;
+    },
     logged(){
       return this.$store.getters.loggedIn;
+    },
+    logged_admin(){
+      return this.$store.getters.loggedIn_admin;
     },
     categos(){
       return this.$store.getters.catego;
@@ -185,7 +193,7 @@ export default {
       //     ],
       searching: false,
       snack: false,
-      wordSearch: '',
+      wordSearch: null,
       logout() {
         this.$store.dispatch("logout");
         this.$store.dispatch('getGames');
@@ -197,7 +205,13 @@ export default {
   },
   methods: {
     setWordSearch(){
-      this.$store.commit('setWordSearch', this.wordSearch);
+      if (this.wordSearch != '') {
+        this.$store.dispatch('searchWordKey', this.wordSearch);
+        this.$store.commit('setbanner', false);
+      }else{
+        this.getGamess();
+      }
+
     },
     commitSheet(){
       this.$store.commit('sheet');

@@ -8,6 +8,7 @@ import register from './components/register.vue'
 import profile from './components/profile.vue'
 import logoutmsg from './components/logoutmsg.vue'
 import profileAdmin from './components/profileAdmin.vue'
+import addcaridk from './components/addcaridk.vue'
 
 Vue.use(Router)
 
@@ -16,9 +17,17 @@ export default new Router({
   base: process.env.BASE_URL,
   routes: [
     {
+      path: '/addcaridk',
+      name: 'addcaridk',
+      component: addcaridk,
+    },
+    {
       path: '/',
       name: 'Hello',
       component: Hello,
+      meta: {
+        requiresNoAdmin: true
+      }
     },
     {
       path: '/myabout',
@@ -62,7 +71,7 @@ export default new Router({
       name: 'profileAdmin',
       component: profileAdmin,
       meta: {
-        requiresAuth: true
+        requiresAdmin: true
       }
     },
   ]

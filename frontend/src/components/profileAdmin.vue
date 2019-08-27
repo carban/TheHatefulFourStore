@@ -27,7 +27,7 @@
                   <v-text-field v-model="cate" name="login" label="Category Name" type="text" required></v-text-field>
                   <v-card-actions>
                     <v-spacer></v-spacer>
-                    <v-btn fab dark color="pink" @click="addCategory()">
+                    <v-btn fab dark color="pink" name="addbtn" @click="addCategory()">
                       <v-icon dark>add</v-icon>
                     </v-btn>
 

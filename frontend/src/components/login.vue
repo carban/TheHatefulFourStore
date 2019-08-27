@@ -51,9 +51,9 @@ export default {
     login(){
       if (this.access.user == 'admin' && this.access.password == 'admin') {
         //TEMPORALY TRUCK, DONT DO THIS AGAIN
-        this.$store.commit('setAdmin', true);
-        localStorage.setItem('access_token', 'admin');
-        this.$store.commit('tokenMutation', 'admin');
+        // this.$store.commit('setAdmin', true);
+        localStorage.setItem('admin_token', 'admin');
+        this.$store.commit('admin_tokenMutation', 'admin');
         this.$router.push({name: 'profileAdmin'});
       }else{
         this.$store.dispatch('api_login', this.access)

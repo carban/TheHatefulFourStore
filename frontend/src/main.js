@@ -10,7 +10,23 @@ Vue.config.productionTip = false
 
 
 router.beforeEach((to, from, next) => {
-  if (to.matched.some(record => record.meta.requiresAuth)) {
+  if (to.matched.some(record => record.meta.requiresNoAdmin)) {
+    if (store.getters.loggedIn_admin) {
+      next({
+        name: 'profileAdmin'
+      })
+    } else {
+      next()
+    }
+  }else if (to.matched.some(record => record.meta.requiresAdmin)) {
+    if (!store.getters.loggedIn_admin) {
+      next({
+        name: 'login'
+      })
+    } else {
+      next()
+    }
+  }else if (to.matched.some(record => record.meta.requiresAuth)) {
     // this route requires auth, check if logged in
     // if not, redirect to login page.
     if (!store.getters.loggedIn) {
@@ -27,7 +43,11 @@ router.beforeEach((to, from, next) => {
         next({
           name: 'profile'
         })
-      } else {
+      } else if(store.getters.loggedIn_admin){
+        next({
+          name: 'profileAdmin'
+        })
+      }else {
         next()
       }
     } else {

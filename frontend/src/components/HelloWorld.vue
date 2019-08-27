@@ -49,7 +49,7 @@
             <span class="grey--text text--lighten-2 caption mr-2">
               ({{item.jurating}})
             </span>
-            <v-rating v-model="item.jurating" background-color="white" color="yellow accent-4" dense half-increments hover size="18">
+            <v-rating v-model="item.jurating" readonly background-color="white" color="yellow accent-4" dense half-increments hover size="18">
             </v-rating>
           </v-card-actions>
 
@@ -90,11 +90,11 @@
     },
     computed: {
       allgames(){
-        return this.$store.getters.games.filter((game) => {
-          let low_game = game.junombre.toLowerCase();
-          return low_game.match(this.$store.getters.getWordSearch.toLowerCase());
-        })
-        // return this.$store.getters.games;
+        // return this.$store.getters.games.filter((game) => {
+        //   let low_game = game.junombre.toLowerCase();
+        //   return low_game.match(this.$store.getters.getWordSearch.toLowerCase());
+        // })
+        return this.$store.getters.games;
       },
       logged(){
         return this.$store.getters.loggedIn;

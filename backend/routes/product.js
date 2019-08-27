@@ -5,6 +5,7 @@ const productMO = require('../models/juegos');
 const libreriasMO = require('../models/librerias');
 const catjuegosMO = require('../models/catjuegos');
 const Sequelize = require('sequelize');
+const orm = require('../db/connection.js');
 
 //Consultar todos los productos
 router.get('/', async (req, res) => {
@@ -18,6 +19,7 @@ router.get('/', async (req, res) => {
       raw: true,
       order: [['juid', 'ASC']]
     });
+    // const prof = await orm.query('select', type: Sequelize.QueryTypes.SELECT)
     for (var i = 0; i < prof.length; i++) {
       prof[i].added = false;
       prof[i].color = colors[Math.floor(Math.random() * ((colors.length - 1) - 0) + 0)];
@@ -75,6 +77,7 @@ router.post('/gamesForClient', async (req, res) => {
   // res.json({'allgames':answ.rows});
 });
 
+//Buscar juego por categoria
 router.post('/searchGamesBy', async (req, res) => {
   const {subcat} = req.body;
   const myquery = {
@@ -90,11 +93,44 @@ router.post('/searchGamesBy', async (req, res) => {
   res.json({'games':prof.rows});
 });
 
+//Buscar juego por categoria estando logueado como cliente
 router.post('/searchGamesByForClient', async (req, res) => {
   const {username, subcat} = req.body;
   const myquery = {
     text: 'select * from subcategorias natural join (select * from catjuegos natural join ( select * from juegos except (select * from (select juid from librerias where cliusuario = $1) as ids natural join juegos)) as cli order by subid) as col where subnombre = $2 order by col.subid',
     values: [username, subcat]
+  }
+  var colors = ['secondary', 'danger', 'accent', 'success', 'purple', 'info'];
+  const prof = await pg.query(myquery);
+  for (var i = 0; i < prof.rows.length; i++) {
+    prof.rows[i].added = false;
+    prof.rows[i].color = colors[Math.floor(Math.random() * ((colors.length - 1) - 0) + 0)];
+  }
+  res.json({'games':prof.rows});
+});
+
+//Buscar juego por palabra clave
+router.post('/searchGamesKeyWord', async (req, res) => {
+  const {kword} = req.body;
+  const myquery = {
+    text: 'select * from subcategorias natural join (select * from catjuegos natural join juegos order by subid) as col where junombre like $1 order by col.subid',
+    values: ['%'+kword+'%']
+  }
+  var colors = ['secondary', 'danger', 'accent', 'success', 'purple', 'info'];
+  const prof = await pg.query(myquery);
+  for (var i = 0; i < prof.rows.length; i++) {
+    prof.rows[i].added = false;
+    prof.rows[i].color = colors[Math.floor(Math.random() * ((colors.length - 1) - 0) + 0)];
+  }
+  res.json({'games':prof.rows});
+});
+
+//Buscar juego por palabra estando logueado como cliente
+router.post('/searchGamesKeyWordForClient', async (req, res) => {
+  const {username, kword} = req.body;
+  const myquery = {
+    text: 'select * from subcategorias natural join (select * from catjuegos natural join ( select * from juegos except (select * from (select juid from librerias where cliusuario = $1) as ids natural join juegos)) as cli order by subid) as col where junombre like $2 order by col.subid',
+    values: [username, "%"+kword+"%"]
   }
   var colors = ['secondary', 'danger', 'accent', 'success', 'purple', 'info'];
   const prof = await pg.query(myquery);

@@ -8,12 +8,13 @@ Vue.use(Vuex)
 export default new Vuex.Store({
   state: {
     token: localStorage.getItem('access_token') || null,
+    admin_token: localStorage.getItem('admin_token') || null,
     openMenu: null,
     sheet: false,
-    wordSearch: '',
+    // wordSearch: '',
     theCar: [],
     profile: {cliusuario: null, clinombre: null, clicorreo: null, clifondos: null, clifechanac: null},
-    admin: false,
+    // admin: false,
     banner: true,
     catego: [],
     subcatego: [],
@@ -24,18 +25,24 @@ export default new Vuex.Store({
     token: state => {
       return state.token;
     },
+    admin_token: state => {
+      return state.admin_token;
+    },
     loggedIn: state => {
       return state.token !== null;
+    },
+    loggedIn_admin: state => {
+      return state.admin_token !== null;
     },
     profile: state => {
       return state.profile;
     },
-    getWordSearch: state => {
-      return state.wordSearch;
-    },
-    admin: state => {
-      return state.admin;
-    },
+    // getWordSearch: state => {
+    //   return state.wordSearch;
+    // },
+    // admin: state => {
+    //   return state.admin;
+    // },
     itemsOnCar: state => {
       return state.theCar.length;
     },
@@ -65,26 +72,30 @@ export default new Vuex.Store({
     tokenMutation: (state, token) => {
       state.token = token;
     },
+    admin_tokenMutation: (state, token) => {
+      state.admin_token = token;
+    },
     destroyToken: state => {
       state.token = null;
+      state.admin_token = null;
     },
     setProfile: (state, pro) => {
       state.profile = pro;
     },
-    setWordSearch: (state, word) => {
-
-      if (word!='') {
-        state.banner = false;
-      }else{
-        state.banner = true;
-      }
-
-      state.wordSearch = word;
-
-    },
-    setAdmin: (state, val) => {
-      state.admin = val;
-    },
+    // setWordSearch: (state, word) => {
+    //
+    //   if (word!='') {
+    //     state.banner = false;
+    //   }else{
+    //     state.banner = true;
+    //   }
+    //
+    //   state.wordSearch = word;
+    //
+    // },
+    // setAdmin: (state, val) => {
+    //   state.admin = val;
+    // },
     AdditemsOnCar: (state, item) => {
       state.theCar.push(item);
     },
@@ -166,6 +177,9 @@ export default new Vuex.Store({
       if(context.getters.loggedIn){
         localStorage.removeItem('access_token');
         context.commit('destroyToken');
+      }else if (context.getters.loggedIn_admin) {
+        localStorage.removeItem('admin_token');
+        context.commit('destroyToken');
       }
     },
     profileInfo: context => {
@@ -219,6 +233,32 @@ export default new Vuex.Store({
           })
       }
 
+    },
+    searchWordKey: (context, value) => {
+      if (context.getters.loggedIn) {
+        const decoded = jwtDecode(context.getters.token);
+        return new Promise((resolve, reject) => {
+          axios.post('http://localhost:8001/game/searchGamesKeyWordForClient', {"username": decoded.userExistent, "kword": value})
+            .then(res => {
+              context.commit('setGames', res.data.games);
+              resolve(res);
+            })
+            .catch(err => {
+              reject(err);
+            })
+        });
+      }else{
+        return new Promise((resolve, reject) => {
+          axios.post('http://localhost:8001/game/searchGamesKeyWord', {"kword": value})
+            .then(res => {
+              context.commit('setGames', res.data.games);
+              resolve(res);
+            })
+            .catch(err => {
+              reject(err);
+            })
+        });
+      }
     },
     getGamesSearchBy: (context, value) => {
       if (context.getters.loggedIn) {
