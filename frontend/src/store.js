@@ -163,9 +163,14 @@ export default new Vuex.Store({
         {cliusuario: credentials.user, clipassword: credentials.password})
           .then(res => {
             const token = res.data.token;
+            // magic 3 lines, just keep it, i know that ypu know, you write magic
+            if (token==undefined) {
+              const {user} = jwtDecode(context.getters.token)
+            }
+            // *-*
             localStorage.setItem('access_token', token);
             context.commit('tokenMutation', token);
-            const {user} = jwtDecode(context.getters.token)
+
             resolve(res);
           })
           .catch(err => {

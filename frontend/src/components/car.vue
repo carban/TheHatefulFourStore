@@ -33,7 +33,11 @@
 
       <v-divider></v-divider>
 
-      <v-stepper-step step="3">Everything Right</v-stepper-step>
+      <v-stepper-step :complete="e1 > 3" step="3">fragmented payment</v-stepper-step>
+
+      <v-divider></v-divider>
+
+      <v-stepper-step step="4">Everything Right</v-stepper-step>
     </v-stepper-header>
 
     <v-stepper-items>
@@ -61,13 +65,13 @@
       </v-stepper-content>
 
       <v-stepper-content step="2">
-        <v-card-text height="200px">
+        <v-card-text height="400px">
 
             <v-list>
               <v-list-tile>
                 <v-list-tile-title>Number of Games: <b>{{car.length}}</b></v-list-tile-title>
               </v-list-tile>
-             <v-list-tile v-for="(item, index) in car" :key="index">
+             <v-list-tile v-for="(item, index) in productsToBuy" :key="index">
 
                <v-list-tile-content>
                  <v-list-tile-title v-html="item.junombre"></v-list-tile-title>
@@ -91,13 +95,6 @@
            <center>
 
            </center>
-           <v-list-tile>
-             <v-checkbox label="Paypal" type="checkbox" required></v-checkbox>
-             <v-checkbox label="Master Card" type="checkbox" required></v-checkbox>
-             <v-checkbox label="Efecty" type="checkbox" required></v-checkbox>
-             <v-checkbox label="Mercado Pago" type="checkbox" required></v-checkbox>
-             <v-checkbox label="UPay" type="checkbox" required></v-checkbox>
-           </v-list-tile>
 
         </v-card-text>
 
@@ -109,6 +106,60 @@
       </v-stepper-content>
 
       <v-stepper-content step="3">
+        <template>
+          <v-expansion-panel>
+            <v-expansion-panel-content>
+              <template v-slot:header>
+                <div>Cash</div>
+              </template>
+              <v-list-tile avatar>
+                <v-checkbox v-for="(item, index) in payCash" :key="index" :label="item.name" v-model="item.v" type="checkbox"></v-checkbox>
+              </v-list-tile>
+            </v-expansion-panel-content>
+            <v-expansion-panel-content>
+              <template v-slot:header>
+                <div>Debito Ahorros</div>
+              </template>
+              <v-list-tile avatar>
+                <v-checkbox label="Paypal" type="checkbox" required></v-checkbox>
+                <v-checkbox label="Bancolombia" type="checkbox" required></v-checkbox>
+              </v-list-tile>
+            </v-expansion-panel-content>
+            <v-expansion-panel-content>
+              <template v-slot:header>
+                <div>Credit Card</div>
+              </template>
+              <v-list-tile avatar>
+                <v-checkbox label="Caja social" type="checkbox" required></v-checkbox>
+                <v-checkbox label="Davivienda" type="checkbox" required></v-checkbox>
+              </v-list-tile>
+            </v-expansion-panel-content>
+          </v-expansion-panel>
+
+          <br>
+
+          <v-card>
+            <v-container grid-list-xs,sm,md,lg,xl>
+              <v-list-tile>
+              <div class="apercen" v-for="(item, index) in payCash" :key="index">
+                <v-text-field :label="item.name" v-if="item.v" v-model="item.porc"></v-text-field>
+              </div>
+              </v-list-tile>
+            </v-container>
+
+          </v-card>
+
+
+        </template>
+
+        <v-btn color="primary" @click="e1 = 4">
+          Continue
+        </v-btn>
+        <v-btn @click="e1 = 2">Back</v-btn>
+
+      </v-stepper-content>
+
+      <v-stepper-content step="4">
         <v-card-text>
           <center>
             <v-progress-circular :size="70" :width="7" color="purple" indeterminate></v-progress-circular>
@@ -145,6 +196,9 @@ export default {
       e1: 0,
       total: 0,
       dividers: 8,
+      iva: "$3.00",
+      productsToBuy: [],
+      payCash: [{name: "Efecty", v:false, porc: 0}, {name: "Mercado Pago", v:false, porc: 0}, {name: "UPay", v:false, porc: 0}]
     }
   },
   methods: {
@@ -157,10 +211,20 @@ export default {
     },
     buyStep(){
       this.e1 = 2;
+      let totaliva = 0;
+      this.productsToBuy = this.car.slice();
+      this.productsToBuy.push({juprecio: this.iva, junombre: "Total IVA"});
       var aux = 0;
-      for (var i = 0; i < this.car.length; i++) {
-        var s = this.car[i].juprecio.split("$");
-        aux += parseFloat(s[1]);
+      for (var i = 0; i < this.productsToBuy.length; i++) {
+        var s = this.productsToBuy[i].juprecio.split("$");
+        //Last element of productsToBuy, IVA * Number of products
+        if (i == this.productsToBuy.length-1) {
+          totaliva = parseFloat(this.productsToBuy.length-1)*parseFloat(s[1]);
+          this.productsToBuy[i].juprecio = "$"+totaliva+".00" //Update new IVA * Number of products
+          aux += totaliva;
+        }else{
+          aux += parseFloat(s[1]);
+        }
       }
       this.total = Math.round(aux * 100) / 100;
     },
@@ -176,5 +240,8 @@ export default {
 <style lang="css" scoped>
   .custom_scroll{
     height: 100%;
+  }
+  .apercen{
+    margin-left: 10px;
   }
 </style>

@@ -43,7 +43,7 @@ export default {
         user: null,
         password: null
       },
-      err: false,
+      success: false,
       snack: false,
     }
   },
@@ -58,6 +58,7 @@ export default {
       }else{
         this.$store.dispatch('api_login', this.access)
           .then(response => {
+            this.success = true;
             this.$router.push({name: 'profile'})
           })
           .catch(err => {
@@ -65,6 +66,16 @@ export default {
           });
       }
 
+    },
+    login2(){
+      this.$store.dispatch('api_login', this.access)
+        .then(response => {
+          this.success = true;
+          this.$router.push({name: 'profile'})
+        })
+        .catch(err => {
+          this.snack = true;
+        });
     }
   }
 }

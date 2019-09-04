@@ -84,6 +84,13 @@
 </template>
 
 <script>
+
+  var blade = require('@/assets/blade.gif');
+  var spacegirl = require('@/assets/spacegirl.gif');
+  var gaming = require('@/assets/gaming.jpg');
+
+
+
   export default {
     beforeCreate(){
       this.$store.dispatch('getGames');
@@ -105,9 +112,11 @@
     },
     data: () => ({
       pics: [
-        {src: 'https://i.imgur.com/S7CV4nw.gif'},
-        {src: 'https://i.imgur.com/N0haYzT.gif'},
-        {src: 'https://www.symmetrymagazine.org/sites/default/files/styles/2015_hero/public/images/standard/FINAL_gaming_031919.jpg'},
+        {src: blade},
+        {src: spacegirl},
+        {src: gaming},
+
+        // {src: 'https://www.symmetrymagazine.org/sites/default/files/styles/2015_hero/public/images/standard/FINAL_gaming_031919.jpg'},
       ],
       dialog: false,
       current_product: {junombre: null, judescription: null},

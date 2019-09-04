@@ -1,4 +1,4 @@
-<template lang="html">
+<!-- <template lang="html">
   <div class="bgb">
     asas<input v-model="username"></input>
     asas<input v-model="name"></input>
@@ -50,4 +50,32 @@ export default {
   .bgb{
     background-color: red
   }
+</style> -->
+<template lang="html">
+  <div class="">
+    <input v-model="user"></input>
+    <input v-model="password"></input>
+    <button v-on:click="login()">CLICKME</button>
+  </div>
+</template>
+
+<script>
+export default {
+  data(){
+    return{
+      user: null,
+      password: null,
+      success: false,
+      snack: false,
+    }
+  },
+  methods:{
+    login(){
+      this.success = false;
+    }
+  }
+}
+</script>
+
+<style lang="css" scoped>
 </style>

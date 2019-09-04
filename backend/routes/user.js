@@ -22,7 +22,7 @@ router.post('/profile', async (req, res) => {
 //login
 router.post('/login',async(req,res) => {
   const {cliusuario,clipassword} = req.body;
-  if(cliusuario == '' || clipassword == ''){
+  if(cliusuario == null || clipassword == null){
     res.json({
       msg:'Hay algun campo vacio'
     })

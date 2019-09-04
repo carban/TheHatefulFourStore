@@ -233,7 +233,7 @@ export default {
     width: 100%;
   }
   #acontent{
-    margin-top: 5%;
+    margin-top: 70px;
   }
   .outme{
     cursor: pointer;
