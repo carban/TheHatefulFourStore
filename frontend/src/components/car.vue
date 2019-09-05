@@ -172,6 +172,7 @@
               <v-flex shrink pa-1>
                 <v-card>
                   Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+                  <h1>{{porTotal}}</h1>
                 </v-card>
               </v-flex>
 
@@ -182,7 +183,7 @@
 
         </template>
 
-        <v-btn color="primary" @click="e1 = 4">
+        <v-btn color="primary" @click="makeShop()">
           Continue
         </v-btn>
         <v-btn @click="e1 = 2">Back</v-btn>
@@ -240,6 +241,14 @@ export default {
         t += parseInt(this.payCredit[i].porc, 10);
       }
       return t;
+    },
+    porTotal(){
+      let t = this.porcCash+this.porcAhorro+this.porcCredit;
+      if (t >= 0 && t <= 100){
+        return t;
+      }else{
+        return "Error"
+      }
     }
   },
   data(){
@@ -283,6 +292,11 @@ export default {
         }
       }
       this.total = Math.round(aux * 100) / 100;
+    },
+    makeShop(){
+      if (this.porTotal==100) {
+        this.e1 = 4;
+      }
     },
     finishBuy(){
       this.e1 = 1;
