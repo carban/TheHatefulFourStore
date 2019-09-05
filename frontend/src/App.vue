@@ -206,6 +206,7 @@ export default {
   methods: {
     setWordSearch(){
       if (this.wordSearch != '') {
+        this.$router.push({name: 'Hello'})
         this.$store.dispatch('searchWordKey', this.wordSearch);
         this.$store.commit('setbanner', false);
       }else{
@@ -217,6 +218,7 @@ export default {
       this.$store.commit('sheet');
     },
     searchBy(title){
+      this.$router.push({name: 'Hello'})
       this.$store.commit('setbanner', false);
       this.$store.dispatch('getGamesSearchBy', title);
     },

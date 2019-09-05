@@ -121,8 +121,7 @@
                 <div>Debito Ahorros</div>
               </template>
               <v-list-tile avatar>
-                <v-checkbox label="Paypal" type="checkbox" required></v-checkbox>
-                <v-checkbox label="Bancolombia" type="checkbox" required></v-checkbox>
+                <v-checkbox v-for="(item, index) in payAhorro" :key="index" :label="item.name" v-model="item.v" type="checkbox" required></v-checkbox>
               </v-list-tile>
             </v-expansion-panel-content>
             <v-expansion-panel-content>
@@ -130,24 +129,55 @@
                 <div>Credit Card</div>
               </template>
               <v-list-tile avatar>
-                <v-checkbox label="Caja social" type="checkbox" required></v-checkbox>
-                <v-checkbox label="Davivienda" type="checkbox" required></v-checkbox>
+                <v-checkbox v-for="(item, index) in payCredit" :key="index" :label="item.name" v-model="item.v" type="checkbox" required></v-checkbox>
               </v-list-tile>
             </v-expansion-panel-content>
           </v-expansion-panel>
 
           <br>
 
-          <v-card>
-            <v-container grid-list-xs,sm,md,lg,xl>
-              <v-list-tile>
-              <div class="apercen" v-for="(item, index) in payCash" :key="index">
-                <v-text-field :label="item.name" v-if="item.v" v-model="item.porc"></v-text-field>
-              </div>
-              </v-list-tile>
-            </v-container>
+          <v-layout row>
+            <v-flex grow pa-1 class="larrge">
+              <v-card>
+                <h3>CASH</h3>
+                <v-list-tile>
+                <div class="apercen" v-for="(item, index) in payCash" :key="index">
+                  <v-text-field :label="item.name" v-if="item.v" v-model="item.porc" type="number"></v-text-field>
+                </div>
+                <v-list-tile-action>
+                  <h1>{{porcCash}}%</h1>
+                </v-list-tile-action>
+                </v-list-tile>
+                <h3>AHORROS</h3>
+                <v-list-tile>
+                <div class="apercen" v-for="(item, index) in payAhorro" :key="index">
+                  <v-text-field :label="item.name" v-if="item.v" v-model="item.porc" type="number"></v-text-field>
+                </div>
+                <v-list-tile-action>
+                  <h1>{{porcAhorro}}%</h1>
+                </v-list-tile-action>
+                </v-list-tile>
+                <h3>CREDIT</h3>
+                <v-list-tile>
+                <div class="apercen" v-for="(item, index) in payCredit" :key="index">
+                  <v-text-field :label="item.name" v-if="item.v" v-model="item.porc" type="number"></v-text-field>
+                </div>
+                <v-list-tile-action>
+                  <h1>{{porcCredit}}%</h1>
+                </v-list-tile-action>
+                </v-list-tile>
+              </v-card>
+              </v-flex>
 
-          </v-card>
+              <v-flex shrink pa-1>
+                <v-card>
+                  Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+                </v-card>
+              </v-flex>
+
+
+          </v-layout>
+
 
 
         </template>
@@ -189,6 +219,27 @@ export default {
     },
     car(){
       return this.$store.getters.car;
+    },
+    porcCash(){
+      let t = 0;
+      for (var i = 0; i < this.payCash.length; i++) {
+        t += parseInt(this.payCash[i].porc, 10);
+      }
+      return t;
+    },
+    porcAhorro(){
+      let t = 0;
+      for (var i = 0; i < this.payCash.length; i++) {
+        t += parseInt(this.payAhorro[i].porc, 10);
+      }
+      return t;
+    },
+    porcCredit(){
+      let t = 0;
+      for (var i = 0; i < this.payCash.length; i++) {
+        t += parseInt(this.payCredit[i].porc, 10);
+      }
+      return t;
     }
   },
   data(){
@@ -198,7 +249,12 @@ export default {
       dividers: 8,
       iva: "$3.00",
       productsToBuy: [],
-      payCash: [{name: "Efecty", v:false, porc: 0}, {name: "Mercado Pago", v:false, porc: 0}, {name: "UPay", v:false, porc: 0}]
+      payCash: [{name: "Efecty", v:false, porc: 0}, {name: "Mercado Pago", v:false, porc: 0}, {name: "UPay", v:false, porc: 0}],
+      payAhorro: [{name: "Bancolombia", v:false, porc: 0}, {name: "Davivienda", v:false, porc: 0}, {name: "Occidenente", v:false, porc: 0}],
+      payCredit: [{name: "Bancolombia", v:false, porc: 0}, {name: "Davivienda", v:false, porc: 0}, {name: "Occidenente", v:false, porc: 0}],
+      // porcCash: 0,
+      // porcAhorro: 0,
+      // porcCredit: 0,
     }
   },
   methods: {
@@ -243,5 +299,8 @@ export default {
   }
   .apercen{
     margin-left: 10px;
+  }
+  .larrge{
+    width: 60%;
   }
 </style>

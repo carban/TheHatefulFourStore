@@ -93,7 +93,9 @@
 
   export default {
     beforeCreate(){
-      this.$store.dispatch('getGames');
+      if (this.banner) {
+        this.$store.dispatch('getGames');
+      }
     },
     computed: {
       allgames(){

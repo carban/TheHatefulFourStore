@@ -97,7 +97,20 @@ export default new Vuex.Store({
     //   state.admin = val;
     // },
     AdditemsOnCar: (state, item) => {
+      // let isInserted = false
+      // for (var i = 0; i < state.car.length; i++) {
+      //   if(state.car[i].juid == item.juid){
+      //     isInserted = true;
+      //   }
+      // }
+      // if (isInserted) {
+      //   alert("This product is already on car")
+      // }else{
+      //   state.theCar.push(item);
+      // }
+
       state.theCar.push(item);
+
     },
     setEmptyCar: state => {
       state.theCar = [];
