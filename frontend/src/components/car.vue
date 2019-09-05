@@ -171,6 +171,10 @@
 
               <v-flex shrink pa-1>
                 <v-card>
+                  <button @click="exportpdf()">PDF</button>
+                  <ul>
+                    <li v-for="item in listt">{{item.name}}</li>
+                  </ul>
                   Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
                   <h1>{{porTotal}}</h1>
                 </v-card>
@@ -213,6 +217,9 @@
 </template>
 
 <script>
+import jsPDF from 'jspdf';
+import 'jspdf-autotable';
+
 export default {
   computed: {
     sheet(){
@@ -261,12 +268,23 @@ export default {
       payCash: [{name: "Efecty", v:false, porc: 0}, {name: "Mercado Pago", v:false, porc: 0}, {name: "UPay", v:false, porc: 0}],
       payAhorro: [{name: "Bancolombia", v:false, porc: 0}, {name: "Davivienda", v:false, porc: 0}, {name: "Occidenente", v:false, porc: 0}],
       payCredit: [{name: "Bancolombia", v:false, porc: 0}, {name: "Davivienda", v:false, porc: 0}, {name: "Occidenente", v:false, porc: 0}],
-      // porcCash: 0,
-      // porcAhorro: 0,
-      // porcCredit: 0,
+      listt: [{name: 'sds'}, {name: '21asd'}, {name: 'asdas'}]
     }
   },
   methods: {
+    exportpdf(){
+      var columns = [{title: 'Cash', dataKey: 'name'}, {title: 'Price', dataKey: 'porc'}]
+      var doc = new jsPDF('p', 'pt');
+      var mode = [];
+      for(var i in this.payCash){
+        if (this.payCash[i].v) {
+          mode.push(this.payCash[i]);
+        }
+      }
+      console.log(mode);
+      doc.autoTable(columns, mode);
+      doc.save('table.pdf');
+    },
     commitSheet(){
       this.$store.commit('sheet');
     },
