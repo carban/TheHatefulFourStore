@@ -37,7 +37,11 @@
 
       <v-divider></v-divider>
 
-      <v-stepper-step step="4">Everything Right</v-stepper-step>
+      <v-stepper-step :complete="e1 > 4" step="4">Payment</v-stepper-step>
+
+      <v-divider></v-divider>
+
+      <v-stepper-step step="5">Everything Right</v-stepper-step>
     </v-stepper-header>
 
     <v-stepper-items>
@@ -133,58 +137,6 @@
               </v-list-tile>
             </v-expansion-panel-content>
           </v-expansion-panel>
-
-          <br>
-
-          <v-layout row>
-            <v-flex grow pa-1 class="larrge">
-              <v-card>
-                <h3>CASH</h3>
-                <v-list-tile>
-                <div class="apercen" v-for="(item, index) in payCash" :key="index">
-                  <v-text-field :label="item.name" v-if="item.v" v-model="item.porc" type="number"></v-text-field>
-                </div>
-                <v-list-tile-action>
-                  <h1>{{porcCash}}%</h1>
-                </v-list-tile-action>
-                </v-list-tile>
-                <h3>AHORROS</h3>
-                <v-list-tile>
-                <div class="apercen" v-for="(item, index) in payAhorro" :key="index">
-                  <v-text-field :label="item.name" v-if="item.v" v-model="item.porc" type="number"></v-text-field>
-                </div>
-                <v-list-tile-action>
-                  <h1>{{porcAhorro}}%</h1>
-                </v-list-tile-action>
-                </v-list-tile>
-                <h3>CREDIT</h3>
-                <v-list-tile>
-                <div class="apercen" v-for="(item, index) in payCredit" :key="index">
-                  <v-text-field :label="item.name" v-if="item.v" v-model="item.porc" type="number"></v-text-field>
-                </div>
-                <v-list-tile-action>
-                  <h1>{{porcCredit}}%</h1>
-                </v-list-tile-action>
-                </v-list-tile>
-              </v-card>
-              </v-flex>
-
-              <v-flex shrink pa-1>
-                <v-card>
-                  <button @click="exportpdf()">PDF</button>
-                  <ul>
-                    <li v-for="item in listt">{{item.name}}</li>
-                  </ul>
-                  Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-                  <h1>{{porTotal}}</h1>
-                </v-card>
-              </v-flex>
-
-
-          </v-layout>
-
-
-
         </template>
 
         <v-btn color="primary" @click="makeShop()">
@@ -195,6 +147,70 @@
       </v-stepper-content>
 
       <v-stepper-content step="4">
+        <template>
+          <v-layout row>
+            <v-flex grow pa-1 class="larrge">
+              <v-card>
+                <h3>CASH</h3>
+                <!-- <v-layout row wrap> -->
+                <!-- <v-container grid-list-xs,sm,md,lg,xl> -->
+                  <v-list-tile avatar class="left-margin-sliders">
+                    <div class="apercen" v-for="(item, index) in payCash" :key="index">
+                      <v-slider v-if="item.v" v-model="item.porc" step="0.1" thumb-label="always" color="success"></v-slider>
+                    </div>
+                    <h1>{{Math.floor((porcCash / total)*100)}}%</h1>
+                  </v-list-tile>
+                <!-- </v-container> -->
+
+                <!-- </v-layout> -->
+
+                <!-- <v-list-tile>
+                <div class="apercen" v-for="(item, index) in payCash" :key="index">
+                  <v-text-field class="small-field" :label="item.name" v-if="item.v" v-model="item.porc" type="number"></v-text-field>
+                </div>
+                <v-list-tile-action>
+                  <h1>{{(porcCash / total)*100}}%</h1>
+                </v-list-tile-action>
+                </v-list-tile> -->
+                <h3>AHORROS</h3>
+                <v-list-tile>
+                <div class="apercen" v-for="(item, index) in payAhorro" :key="index">
+                  <v-text-field class="small-field" :label="item.name" v-if="item.v" v-model="item.porc" type="number"></v-text-field>
+                </div>
+                <v-list-tile-action>
+                  <h1>{{porcAhorro}}%</h1>
+                </v-list-tile-action>
+                </v-list-tile>
+                <h3>CREDIT</h3>
+                <v-list-tile>
+                <div class="apercen" v-for="(item, index) in payCredit" :key="index">
+                  <v-text-field class="small-field" :label="item.name" v-if="item.v" v-model="item.porc" type="number"></v-text-field>
+                </div>
+                <v-list-tile-action>
+                  <h1>{{porcCredit}}%</h1>
+                </v-list-tile-action>
+                </v-list-tile>
+              </v-card>
+              </v-flex>
+
+              <v-flex shrink pa-1>
+                <v-card>
+                  Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+                  <button @click="exportpdf()">PDF</button>
+                  <h1>${{total}}</h1>
+                  <h1>{{porTotal}}</h1>
+                </v-card>
+              </v-flex>
+
+          </v-layout>
+          <v-btn color="primary" @click="e1 = 5">
+            Continue
+          </v-btn>
+          <v-btn @click="e1 = 3">Back</v-btn>
+        </template>
+      </v-stepper-content>
+
+      <v-stepper-content step="5">
         <v-card-text>
           <center>
             <v-progress-circular :size="70" :width="7" color="purple" indeterminate></v-progress-circular>
@@ -265,10 +281,9 @@ export default {
       dividers: 8,
       iva: "$3.00",
       productsToBuy: [],
-      payCash: [{name: "Efecty", v:false, porc: 0}, {name: "Mercado Pago", v:false, porc: 0}, {name: "UPay", v:false, porc: 0}],
-      payAhorro: [{name: "Bancolombia", v:false, porc: 0}, {name: "Davivienda", v:false, porc: 0}, {name: "Occidenente", v:false, porc: 0}],
-      payCredit: [{name: "Bancolombia", v:false, porc: 0}, {name: "Davivienda", v:false, porc: 0}, {name: "Occidenente", v:false, porc: 0}],
-      listt: [{name: 'sds'}, {name: '21asd'}, {name: 'asdas'}]
+      payCash: [{name: "Efecty", v:false, porc: 0}, {name: "Mercado Pago", v:false, porc: 0}, {name: "UPay", v:false, porc: 0}, {name: "Baloto", v:false, porc: 0}],
+      payAhorro: [{name: "Bancolombia", v:false, porc: 0}, {name: "Davivienda", v:false, porc: 0}, {name: "Occidenente", v:false, porc: 0}, {name: "PSE", v:false, porc: 0}],
+      payCredit: [{name: "Master Card", v:false, porc: 0}, {name: "Visa", v:false, porc: 0}, {name: "American Express", v:false, porc: 0}, {name: "Diners Club", v:false, porc: 0}],
     }
   },
   methods: {
@@ -312,9 +327,10 @@ export default {
       this.total = Math.round(aux * 100) / 100;
     },
     makeShop(){
-      if (this.porTotal==100) {
-        this.e1 = 4;
-      }
+      // if (this.porTotal==100) {
+      //   this.e1 = 4;
+      // }
+      this.e1 = 4;
     },
     finishBuy(){
       this.e1 = 1;
@@ -330,9 +346,15 @@ export default {
     height: 100%;
   }
   .apercen{
-    margin-left: 10px;
+    margin-left: 21px;
   }
   .larrge{
-    width: 60%;
+    width: 65%;
+  }
+  .small-field{
+    width: 75%;
+  }
+  .left-margin-sliders{
+    margin-left: 30px;
   }
 </style>
