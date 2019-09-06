@@ -185,6 +185,10 @@
                   <v-textarea color="primary" label="Description" v-model="game.judescription"></v-textarea>
                   <v-combobox v-model="game.subnombre" :items="itemssub" label="Select Sub-category"></v-combobox>
                   <v-text-field  v-model="game.juimage" name="login" label="URL" type="text" required></v-text-field>
+                  <input type="file" @change="onFileSelected"></input>
+                  <center>
+                    <img v-if="preImage" :src="preImage" alt="">
+                  </center>
                   <v-spacer></v-spacer>
                   <center><v-btn color="success" @click="createGame()">CREATE</v-btn></center>
                 </v-form>
@@ -295,7 +299,8 @@ export default {
       editdialog: false,
       deletedialog: false,
       subeditdialog: false,
-      subdeletedialog: false
+      subdeletedialog: false,
+      preImage: null
     }
   },
 
@@ -462,6 +467,10 @@ export default {
         .catch(err => {
           console.log(err);
         })
+    },
+    onFileSelected(event){
+      let file = event.target.files[0];
+      this.preImage = URL.createObjectURL(file);
     }
 
   }
