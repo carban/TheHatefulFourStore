@@ -61,12 +61,62 @@
         <h1>No Results</h1>
       </v-layout>
 
-      <v-dialog light v-model="dialog" persistent max-width="900px">
+      <v-dialog light v-model="dialog" max-width="900px">
                 <v-card>
                   <iframe width="100%" height="480" src="https://www.youtube.com/embed/piIgkJWDuQg" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
                   <v-card-text>
                      <h1>{{current_product.junombre}}</h1>
-                     <h3>{{current_product.judescription}}</h3>
+                     <h3>{{current_product.jucompany}}</h3>
+                     <p>{{current_product.judescription}}</p>
+
+                     <v-list two-line>
+                       <v-subheader>
+                         Comments
+                       </v-subheader>
+
+                               <template v-for="(item, index) in comments">
+
+                                 <v-divider></v-divider>
+
+                                 <v-list-tile>
+                                   <v-list-tile-avatar>
+                                     <img :src="item.avatar">
+                                   </v-list-tile-avatar>
+
+                                   <v-list-tile-content>
+                                     <v-list-tile-title v-html="item.user"></v-list-tile-title>
+                                     <v-list-tile-sub-title v-html="item.msg"></v-list-tile-sub-title>
+                                   </v-list-tile-content>
+                                 </v-list-tile>
+                               </template>
+
+                               <template>
+
+                                 <v-divider></v-divider>
+
+                                 <v-list-tile>
+                                   <v-list-tile-avatar>
+                                     <img :src="user.avatar">
+                                   </v-list-tile-avatar>
+                                   <v-list-tile-content>
+                                     <v-list-tile-title>{{user.cliusuario}}</v-list-tile-title>
+                                     <br>
+                                     <v-list-tile-sub-title>
+                                       <v-list-tile avatar>
+                                         <v-text-field></v-text-field>
+                                         <v-btn color="primary">Comment</v-btn>
+                                       </v-list-tile>
+
+
+                                       <!-- <v-bt n color="primary">Comment</v-btn> -->
+                                     </v-list-tile-sub-title>
+                                   </v-list-tile-content>
+                                 </v-list-tile>
+                               </template>
+
+                             </v-list>
+
+
 
                   </v-card-text>
                   <v-card-actions>
@@ -98,6 +148,9 @@
       }
     },
     computed: {
+      user(){
+        return this.$store.getters.profile;
+      },
       allgames(){
         // return this.$store.getters.games.filter((game) => {
         //   let low_game = game.junombre.toLowerCase();
@@ -122,6 +175,11 @@
       ],
       dialog: false,
       current_product: {junombre: null, judescription: null},
+      comments: [{user: "user1", msg: "sdkfjskdjfkdsjfksd kdsjf ksjd kfsjd ksjf ksdjfksjfs"},
+      {user: "user1", msg: "sdkfjskdjfkdsjfksd kdsjf ksjd kfsjd ksjf ksdjfksjfs"},
+      {user: "user1", msg: "sdkfjskdjfkdsjfksd kdsjf ksjd kfsjd ksjf ksdjfksjfs"},
+      {user: "user1", msg: "sdkfjskdjfkdsjfksd kdsjf ksjd kfsjd ksjf ksdjfksjfs"},
+      ]
     }),
     methods: {
       addItem(index){
