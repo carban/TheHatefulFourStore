@@ -190,27 +190,23 @@ router.post('/crearGame', async (req, res) => {
 })
 
 //Modificar un juego
-router.put('/', async (req, res) => {
-    const { juid, junombre, juprecio } = req.body;
-    if (junombre == '' || juprecio == '') {
-        res.status(400).json({
-            msg: 'Hay algun campo vacio'
+router.post('/editGame', async (req, res) => {
+    const { juid, junombre, jucompany, judescription, juprecio, juyear, jurating, subnombre, juimage } = req.body;
+    // QUEDA PENDIENTE MODICAR LA SUBCATEGORIA
+    const query = {
+        text: 'UPDATE juegos SET junombre=$2, jucompany=$3, judescription=$4, juprecio=$5, juyear=$6, jurating=$7, juimage=$8 WHERE juid=$1',
+        values: [juid, junombre, jucompany, judescription, juprecio, juyear, jurating, juimage]
+    };
+    try {
+        await pg.query(query);
+        res.status(200).json({
+            msg: 'Juego modificado satisfactoriamente'
         });
-    } else {
-        const query = {
-            text: 'UPDATE juegos SET junombre=$2, juprecio=$3 WHERE juid=$1',
-            values: [juid, junombre, juprecio]
-        };
-        try {
-            await pg.query(query);
-            res.status(200).json({
-                msg: 'Juego modificado satisfactoriamente'
-            });
-        } catch (error) {
-            res.status(400).json({
-                msg: 'El juego no fue modificado'
-            });
-        }
+    } catch (error) {
+      console.log(error);
+        res.status(400).json({
+            msg: 'El juego no fue modificado'
+        });
     }
 })
 

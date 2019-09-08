@@ -174,83 +174,118 @@
         <v-card flat>
           <v-container grid-list-xs,sm,md,lg,xl>
             <h2>Create</h2>
-            <v-card class="elevation-20" >
-              <v-card-text>
-                <v-form>
-                  <v-text-field  v-model="game.junombre" name="login" label="Game name" type="text" required></v-text-field>
-                  <v-text-field  v-model="game.juprecio" name="login" label="Game Price" type="text" required></v-text-field>
-                  <v-text-field  v-model="game.jucompany" name="login" label="Company of game" type="text" required></v-text-field>
-                  <v-text-field  v-model="game.juyear" name="login" label="Year of game" type="text" required></v-text-field>
-                  <v-text-field  v-model="game.jurating" name="login" label="Rating" type="text" required></v-text-field>
-                  <v-textarea color="primary" label="Description" v-model="game.judescription"></v-textarea>
-                  <v-combobox v-model="game.subnombre" :items="itemssub" label="Select Sub-category"></v-combobox>
-                  <v-text-field  v-model="game.juimage" name="login" label="URL" type="text" required></v-text-field>
-                  <input type="file" @change="onFileSelected"></input>
-                  <center>
-                    <img v-if="preImage" :src="preImage" alt="">
-                  </center>
-                  <v-spacer></v-spacer>
-                  <center><v-btn color="success" @click="createGame()">CREATE</v-btn></center>
-                </v-form>
-              </v-card-text>
 
-            </v-card>
-          </v-container>
+              <v-layout row wrap>
+                <v-flex grow pa-1>
+                  <v-card class="elevation-20">
+                    <v-card-text>
+                      <v-form>
+                        <v-text-field  v-model="game.junombre" name="login" label="Game name" type="text" required></v-text-field>
+                        <v-text-field  v-model="game.juprecio" name="login" label="Game Price" type="text" required></v-text-field>
+                        <v-text-field  v-model="game.jucompany" name="login" label="Company of game" type="text" required></v-text-field>
+                        <v-text-field  v-model="game.juyear" name="login" label="Year of game" type="text" required></v-text-field>
+                        <v-text-field  v-model="game.jurating" name="login" label="Rating" type="text" required></v-text-field>
+                        <v-textarea color="primary" label="Description" v-model="game.judescription"></v-textarea>
+                        <v-spacer></v-spacer>
+                        <center><v-btn color="success" @click="createGame()">CREATE</v-btn></center>
+                      </v-form>
+                    </v-card-text>
+                  </v-card>
+                </v-flex>
+                <v-flex shrink pa-1 class="resize">
+                  <v-card class="elevation-20">
+                    <v-card-text>
+                      <p>No implement yet.........</p>
+                      <v-combobox v-model="game.subnombre" :items="itemssub" label="Select Sub-category"></v-combobox>
+                      <v-combobox v-model="promo" :items="promotions" label="Select a promotion value"></v-combobox>
+                      <v-text-field  v-model="game.juimage" name="login" label="URL" type="text" required></v-text-field>
+                      <input type="file" @change="onFileSelected"></input>
+                      <center>
+                        <img v-if="preImage" :src="preImage" alt="">
+                      </center>
+                    </v-card-text>
+                  </v-card>
+                </v-flex>
+              </v-layout>
 
-        </v-card>
-      </v-tab-item>
-      <v-tab>
-        EDIT GAME
-      </v-tab>
-      <v-tab-item>
-        <v-card flat>
-          <v-container grid-list-xs,sm,md,lg,xl>
-            <v-card class="elevation-20" >
-              <v-card-text>
-                <v-form>
-                  <v-text-field  v-model="game.junombre" name="login" label="Game name" type="text" required></v-text-field>
-                  <v-text-field  v-model="game.juprecio" name="login" label="Game Price" type="text" required></v-text-field>
-                  <v-text-field  v-model="game.jucompany" name="login" label="Company of game" type="text" required></v-text-field>
-                  <v-text-field  v-model="game.juyear" name="login" label="Year of game" type="text" required></v-text-field>
-                  <v-text-field  v-model="game.jurating" name="login" label="Rating" type="text" required></v-text-field>
-                  <v-textarea color="primary" label="Description" v-model="game.judescription"></v-textarea>
-                  <v-combobox v-model="game.subnombre" :items="itemssub" label="Select Sub-category"></v-combobox>
-                  <v-btn color="info">Add Pic </v-btn>
+              <br>
+
+              <h2>Edit / Delete</h2>
+              <v-card class="elevation-20">
+                <v-list-tile avatar>
+                  <v-text-field dark color="white"
+                    label="Search"
+                    v-model="wordSearch"
+                    v-on:keyup.enter="searchToEdit()"
+                  ></v-text-field>
+                  <v-btn color="primary" @click="searchToEdit()"><v-icon>search</v-icon></v-btn>
+                </v-list-tile>
+
+                <br>
+
+                <v-list-tile class="listBg elevation-5" ipple v-for="(item, index) in gamesForEdit" :key="index" @click="openEditPanel(item)">
+
+                  <v-list-tile-content>
+                    <v-list-tile-title v-text="item.junombre"></v-list-tile-title>
+                     <i>{{item.judescription}}</i>
+                  </v-list-tile-content>
+
+                </v-list-tile>
+
+
+              </v-card>
+
+              <!-- DIALOG EDIT PANEL -->
+              <!--  -->
+              <!--  -->
+              <!--  -->
+              <!--  -->
+              <v-dialog dark v-model="dialog" max-width="900px">
+                <v-card>
+                  <v-card-text>
+                    <v-layout row wrap>
+                      <v-flex grow pa-1>
+                        <v-card>
+                          <v-card-text>
+                            <v-form>
+                              <v-text-field  v-model="editAGame.junombre" name="login" label="Game name" type="text" required></v-text-field>
+                              <v-text-field  v-model="editAGame.juprecio" name="login" label="Game Price" type="text" required></v-text-field>
+                              <v-text-field  v-model="editAGame.jucompany" name="login" label="Company of game" type="text" required></v-text-field>
+                              <v-text-field  v-model="editAGame.juyear" name="login" label="Year of game" type="text" required></v-text-field>
+                              <v-text-field  v-model="editAGame.jurating" name="login" label="Rating" type="text" required></v-text-field>
+                              <v-textarea color="primary" label="Description" v-model="editAGame.judescription"></v-textarea>
+                              <v-spacer></v-spacer>
+                            </v-form>
+                          </v-card-text>
+                        </v-card>
+                      </v-flex>
+                      <v-flex shrink pa-1 class="resize">
+                        <v-card>
+                          <v-card-text>
+                            <v-combobox v-model="editAGame.subnombre" :items="itemssub" label="Select Sub-category"></v-combobox>
+                            <v-combobox v-model="promo" :items="promotions" label="Select a promotion value"></v-combobox>
+                            <v-text-field  v-model="editAGame.juimage" name="login" label="URL" type="text" required></v-text-field>
+                            <input type="file" @change="onFileSelected"></input>
+                            <center>
+                              <img v-if="preImage" :src="preImage" alt="">
+                            </center>
+                          </v-card-text>
+                        </v-card>
+                      </v-flex>
+                    </v-layout>
+                  </v-card-text>
                   <v-card-actions>
+                    <center>
+                      <v-list-tile>
+                        <v-btn color="success" @click="editGame()">Update</v-btn>
+                        <v-btn color="error">Delete</v-btn>
+                      </v-list-tile>
+                    </center>
                     <v-spacer></v-spacer>
-                    <v-btn color="success" @click="createGame()">CREATE</v-btn>
+                    <v-btn color="blue darken-1" flat @click="dialog = false">Close</v-btn>
                   </v-card-actions>
-                </v-form>
-              </v-card-text>
-
-            </v-card>
-          </v-container>
-
-        </v-card>
-      </v-tab-item>
-      <v-tab>
-        DELETE GAME
-      </v-tab>
-      <v-tab-item>
-        <v-card flat>
-          <v-container grid-list-xs,sm,md,lg,xl>
-            <v-card class="elevation-20" >
-              <v-card-text>
-                <v-form>
-                  <v-text-field  v-model="game.name" name="login" label="Game name" type="text" required></v-text-field>
-                  <v-text-field  v-model="game.comp" name="login" label="Company of game" type="text" required></v-text-field>
-                  <v-text-field  v-model="game.year" name="login" label="Year of game" type="text" required></v-text-field>
-                  <v-text-field  v-model="game.rating" name="login" label="Rating" type="text" required></v-text-field>
-                  <v-combobox v-model="game.sub" :items="items" label="Select Sub-category"></v-combobox>
-                  <v-btn color="info">Add Pic </v-btn>
-                  <v-card-actions>
-                    <v-spacer></v-spacer>
-                    <v-btn color="error">DELETE</v-btn>
-                  </v-card-actions>
-                </v-form>
-              </v-card-text>
-
-            </v-card>
+                </v-card>
+              </v-dialog>
           </v-container>
 
         </v-card>
@@ -300,7 +335,23 @@ export default {
       deletedialog: false,
       subeditdialog: false,
       subdeletedialog: false,
-      preImage: null
+      preImage: null,
+
+      dialog: null,
+      wordSearch: null,
+      gamesForEdit: [],
+      editAGame: {
+        junombre: '',
+        juprecio: '',
+        jucompany: '',
+        juyear: '',
+        judescription: '',
+        jurating: '',
+        juimage: '',
+        subnombre: '',
+      },
+      promo: null,
+      promotions: [0, 5, 10, 15, 20, 25, 30, 40, 50]
     }
   },
 
@@ -471,6 +522,35 @@ export default {
     onFileSelected(event){
       let file = event.target.files[0];
       this.preImage = URL.createObjectURL(file);
+    },
+    searchToEdit(){
+
+      if (this.wordSearch != '') {
+        this.$store.dispatch('searchToEdit', this.wordSearch)
+          .then(res => {
+            this.gamesForEdit = res;
+          })
+          .catch(err => {
+            console.log(err);
+          })
+      }else{
+        this.gamesForEdit = [];
+      }
+    },
+    openEditPanel(item){
+      this.dialog = true;
+      this.editAGame = item;
+    },
+    editGame(){
+      // QUEDA PENDIENTE MODICAR LA SUBCATEGORIA
+      this.$store.dispatch('editGame', this.editAGame)
+        .then(res => {
+          this.dialog = false;
+          this.snack2 = true;
+        })
+        .catch(err => {
+          console.log(err);
+        })
     }
 
   }
@@ -481,5 +561,8 @@ export default {
   .listBg{
     background-color: #514455;
     margin-top: 10px;
+  }
+  .resize{
+    width: 370px;
   }
 </style>

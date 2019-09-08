@@ -401,7 +401,28 @@ export default new Vuex.Store({
             console.log(err);
           })
       });
-
     },
+    searchToEdit: (context, value) => {
+      return new Promise((resolve, reject) => {
+        axios.post('http://localhost:8001/game/searchGamesKeyWord', {"kword": value})
+          .then(res => {
+            resolve(res.data.games);
+          })
+          .catch(err => {
+            console.log(err);
+          })
+      });
+    },
+    editGame: (context, obj) => {
+      return new Promise((resolve, reject) => {
+        axios.post('http://localhost:8001/game/editGame', obj)
+          .then(res => {
+            resolve(res.data.games);
+          })
+          .catch(err => {
+            console.log(err);
+          })
+      });
+    }
   }
 })

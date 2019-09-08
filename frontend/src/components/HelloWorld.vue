@@ -27,7 +27,7 @@
                   <div class="headline">{{item.junombre}}</div>
                   <div>{{item.jucompany}}</div>
                   <div>({{item.juyear}})</div>
-                  <div>{{item.juprecio}}</div>
+                  <div><b>{{item.juprecio}}</b></div>
                 </div>
               </v-card-title>
 
