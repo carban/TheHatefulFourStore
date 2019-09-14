@@ -5,7 +5,7 @@ const pg = require('../db/database.js').getPool();
 
 //Consultar todas las categorias existentes
 router.get('/', async (req, res) => {
-  const query = 'SELECT * FROM categorias ORDER BY catid';
+  const query = 'SELECT * FROM categorias WHERE catactivo=true ORDER BY catid';
   try {
     const cat = await pg.query(query);
     res.status(200).send({'cats': cat.rows});
@@ -21,7 +21,7 @@ router.post('/', async (req, res) => {
   try {
     for (var i = 0; i < list.length; i++) {
       const myquery = {
-        text: "insert into categorias (catnombre, catdescripcion) values ($1, 'description');",
+        text: "insert into categorias (catnombre, catdescripcion,catactivo) values ($1, 'description',true);",
         values: [list[i].title]
       }
       const prof = await pg.query(myquery);
@@ -36,7 +36,7 @@ router.post('/', async (req, res) => {
 
 //Modificar una categoria
 router.put('/', async (req, res) => {
-  const { catid, catnombre} = req.body;
+  const { catid, catnombre } = req.body;
   console.log(catid, catnombre);
   const query = {
     text: 'UPDATE categorias SET catnombre=$2 WHERE catid=$1',
@@ -57,9 +57,10 @@ router.put('/', async (req, res) => {
 
 //eliminar una categoria
 router.delete('/:id', async (req, res) => {
+  //const { id } = req.body;
   const id = req.params.id;
   const query = {
-    text: 'DELETE FROM categorias WHERE catid=$1',
+    text: 'UPDATE categorias SET catactivo=false WHERE catid=$1',
     values: [id]
   };
   try {

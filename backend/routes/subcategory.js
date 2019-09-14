@@ -7,7 +7,7 @@ const pg = require('../db/database.js').getPool();
 router.get('/', async (req, res) => {
   const {username} = req.body;
   const myquery = {
-    text: 'select subid, subnombre, catid from subcategorias order by catid;',
+    text: 'select subid, subnombre, catid from subcategorias natural join categorias where subactivo=true and catactivo=true order by catid;',
   }
   const prof = await pg.query(myquery);
   var answ = [];
@@ -22,11 +22,12 @@ router.get('/', async (req, res) => {
     aux.push(prof.rows[i]);
   }
   answ.push(aux);
+  //console.log(answ);
   res.json({'subcats':answ});
 })
 
 router.get('/combo', async (req, res) => {
-  const query = 'SELECT * FROM subcategorias';
+  const query = 'SELECT * FROM subcategorias where subactivo=true';
   try {
     const subcat = await pg.query(query);
     res.status(200).send(subcat.rows);
@@ -50,7 +51,7 @@ router.post('/', async (req, res) => {
       const prof = await pg.query(myquery);
       var id = prof.rows[0].catid;
       const myquery2 = {
-        text: "insert into subcategorias (subnombre, subdescripcion, catid) values ($1, 'description', $2)",
+        text: "insert into subcategorias (subnombre, subdescripcion,subactivo, catid) values ($1, 'description', true, $2)",
         values: [sub, id]
       }
       const prof2 = await pg.query(myquery2);
@@ -85,7 +86,7 @@ router.put('/', async (req, res) => {
 router.delete('/:id', async (req, res) => {
   const id = req.params.id;
   const query = {
-    text:'DELETE FROM subcategorias WHERE subid=$1',
+    text:'UPDATE subcategorias SET subactivo=false WHERE subid=$1',
     values:[id]
   };
   try {

@@ -359,9 +359,33 @@ export default new Vuex.Store({
           })
       });
     },
+    deleteCategory: (context, cat) => {
+      return new Promise((resolve, reject) => {
+        axios.delete('http://localhost:8001/category/'+cat)
+          .then(res => {
+            resolve(res);
+          })
+          .catch(err => {
+            console.log(err);
+          })
+      });
+    },
+    deleteSubcategory: (context, subcat) => {
+      return new Promise((resolve, reject) => {
+        axios.delete('http://localhost:8001/subcategory/'+subcat)
+          .then(res => {
+            resolve(res);
+          })
+          .catch(err => {
+            console.log(err);
+          })
+      });
+    },
     getSubcategories: context => {
       axios.get('http://localhost:8001/subcategory')
         .then(res => {
+          console.log(res.data.subcats);
+          
           context.commit('setSubcatego', res.data.subcats);
         })
         .catch(err => {

@@ -43,6 +43,7 @@ CREATE TABLE juegos
   jurating int NOT NULL,
   judescription VARCHAR(280) NOT NULL,
   juimage VARCHAR(200),
+  juactivo BOOLEAN,
   PRIMARY KEY (juid)
 );
 DROP SEQUENCE IF EXISTS juid_sequence CASCADE; -- probablemente inecesario
@@ -55,6 +56,7 @@ CREATE TABLE categorias
   catid SERIAL NOT NULL, -- Cambiado a serial para que el id sea incremental.
   catnombre VARCHAR(64) NOT NULL,
   catdescripcion VARCHAR(256),
+  catactivo BOOLEAN,
   PRIMARY KEY (catid)
 );
 DROP SEQUENCE IF EXISTS catid_sequence CASCADE;  --Probablemente innecesario.
@@ -67,6 +69,7 @@ CREATE TABLE subcategorias
   subid SERIAl NOT NULL, -- Cambiado a serial para que el id sea incremental.
   subnombre VARCHAR(64) NOT NULL,
   subdescripcion VARCHAR(256),
+  subactivo BOOLEAN,
   catid INT NOT NULL,
   PRIMARY KEY (subid),
   FOREIGN KEY (catid) REFERENCES categorias(catid)
@@ -138,31 +141,31 @@ insert into clientes values ('fparriaga15', 54321, 'Octavia Flores Arriaga', 'fp
 
 -- JUEGOS | aun no esta bien implementado le incremento secuencial en el juid.
 --  | problema solucionado agregando tipo de dato "serial" en lugar de "int"
-insert into juegos (junombre, juprecio, jucompany, juyear, jurating, judescription, juimage) values ('Metal Gear Solid V', 5.59, 'konami', 2019, 4, 'Lorem ipsum dolor si magna aliqua. Ut enim ad minim veni', 'https://i11c.3djuegos.com/juegos/8223/metal_gear_solid_5/fotos/ficha/metal_gear_solid_5-2723810.jpg');
-insert into juegos (junombre, juprecio, jucompany, juyear, jurating, judescription, juimage) values ('Death Stranding', 38.59, 'konami', 2019, 4, 'Lorem ipsum dolor sit amet, ciqua. Ut enim ad minim veni', 'https://uvejuegos.com/img/caratulas/57113/death-stranding-cover_02.jpg');
-insert into juegos (junombre, juprecio, jucompany, juyear, jurating, judescription, juimage) values ('Shell Shockers', 20.45, 'konami', 2019, 4, 'Lorem ipsum dolor sit amet, liqua. Ut enim ad minim veni', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ5jLBRT2sjVtKG-0MIEDAWTJ6fJ-wZRY2xiSi1_7oF4dg576aaPg');
-insert into juegos (junombre, juprecio, jucompany, juyear, jurating, judescription, juimage) values ('God of War', 10, 'konami', 2019, 4, 'Lorem ipsum dolor sit amet,aliqua. Ut enim ad minim veni', 'https://http2.mlstatic.com/god-of-war-ps4-gow-fisico-nuevo-nextgames-D_NQ_NP_783521-MLA27172871700_042018-F.jpg');
-insert into juegos (junombre, juprecio, jucompany, juyear, jurating, judescription, juimage) values ('GTA V', 12.89, 'konami', 2019, 4, 'Lorem ipsum dolor sit amet, ciqua. Ut enim ad minim veni', 'https://sm.ign.com/ign_es/screenshot/r/rockstar-hace-publica-la-caratula-de-gta-5/rockstar-hace-publica-la-caratula-de-gta-5_e852.jpg');
-insert into juegos (junombre, juprecio, jucompany, juyear, jurating, judescription, juimage) values ('PES 2019', 22.29, 'konami', 2019, 4, 'Lorem ipsum dolor sit amea aliqua. Ut enim ad minim veni', 'https://i11d.3djuegos.com/juegos/15474/pes_2019/fotos/ficha/pes_2019-4036723.jpg');
-insert into juegos (junombre, juprecio, jucompany, juyear, jurating, judescription, juimage) values ('FIFA 2019', 9.49, 'konami', 2019, 4, 'Lorem ipsum dolor sit amea aliqua. Ut enim ad minim veni', 'https://http2.mlstatic.com/juego-fifa-2019-pc-D_NQ_NP_867661-MLV31316217873_072019-Q.jpg');
-insert into juegos (junombre, juprecio, jucompany, juyear, jurating, judescription, juimage) values ('Cyberpunk 2077', 48.89, 'konami', 2019, 4, 'Lorem ipsum dolor re magna aliqua. Ut enim ad minim veni', 'https://areajugones.sport.es/wp-content/uploads/2019/07/CaratulaCyberpunk2077.jpg');
-insert into juegos (junombre, juprecio, jucompany, juyear, jurating, judescription, juimage) values ('BORDERLANDS 3', 49.89, 'konami', 2019, 4, 'Lorem ipsum dolor se magna aliqua. Ut enim ad minim veni', 'https://sm.ign.com/ign_es/screenshot/default/borderlands3-es-standard_rcgr.jpg');
-insert into juegos (junombre, juprecio, jucompany, juyear, jurating, judescription, juimage) values ('Need for speed', 22.39, 'konami', 2019, 4, 'Lorem ipsum dolor re magna aliqua. Ut enim ad minim veni', 'https://images-na.ssl-images-amazon.com/images/I/81m3V0xW6bL._SX466_.jpg');
-insert into juegos (junombre, juprecio, jucompany, juyear, jurating, judescription, juimage) values ('DOOM ETERNAL', 38.89, 'konami', 2019, 4, 'Lorem ipsum dolor se magna aliqua. Ut enim ad minim veni', 'https://as01.epimg.net/meristation/imagenes/2019/06/10/cover/246846681560152864.jpg');
+insert into juegos (junombre, juprecio, jucompany, juyear, jurating, judescription, juimage, juactivo) values ('Metal Gear Solid V', 5.59, 'konami', 2019, 4, 'Lorem ipsum dolor si magna aliqua. Ut enim ad minim veni', 'https://i11c.3djuegos.com/juegos/8223/metal_gear_solid_5/fotos/ficha/metal_gear_solid_5-2723810.jpg', true);
+insert into juegos (junombre, juprecio, jucompany, juyear, jurating, judescription, juimage, juactivo) values ('Death Stranding', 38.59, 'konami', 2019, 4, 'Lorem ipsum dolor sit amet, ciqua. Ut enim ad minim veni', 'https://uvejuegos.com/img/caratulas/57113/death-stranding-cover_02.jpg', true);
+insert into juegos (junombre, juprecio, jucompany, juyear, jurating, judescription, juimage, juactivo) values ('Shell Shockers', 20.45, 'konami', 2019, 4, 'Lorem ipsum dolor sit amet, liqua. Ut enim ad minim veni', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ5jLBRT2sjVtKG-0MIEDAWTJ6fJ-wZRY2xiSi1_7oF4dg576aaPg', true);
+insert into juegos (junombre, juprecio, jucompany, juyear, jurating, judescription, juimage, juactivo) values ('God of War', 10, 'konami', 2019, 4, 'Lorem ipsum dolor sit amet,aliqua. Ut enim ad minim veni', 'https://http2.mlstatic.com/god-of-war-ps4-gow-fisico-nuevo-nextgames-D_NQ_NP_783521-MLA27172871700_042018-F.jpg', true);
+insert into juegos (junombre, juprecio, jucompany, juyear, jurating, judescription, juimage, juactivo) values ('GTA V', 12.89, 'konami', 2019, 4, 'Lorem ipsum dolor sit amet, ciqua. Ut enim ad minim veni', 'https://sm.ign.com/ign_es/screenshot/r/rockstar-hace-publica-la-caratula-de-gta-5/rockstar-hace-publica-la-caratula-de-gta-5_e852.jpg', true);
+insert into juegos (junombre, juprecio, jucompany, juyear, jurating, judescription, juimage, juactivo) values ('PES 2019', 22.29, 'konami', 2019, 4, 'Lorem ipsum dolor sit amea aliqua. Ut enim ad minim veni', 'https://i11d.3djuegos.com/juegos/15474/pes_2019/fotos/ficha/pes_2019-4036723.jpg', true);
+insert into juegos (junombre, juprecio, jucompany, juyear, jurating, judescription, juimage, juactivo) values ('FIFA 2019', 9.49, 'konami', 2019, 4, 'Lorem ipsum dolor sit amea aliqua. Ut enim ad minim veni', 'https://http2.mlstatic.com/juego-fifa-2019-pc-D_NQ_NP_867661-MLV31316217873_072019-Q.jpg', true);
+insert into juegos (junombre, juprecio, jucompany, juyear, jurating, judescription, juimage, juactivo) values ('Cyberpunk 2077', 48.89, 'konami', 2019, 4, 'Lorem ipsum dolor re magna aliqua. Ut enim ad minim veni', 'https://areajugones.sport.es/wp-content/uploads/2019/07/CaratulaCyberpunk2077.jpg', true);
+insert into juegos (junombre, juprecio, jucompany, juyear, jurating, judescription, juimage, juactivo) values ('BORDERLANDS 3', 49.89, 'konami', 2019, 4, 'Lorem ipsum dolor se magna aliqua. Ut enim ad minim veni', 'https://sm.ign.com/ign_es/screenshot/default/borderlands3-es-standard_rcgr.jpg', true);
+insert into juegos (junombre, juprecio, jucompany, juyear, jurating, judescription, juimage, juactivo) values ('Need for speed', 22.39, 'konami', 2019, 4, 'Lorem ipsum dolor re magna aliqua. Ut enim ad minim veni', 'https://images-na.ssl-images-amazon.com/images/I/81m3V0xW6bL._SX466_.jpg', true);
+insert into juegos (junombre, juprecio, jucompany, juyear, jurating, judescription, juimage, juactivo) values ('DOOM ETERNAL', 38.89, 'konami', 2019, 4, 'Lorem ipsum dolor se magna aliqua. Ut enim ad minim veni', 'https://as01.epimg.net/meristation/imagenes/2019/06/10/cover/246846681560152864.jpg', true);
 
 --CATEGORIAS
-insert into categorias (catnombre, catdescripcion) values ('Sports', 'Sports games');
-insert into categorias (catnombre, catdescripcion) values ('Sci-fi', 'Sci-fi games');
-insert into categorias (catnombre, catdescripcion) values ('Adventure', 'Adventure games');
-insert into categorias (catnombre, catdescripcion) values ('Action', 'Action games');
+insert into categorias (catnombre, catdescripcion, catactivo) values ('Sports', 'Sports games', true);
+insert into categorias (catnombre, catdescripcion, catactivo) values ('Sci-fi', 'Sci-fi games', true);
+insert into categorias (catnombre, catdescripcion, catactivo) values ('Adventure', 'Adventure games', true);
+insert into categorias (catnombre, catdescripcion, catactivo) values ('Action', 'Action games', true);
 --SUBCATEGORIAS
-insert into subcategorias (subnombre, subdescripcion, catid) values ('soccer', 'Soccer games', 1);
-insert into subcategorias (subnombre, subdescripcion, catid) values ('Tenis', 'Tenis games', 1);
-insert into subcategorias (subnombre, subdescripcion, catid) values ('CyberPunk', 'CyberPunk games', 2);
-insert into subcategorias (subnombre, subdescripcion, catid) values ('Aliens', 'Alien games', 2);
-insert into subcategorias (subnombre, subdescripcion, catid) values ('Gore', 'Gore games', 3);
-insert into subcategorias (subnombre, subdescripcion, catid) values ('Cars', 'Cars games', 1);
-insert into subcategorias (subnombre, subdescripcion, catid) values ('Shooter', 'Shooter games', 4);
+insert into subcategorias (subnombre, subdescripcion, subactivo,catid) values ('soccer', 'Soccer games', true, 1);
+insert into subcategorias (subnombre, subdescripcion, subactivo, catid) values ('Tenis', 'Tenis games', true, 1);
+insert into subcategorias (subnombre, subdescripcion, subactivo, catid) values ('CyberPunk', 'CyberPunk games', true, 2);
+insert into subcategorias (subnombre, subdescripcion, subactivo, catid) values ('Aliens', 'Alien games', true, 2);
+insert into subcategorias (subnombre, subdescripcion, subactivo, catid) values ('Gore', 'Gore games', true, 3);
+insert into subcategorias (subnombre, subdescripcion, subactivo, catid) values ('Cars', 'Cars games', true, 1);
+insert into subcategorias (subnombre, subdescripcion, subactivo, catid) values ('Shooter', 'Shooter games', true, 4);
 --CATJUEGOS
 insert into catjuegos values (1, 7);
 insert into catjuegos values (2, 1);
