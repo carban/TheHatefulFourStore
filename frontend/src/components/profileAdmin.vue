@@ -351,7 +351,7 @@ export default {
         subnombre: '',
       },
       promo: null,
-      promotions: [0, 5, 10, 15, 20, 25, 30, 40, 50]
+      promotions: [0, 5, 10, 15, 20, 25, 30, 40, 45, 50]
     }
   },
 

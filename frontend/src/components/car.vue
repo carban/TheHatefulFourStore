@@ -1,27 +1,7 @@
 <template light>
   <div class="text-xs-center">
     <v-bottom-sheet v-model="sheet" persistent>
-      <!-- <v-list>
-        <v-btn color="error" left v-on:click="commitSheet()">
-          <v-icon>close</v-icon>
-        </v-btn> -->
-        <!-- <v-layout row wrap>
-          <v-card tile flat color="white">
 
-            <v-card-text>
-              <v-list-tile v-for="(item, index) in car" :key="index">
-                <div class="text-xs-center">
-                  <v-chip  @input="removeItem(index)" close>
-                    <v-avatar>
-                      <img src="https://res.cloudinary.com/teepublic/image/private/s--xeppzKEN--/t_Preview/b_rgb:191919,t_Watermark/c_limit,f_jpg,h_630,q_90,w_630/v1540525490/production/designs/3389495_0.jpg" alt="trevor">
-                    </v-avatar>
-                    <v-list-tile-title>{{ item.title }}</v-list-tile-title>
-                  </v-chip>
-                </div>
-              </v-list-tile>
-            </v-card-text>
-          </v-card>
-        </v-layout> -->
         <template light>
   <v-stepper dark v-model="e1">
     <v-stepper-header>
@@ -136,32 +116,7 @@
           </v-radio-group>
 
           </v-list>
-          <!-- <v-expansion-panel>
-            <v-expansion-panel-content>
-              <template v-slot:header>
-                <div>Cash</div>
-              </template>
-              <v-radio-group v-model="cashSelected" row>
-                <v-radio v-for="(item, index) in payCash" :key="index" :label="item.name" :value="item.name" color="pink"></v-radio>
-              </v-radio-group>
-            </v-expansion-panel-content>
-            <v-expansion-panel-content>
-              <template v-slot:header>
-                <div>Debito Ahorros</div>
-              </template>
-              <v-radio-group v-model="ahorrosSelected" row>
-                <v-radio v-for="(item, index) in payAhorro" :key="index" :label="item.name" :value="item.name" color="pink"></v-radio>
-              </v-radio-group>
-            </v-expansion-panel-content>
-            <v-expansion-panel-content>
-              <template v-slot:header>
-                <div>Credit Card</div>
-              </template>
-              <v-radio-group v-model="creditSelected" row>
-                <v-radio v-for="(item, index) in payCredit" :key="index" :label="item.name" :value="item.name" color="pink"></v-radio>
-              </v-radio-group>
-            </v-expansion-panel-content>
-          </v-expansion-panel> -->
+
         </template>
 
         <v-btn color="primary" @click="makeShop()">
