@@ -36,6 +36,12 @@ const juegos = sequelize.define('juegos', {
     },
     juimage:{
       type: Sequelize.STRING
+    },
+    judescuentoactual:{
+      type: Sequelize.INTEGER
+    },
+    juactivo:{
+      type: Sequelize.BOOLEAN
     }
 },{
     timestamps: false

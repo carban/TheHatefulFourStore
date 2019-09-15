@@ -385,7 +385,7 @@ export default new Vuex.Store({
       axios.get('http://localhost:8001/subcategory')
         .then(res => {
           console.log(res.data.subcats);
-          
+
           context.commit('setSubcatego', res.data.subcats);
         })
         .catch(err => {
@@ -442,6 +442,18 @@ export default new Vuex.Store({
         axios.post('http://localhost:8001/game/editGame', obj)
           .then(res => {
             resolve(res.data.games);
+          })
+          .catch(err => {
+            console.log(err);
+          })
+      });
+    },
+    purchase: (context, obj) => {
+      return new Promise((resolve, reject) => {
+        const decoded = jwtDecode(context.getters.token);
+        axios.post('http://localhost:8001/sales', {'allinfo': obj, "username": decoded.userExistent})
+          .then(res => {
+            resolve(res.data);
           })
           .catch(err => {
             console.log(err);

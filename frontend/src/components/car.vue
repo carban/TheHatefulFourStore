@@ -119,7 +119,7 @@
 
         </template>
 
-        <v-btn color="primary" @click="makeShop()">
+        <v-btn color="primary" @click="e1 = 4">
           Continue
         </v-btn>
         <v-btn @click="e1 = 2">Back</v-btn>
@@ -251,12 +251,9 @@ export default {
     exportpdf(){
       var columns = [{title: 'Cash', dataKey: 'name'}, {title: 'Price', dataKey: 'porc'}]
       var doc = new jsPDF('p', 'pt');
-      var mode = [];
-      for(var i in this.payCash){
-        if (this.payCash[i].v) {
-          mode.push(this.payCash[i]);
-        }
-      }
+      var mode = [{name: this.cashSelected, porc: this.porcCash},
+        {name: this.ahorrosSelected, porc: this.porcAhorros},
+        {name: this.creditSelected, porc: this.porcCredit}];
       console.log(mode);
       doc.autoTable(columns, mode);
       doc.save('table.pdf');
@@ -313,16 +310,34 @@ export default {
       }
 
       if (this.porTotal == 100 && a && b && c) {
-        this.e1 = 5;
+        // this.e1 = 5;
+        this.makeShop();
       }else{
         alert("Oye tranquilo viejo")
       }
     },
     makeShop(){
-      // if (this.porTotal==100) {
-      //   this.e1 = 4;
-      // }
-      this.e1 = 4;
+
+      let modals = [{type: null, mode: null, money: null},{type: null, mode: null, money: null}, {type: null, mode: null, money: null}];
+
+      if (this.cashSelected!=null && this.cashSelected!='none') {
+        modals[0]={type: 'cash', mode: this.cashSelected, money: parseInt(this.porcCash)};
+      }
+      if(this.ahorrosSelected!=null && this.ahorrosSelected!='none'){
+        modals[1]={type: 'Ahorros', mode: this.ahorrosSelected, money: parseInt(this.porcAhorros)};
+      }
+      if(this.creditSelected!=null && this.creditSelected!='none'){
+        modals[2]={type: 'Credit', mode: this.creditSelected, money: parseInt(this.porcCredit)};
+      }
+
+      let obj = {modals: modals, games: this.car, total: parseFloat(this.total)}
+      // console.log(obj);
+      this.$store.dispatch('purchase', obj)
+        .then(res => {
+          console.log(res);
+        })
+
+      // this.e1 = 5;
     },
     finishBuy(){
       this.e1 = 1;

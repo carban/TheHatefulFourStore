@@ -17,6 +17,9 @@ const categorias = sequelize.define('categorias', {
     catdescripcion:{
         type:Sequelize.STRING,
         allowNull:false
+    },
+    catactivo: {
+      type: Sequelize.BOOLEAN
     }
 },{
     timestamps: false
