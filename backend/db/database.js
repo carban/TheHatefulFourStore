@@ -6,11 +6,11 @@ module.exports = {
       return pool;
     } else {
       pool = new Pool({
-        user: 'postgres',
+        user: 'juancamilo',
         host: 'localhost',
-        database: 'hateful4',
-        password: 'lordpostgres123',
-        port: 5432
+        database: 'hatefulfour',
+        password: '24880312',
+        port: 5433
       });
       console.log('Conectado a la base de datos');
       return pool;

@@ -83,7 +83,7 @@
                 <v-card>
                   <v-container grid-list-xs,sm,md,lg,xl>
                   <center><h1>Are you sure to delete Category {{deleteCom}} ?</h1>
-                  <v-btn color="error" @click="deleteCatego()">Sisas pri</v-btn></center>
+                  <v-btn color="error" v-on:click="deletedialog = false" @click="deleteCatego()">Sisas pri</v-btn></center>
                   </v-container>
                 </v-card>
             </v-dialog>
@@ -149,7 +149,7 @@
             <h2>Delete</h2>
             <v-card class="elevation-20">
               <v-card-text>
-                <v-combobox :items="items" label="Select Subcategory" v-model="subdeleteCom"></v-combobox>
+                <v-combobox :items="itemssub" label="Select Subcategory" v-model="subdeleteCom"></v-combobox>
               </v-card-text>
               <center>
                 <v-btn color="error" @click="subdeletedialog = true">DELETE</v-btn>
@@ -158,8 +158,8 @@
             <v-dialog v-model="subdeletedialog" max-width="500px">
                 <v-card>
                   <v-container grid-list-xs,sm,md,lg,xl>
-                  <center><h1>Are you sure to delete Category {{subdeleteCom}} ?</h1>
-                  <v-btn color="error">Sisas pri</v-btn></center>
+                  <center><h1>Are you sure to delete subcategory {{subdeleteCom}} ?</h1>
+                  <v-btn color="error" v-on:click="subdeletedialog = false" @click="deleteSubcatego()">Sisas pri</v-btn></center>
                   </v-container>
                 </v-card>
             </v-dialog>
@@ -416,6 +416,34 @@ export default {
         }
       }
       console.log(thecat.catnombre, thecat.catid);
+      this.$store.dispatch('deleteCategory',thecat.catid)
+      .then(res => {
+        removeCategory(thecat.catid)
+        console.log('Categoria eliminada'); ///esto provisionalmente mientras ponemos algun anuncio
+      })
+      .catch(err => {
+        console.log('Categoria no eliminada');
+      })
+    },
+    deleteSubcatego(){
+      var subcats = this.$store.getters.subcatego;
+      for (var i = 0; i < subcats.length; i++) {
+        for(var j = 0; j < subcats[i].length; j++){
+          if (subcats[i][j].subnombre == this.subdeleteCom) {
+            var thesubcat = subcats[i][j];
+            break;
+          } 
+        }
+      }
+      console.log(thesubcat.subnombre, thesubcat.subid);
+      this.$store.dispatch('deleteSubcategory',thesubcat.subid)
+      .then(res => {
+        //removeCategory(thesubcat.subid)
+        console.log('Subcategoria eliminada'); ///esto provisionalmente mientras ponemos algun anuncio
+      })
+      .catch(err => {
+        console.log('Subcategoria no eliminada');
+      })
     },
     getCatsforCombo(){
       this.$store.dispatch('getCategoriesCombo')
