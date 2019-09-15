@@ -76,7 +76,74 @@
         <v-card flat>
           <v-container grid-list-xs,sm,md,lg,xl>
             <h1>CLAIMS</h1>
-            <center><h2>Coming soon</h2></center>
+            <br>
+            <br>
+
+            <v-card class="elevation-20">
+              <v-list-tile avatar>
+                <v-text-field v-model="newClaim.title" label="Title"></v-text-field>
+                <v-text-field v-model="newClaim.description" label="Description"></v-text-field>
+
+                <v-btn fab dark color="#45a2d2" name="addbtn" @click="addclaim()">
+                  <v-icon dark>add</v-icon>
+                </v-btn>
+              </v-list-tile>
+            </v-card>
+
+            <br><br><br>
+            <!-- LIST OF CLAIMS -->
+            <v-list-tile class="climlistbg elevation-5" ipple v-for="(item, index) in claims" :key="index" @click="openAClaim(index)">
+
+              <v-list-tile-content>
+                <v-list-tile-title>
+                  <b>{{item.title}}: </b>
+                  <b v-if="item.state == 'Active'" class="activeR">Active</b>
+                  <b v-if="item.state == 'Resolved'" class="resolvedR">Resolved</b>
+
+                </v-list-tile-title>
+                <v-list-tile-sub-title>{{ item.description }}</v-list-tile-sub-title>
+              </v-list-tile-content>
+
+            </v-list-tile>
+
+            <!--  -->
+
+            <!-- Dialog for claims  -->
+            <!--  -->
+            <v-dialog light v-model="claim_dialog" max-width="900px">
+              <v-card>
+                <v-card-text>
+                  <v-layout row wrap>
+                    <v-card-text>
+                      <v-list-tile avatar>
+                        <h1>{{aClaim.title}}:</h1>
+                        <h1 v-if="aClaim.state == 'Active'" class="activeR" >&nbsp;Active</h1>
+                        <h1 v-if="aClaim.state == 'Resolved'" class="resolvedR" >&nbsp;Resolved</h1>
+                      </v-list-tile>
+                    </v-card-text>
+                    <v-card>
+                      <v-card-text>
+                        {{aClaim.description}}
+                      </v-card-text>
+                    </v-card>
+                  </v-layout>
+                </v-card-text>
+                <v-card-actions>
+                  <center>
+                    <v-list-tile>
+                      <v-btn color="error" @click="claim_dialog = false">CLOSE</v-btn>
+                    </v-list-tile>
+                  </center>
+                  <v-spacer></v-spacer>
+                </v-card-actions>
+              </v-card>
+            </v-dialog>
+
+            <!--  -->
+            <!--  -->
+
+
+
           </v-container>
         </v-card>
       </v-tab-item>
@@ -99,6 +166,12 @@ export default {
       active: null,
       snack: false,
       snack2: false,
+      claims: [{title: 'Claim 1', description: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.', state: 'Active'},
+    {title: 'Claim 2', description: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.',
+    state: 'Resolved'}],
+      aClaim: {title: null, description: null, state: null},
+      claim_dialog: false,
+      newClaim: {title: null, description: null, state: 'Active'}
     }
   },
   beforeCreate(){
@@ -128,10 +201,29 @@ export default {
           })
        })
     },
-
+    openAClaim(index){
+      this.aClaim.title = this.claims[index].title;
+      this.aClaim.description = this.claims[index].description;
+      this.aClaim.state = this.claims[index].state;
+      this.claim_dialog = true;
+    },
+    addclaim(){
+      this.claims.push(this.newClaim);
+    }
   }
 }
 </script>
 
 <style lang="css" scoped>
+.climlistbg{
+  cursor: pointer;
+  background-color: #45a2d2;
+  margin-top: 10px;
+}
+.activeR{
+  color: lime
+}
+.resolvedR{
+  color: orange;
+}
 </style>

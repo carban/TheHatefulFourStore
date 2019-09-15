@@ -197,6 +197,7 @@ export default {
       logout() {
         this.$store.dispatch("logout");
         this.$store.dispatch('getGames');
+        this.$store.commit("setEmptyCar"); // yo know why
         this.$store.commit('setbanner', true);
         this.$store.commit('setAdmin', false);
         this.$router.push({name: 'logoutmsg'});

@@ -156,7 +156,24 @@
         //   let low_game = game.junombre.toLowerCase();
         //   return low_game.match(this.$store.getters.getWordSearch.toLowerCase());
         // })
-        return this.$store.getters.games;
+        let presentGames = this.$store.getters.games;
+        let buseta = this.$store.getters.car;
+
+        // Verifica que se encuentren seleccionados los elementos que ya estan en el carro
+        // de compras, entonces no el usuario no puede volver a seleccionar el mismo juego
+        if (buseta.length > 0) {
+            for(let i in buseta){
+              if(buseta[i].added){
+                for(let j in presentGames){
+                  if (presentGames[j].juid == buseta[i].juid) {
+                    presentGames[j].added = true;
+                  }
+                }
+              }
+            }
+        }
+
+        return presentGames;
       },
       logged(){
         return this.$store.getters.loggedIn;
@@ -170,8 +187,6 @@
         {src: blade},
         {src: spacegirl},
         {src: gaming},
-
-        // {src: 'https://www.symmetrymagazine.org/sites/default/files/styles/2015_hero/public/images/standard/FINAL_gaming_031919.jpg'},
       ],
       dialog: false,
       current_product: {junombre: null, judescription: null},
