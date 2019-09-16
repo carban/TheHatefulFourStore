@@ -77,16 +77,59 @@
         <v-card>
           <v-container grid-list-xs,sm,md,lg,xl>
             <h1>Bills</h1>
-            <v-data-table :headers="headers" :items="bills" rowsPerPage="-1" class="elevation-1">
-            <template v-slot:items="props">
-              <td>{{ props.item.game }}</td>
-              <td class="text-xs-right">{{ props.item.pagoid }}</td>
-              <td class="text-xs-right">{{ props.item.fechapago }}</td>
-              <td class="text-xs-right">{{ props.item.valoruno }}</td>
-              <td class="text-xs-right">{{ props.item.valordos }}</td>
-              <td class="text-xs-right">{{ props.item.valortres }}</td>
+            <template>
+              <div>
+                  <v-divider
+                    class="mx-2"
+                    inset
+                    vertical
+                  ></v-divider>
+                  <v-spacer></v-spacer>
+                  <v-dialog v-model="billdialog" max-width="500px">
+
+                    <v-card>
+                      <v-card-text>
+                        <v-container grid-list-md>
+                          <v-layout v-for="(item, index) in aBill" :key="index">
+                            <v-text-field v-model="item.title" label="Title name"></v-text-field>
+                            <v-text-field v-model="item.price" label="Price name"></v-text-field>
+                          </v-layout>
+                        </v-container>
+                      </v-card-text>
+
+                      <v-card-actions>
+                        <v-spacer></v-spacer>
+                        <v-btn color="blue darken-1" flat @click="billdialog = false">Cancel</v-btn>
+                        <v-btn color="blue darken-1" flat @click="">Save</v-btn>
+                      </v-card-actions>
+                    </v-card>
+                  </v-dialog>
+                </v-toolbar>
+                <v-data-table
+                  :headers="headers"
+                  :items="bills"
+                  class="elevation-1"
+                >
+                  <template v-slot:items="props">
+                    <td>{{ props.item.game }}</td>
+                    <td class="text-xs">{{ props.item.pagoid }}</td>
+                    <td class="text-xs">{{ props.item.fechapago }}</td>
+                    <td class="text-xs">{{ props.item.valoruno }}</td>
+                    <td class="text-xs">{{ props.item.valordos }}</td>
+                    <td class="text-xs">{{ props.item.valortres }}</td>
+                    <td class="justify-center layout px-0">
+                      <v-icon small class="mr-2" @click="showBill(props.item.games)">
+                        edit
+                      </v-icon>
+                    </td>
+                  </template>
+                  <template v-slot:no-data>
+                    <v-btn color="primary" @click="">Reset</v-btn>
+                  </template>
+                </v-data-table>
+              </div>
             </template>
-          </v-data-table>
+          Kill Bill
           </v-container>
         </v-card>
       </v-tab-item>
@@ -195,27 +238,27 @@ export default {
       claim_dialog: false,
       newClaim: {title: null, description: null, state: 'Active'},
       bills: [
-        {game: "GAME 1", pagoid: "1", fechapago: "05/04/2019", valoruno: 40, valordos: 20, valortres: 70},
-        {game: "GAME 1", pagoid: "2", fechapago: "05/04/2019", valoruno: 40, valordos: 20, valortres: 70},
-        {game: "GAME 1", pagoid: "3", fechapago: "05/04/2019", valoruno: 40, valordos: 20, valortres: 70},
-        {game: "GAME 1", pagoid: "4", fechapago: "05/04/2019", valoruno: 40, valordos: 20, valortres: 70},
-        {game: "GAME 1", pagoid: "5", fechapago: "05/04/2019", valoruno: 40, valordos: 20, valortres: 70},
-        {game: "GAME 1", pagoid: "6", fechapago: "05/04/2019", valoruno: 40, valordos: 20, valortres: 70},
+        {game: "BILL 1", pagoid: "1", fechapago: "05/04/2019", valoruno: 40, valordos: 20, valortres: 70, games: [{title: "dfdfd", price: 23232}, {title: "dfdfd", price: 23232}]},
+        {game: "BILL 3", pagoid: "3", fechapago: "05/04/2019", valoruno: 40, valordos: 20, valortres: 70},
+        {game: "BILL 4", pagoid: "4", fechapago: "05/04/2019", valoruno: 40, valordos: 20, valortres: 70},
+        {game: "BILL 5", pagoid: "5", fechapago: "05/04/2019", valoruno: 40, valordos: 20, valortres: 70},
+        {game: "BILL 6", pagoid: "6", fechapago: "05/04/2019", valoruno: 40, valordos: 20, valortres: 70},
       ],
       headers: [
                {
-                 text: 'Dessert (100g serving)',
-                 align: 'left',
+                 text: 'List of games',
                  sortable: false,
-                 value: 'name',
-                 rowsPerPage: -1
                },
-               { text: 'Calories', value: 'pagoid' },
-               { text: 'Fat (g)', value: 'fechapago' },
-               { text: 'Carbs (g)', value: 'valoruno' },
-               { text: 'Protein (g)', value: 'valordos' },
-               { text: 'Iron (%)', value: 'valortres' },
-             ]
+               { text: 'Payment ID', value: 'pagoid' },
+               { text: 'Date', value: 'fechapago' },
+               { text: 'Fraction 1', value: 'valoruno' },
+               { text: 'Fraction 2', value: 'valordos' },
+               { text: 'Fraction 3', value: 'valortres' },
+               { text: 'Actions', value: 'Actions' },
+             ],
+      rowsPerPage: 1,
+      aBill: [{title: 'sds', price: '34343'}, {title: 'sds', price: '34343'}],
+      billdialog: false
     }
   },
   beforeCreate(){
@@ -253,6 +296,10 @@ export default {
     },
     addclaim(){
       this.claims.push(this.newClaim);
+    },
+    showBill(item){
+      this.billdialog = true;
+      this.aBill = item;
     }
   }
 }
