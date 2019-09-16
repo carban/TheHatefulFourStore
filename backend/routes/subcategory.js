@@ -5,7 +5,7 @@ const pg = require('../db/database.js').getPool();
 
 //Consultar todas las subcategorias existentes
 router.get('/', async (req, res) => {
-  const {username} = req.body;
+  //const {username} = req.body;
   const myquery = {
     text: 'select subid, subnombre, catid from subcategorias natural join categorias where subactivo=true and catactivo=true order by catid;',
   }
@@ -22,12 +22,12 @@ router.get('/', async (req, res) => {
     aux.push(prof.rows[i]);
   }
   answ.push(aux);
-  //console.log(answ);
+  console.log(answ);
   res.json({'subcats':answ});
 })
 
 router.get('/combo', async (req, res) => {
-  const query = 'SELECT * FROM subcategorias where subactivo=true';
+  const query = 'SELECT * FROM subcategorias natural join categorias where subactivo=true and catactivo=true';
   try {
     const subcat = await pg.query(query);
     res.status(200).send(subcat.rows);
@@ -98,6 +98,38 @@ router.delete('/:id', async (req, res) => {
     res.status(400).json({
       msg: 'No se pudo eliminar la subcategoria'
     });
+  }
+})
+
+//Consultar subcategorias que han sido desactivadas
+router.get('/inactivas', async (req, res) => {
+  const query = 'SELECT * FROM subcategorias WHERE subactivo=false';
+  try {
+    const subcat = await pg.query(query);
+    res.status(200).send(subcat.rows);
+  } catch (e) {
+    console.log(e);
+    res.sendStatus(400);
+  }
+})
+
+//reactivar subcategoria
+router.put('/reactivate', async (req, res) => {
+  const { subid } = req.body;
+  const query = {
+    text: 'UPDATE subcategorias SET subactivo=true WHERE subid=$1',
+    values: [subid]
+  }
+  try {
+    await pg.query(query);
+    res.status(200).json({
+      msg: 'Subcategoria reactivada con exito'
+    });
+  } catch (error) {
+    res.status(400).json({
+      msg: 'No se pudo reactivar la subcategoria'
+    });
+    console.log(error);
   }
 })
 

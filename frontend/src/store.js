@@ -13,13 +13,15 @@ export default new Vuex.Store({
     sheet: false,
     // wordSearch: '',
     theCar: [],
-    profile: {cliusuario: null, clinombre: null, clicorreo: null, clifondos: null, clifechanac: null},
+    profile: { cliusuario: null, clinombre: null, clicorreo: null, clifondos: null, clifechanac: null },
     // admin: false,
     banner: true,
     catego: [],
     subcatego: [],
     games: [],
-    myGames: []
+    myGames: [],
+    categoInactivas: [],
+    subCatsInactivas: []
   },
   getters: {
     token: state => {
@@ -66,6 +68,12 @@ export default new Vuex.Store({
     },
     subcatego: state => {
       return state.subcatego;
+    },
+    categoInactivas: state => {
+      return state.categoInactivas;
+    },
+    subCatsInactivas: state => {
+      return state.subCatsInactivas;
     }
   },
   mutations: {
@@ -118,8 +126,8 @@ export default new Vuex.Store({
     RemoveitemsOnCar: (state, id) => {
 
       var index = null;
-      for(var i=0; i<state.theCar.length; i++){
-        if (state.theCar[i].juid==id) {
+      for (var i = 0; i < state.theCar.length; i++) {
+        if (state.theCar[i].juid == id) {
           index = i;
           break;
         }
@@ -146,6 +154,12 @@ export default new Vuex.Store({
     },
     setProfile: (state, pro) => {
       state.profile = pro;
+    },
+    setcategoInactivas: (state, cats) => {
+      state.categoInactivas = cats;
+    },
+    setsubCatsInactivas: (state, subcats) => {
+      state.subCatsInactivas = subcats;
     }
   },
   actions: {
@@ -173,12 +187,12 @@ export default new Vuex.Store({
     api_login: (context, credentials) => {
       return new Promise((resolve, reject) => {
         axios.post('http://localhost:8001/user/login',
-        {cliusuario: credentials.user, clipassword: credentials.password})
+          { cliusuario: credentials.user, clipassword: credentials.password })
           .then(res => {
             const token = res.data.token;
             // magic 3 lines, just keep it, i know that ypu know, you write magic
-            if (token==undefined) {
-              const {user} = jwtDecode(context.getters.token)
+            if (token == undefined) {
+              const { user } = jwtDecode(context.getters.token)
             }
             // *-*
             localStorage.setItem('access_token', token);
@@ -191,11 +205,11 @@ export default new Vuex.Store({
           })
       });
     },
-    logout: context =>{
-      if(context.getters.loggedIn){
+    logout: context => {
+      if (context.getters.loggedIn) {
         localStorage.removeItem('access_token');
         context.commit('destroyToken');
-      }else if (context.getters.loggedIn_admin) {
+      } else if (context.getters.loggedIn_admin) {
         localStorage.removeItem('admin_token');
         context.commit('destroyToken');
       }
@@ -204,7 +218,7 @@ export default new Vuex.Store({
       return new Promise((resolve, reject) => {
         const decoded = jwtDecode(context.getters.token);
         // console.log(decoded);
-        axios.post('http://localhost:8001/user/profile', {"username": decoded.userExistent})
+        axios.post('http://localhost:8001/user/profile', { "username": decoded.userExistent })
           .then(res => {
             console.log(res.data.profileInfo.clifechanac);
             context.commit('setProfile', res.data.profileInfo);
@@ -233,7 +247,7 @@ export default new Vuex.Store({
 
       if (context.getters.loggedIn) {
         const decoded = jwtDecode(context.getters.token);
-        axios.post('http://localhost:8001/game/gamesForClient', {"username": decoded.userExistent})
+        axios.post('http://localhost:8001/game/gamesForClient', { "username": decoded.userExistent })
           .then(res => {
             context.commit('setGames', res.data.allgames);
             context.commit('setmyGames', res.data.yourgames);
@@ -241,7 +255,7 @@ export default new Vuex.Store({
           .catch(err => {
             console.log(err);
           })
-      }else{
+      } else {
         axios.get('http://localhost:8001/game')
           .then(res => {
             context.commit('setGames', res.data.games);
@@ -256,7 +270,7 @@ export default new Vuex.Store({
       if (context.getters.loggedIn) {
         const decoded = jwtDecode(context.getters.token);
         return new Promise((resolve, reject) => {
-          axios.post('http://localhost:8001/game/searchGamesKeyWordForClient', {"username": decoded.userExistent, "kword": value})
+          axios.post('http://localhost:8001/game/searchGamesKeyWordForClient', { "username": decoded.userExistent, "kword": value })
             .then(res => {
               context.commit('setGames', res.data.games);
               resolve(res);
@@ -265,9 +279,9 @@ export default new Vuex.Store({
               reject(err);
             })
         });
-      }else{
+      } else {
         return new Promise((resolve, reject) => {
-          axios.post('http://localhost:8001/game/searchGamesKeyWord', {"kword": value})
+          axios.post('http://localhost:8001/game/searchGamesKeyWord', { "kword": value })
             .then(res => {
               context.commit('setGames', res.data.games);
               resolve(res);
@@ -282,7 +296,7 @@ export default new Vuex.Store({
       if (context.getters.loggedIn) {
         const decoded = jwtDecode(context.getters.token);
         return new Promise((resolve, reject) => {
-          axios.post('http://localhost:8001/game/searchGamesByForClient', {"username": decoded.userExistent, "subcat": value})
+          axios.post('http://localhost:8001/game/searchGamesByForClient', { "username": decoded.userExistent, "subcat": value })
             .then(res => {
               console.log(res.data.games);
               context.commit('setGames', res.data.games);
@@ -292,9 +306,9 @@ export default new Vuex.Store({
               reject(err);
             })
         });
-      }else{
+      } else {
         return new Promise((resolve, reject) => {
-          axios.post('http://localhost:8001/game/searchGamesBy', {"subcat": value})
+          axios.post('http://localhost:8001/game/searchGamesBy', { "subcat": value })
             .then(res => {
               context.commit('setGames', res.data.games);
               resolve(res);
@@ -326,6 +340,19 @@ export default new Vuex.Store({
           })
       })
     },
+    getCategoriesInactivasCombo: context => {
+      return new Promise((resolve, reject) => {
+        axios.get('http://localhost:8001/category/inactivas')
+          .then(res => {
+            //console.log(res.data.cats);
+            context.commit('setcategoInactivas', res.data.cats);
+            resolve(res.data.cats);
+          })
+          .catch(err => {
+            reject(err)
+          })
+      })
+    },
     getSubcategoriesCombo: context => {
       return new Promise((resolve, reject) => {
         axios.get('http://localhost:8001/subcategory/combo')
@@ -337,9 +364,21 @@ export default new Vuex.Store({
           })
       })
     },
+    getSubcategoriesInactivasCombo: context => {
+      return new Promise((resolve, reject) => {
+        axios.get('http://localhost:8001/subcategory/inactivas')
+          .then(res => {
+            context.commit('setsubCatsInactivas', res.data);
+            resolve(res.data);
+          })
+          .catch(err => {
+            reject(err)
+          })
+      })
+    },
     createCategory: (context, cat) => {
       return new Promise((resolve, reject) => {
-        axios.post('http://localhost:8001/category/', {'list': cat})
+        axios.post('http://localhost:8001/category/', { 'list': cat })
           .then(res => {
             resolve(res);
           })
@@ -359,9 +398,31 @@ export default new Vuex.Store({
           })
       });
     },
+    reactivateCategory: (context, cat) => {
+      return new Promise((resolve, reject) => {
+        axios.put('http://localhost:8001/category/reactivate', { 'catid': cat })
+          .then(res => {
+            resolve(res);
+          })
+          .catch(err => {
+            console.log(err);
+          })
+      });
+    },
+    reactivateSubcategory: (context, subcat) => {
+      return new Promise((resolve, reject) => {
+        axios.put('http://localhost:8001/subcategory/reactivate', { 'subid': subcat })
+          .then(res => {
+            resolve(res);
+          })
+          .catch(err => {
+            console.log(err);
+          })
+      });
+    },
     deleteCategory: (context, cat) => {
       return new Promise((resolve, reject) => {
-        axios.delete('http://localhost:8001/category/'+cat)
+        axios.delete('http://localhost:8001/category/' + cat)
           .then(res => {
             resolve(res);
           })
@@ -372,7 +433,7 @@ export default new Vuex.Store({
     },
     deleteSubcategory: (context, subcat) => {
       return new Promise((resolve, reject) => {
-        axios.delete('http://localhost:8001/subcategory/'+subcat)
+        axios.delete('http://localhost:8001/subcategory/' + subcat)
           .then(res => {
             resolve(res);
           })
@@ -384,7 +445,7 @@ export default new Vuex.Store({
     getSubcategories: context => {
       axios.get('http://localhost:8001/subcategory')
         .then(res => {
-          console.log(res.data.subcats);
+          //console.log(res.data.subcats);
 
           context.commit('setSubcatego', res.data.subcats);
         })
@@ -394,7 +455,7 @@ export default new Vuex.Store({
     },
     createSubcategory: (context, be) => {
       return new Promise((resolve, reject) => {
-        axios.post('http://localhost:8001/subcategory', {'list': be})
+        axios.post('http://localhost:8001/subcategory', { 'list': be })
           .then(res => {
             resolve(res);
           })
@@ -428,7 +489,7 @@ export default new Vuex.Store({
     },
     searchToEdit: (context, value) => {
       return new Promise((resolve, reject) => {
-        axios.post('http://localhost:8001/game/searchGamesKeyWord', {"kword": value})
+        axios.post('http://localhost:8001/game/searchGamesKeyWord', { "kword": value })
           .then(res => {
             resolve(res.data.games);
           })
