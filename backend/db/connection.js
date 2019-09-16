@@ -1,11 +1,11 @@
 const Sequelize = require('sequelize')
 
 
-const sequelize = new Sequelize('hatefulfour','juancamilo','24880312',//Sequelize('hateful4','postgres','lordpostgres123',
+const sequelize = new Sequelize('hateful42','postgres','lordpostgres123',
 {
     host:'localhost',
     dialect:'postgres',
-    port: 5433,//5432,
+    port: 5432,
     logging: false,
     define: {
       "createdAt": null,

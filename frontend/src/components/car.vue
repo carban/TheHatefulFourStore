@@ -1,27 +1,7 @@
 <template light>
   <div class="text-xs-center">
     <v-bottom-sheet v-model="sheet" persistent>
-      <!-- <v-list>
-        <v-btn color="error" left v-on:click="commitSheet()">
-          <v-icon>close</v-icon>
-        </v-btn> -->
-        <!-- <v-layout row wrap>
-          <v-card tile flat color="white">
 
-            <v-card-text>
-              <v-list-tile v-for="(item, index) in car" :key="index">
-                <div class="text-xs-center">
-                  <v-chip  @input="removeItem(index)" close>
-                    <v-avatar>
-                      <img src="https://res.cloudinary.com/teepublic/image/private/s--xeppzKEN--/t_Preview/b_rgb:191919,t_Watermark/c_limit,f_jpg,h_630,q_90,w_630/v1540525490/production/designs/3389495_0.jpg" alt="trevor">
-                    </v-avatar>
-                    <v-list-tile-title>{{ item.title }}</v-list-tile-title>
-                  </v-chip>
-                </div>
-              </v-list-tile>
-            </v-card-text>
-          </v-card>
-        </v-layout> -->
         <template light>
   <v-stepper dark v-model="e1">
     <v-stepper-header>
@@ -136,35 +116,10 @@
           </v-radio-group>
 
           </v-list>
-          <!-- <v-expansion-panel>
-            <v-expansion-panel-content>
-              <template v-slot:header>
-                <div>Cash</div>
-              </template>
-              <v-radio-group v-model="cashSelected" row>
-                <v-radio v-for="(item, index) in payCash" :key="index" :label="item.name" :value="item.name" color="pink"></v-radio>
-              </v-radio-group>
-            </v-expansion-panel-content>
-            <v-expansion-panel-content>
-              <template v-slot:header>
-                <div>Debito Ahorros</div>
-              </template>
-              <v-radio-group v-model="ahorrosSelected" row>
-                <v-radio v-for="(item, index) in payAhorro" :key="index" :label="item.name" :value="item.name" color="pink"></v-radio>
-              </v-radio-group>
-            </v-expansion-panel-content>
-            <v-expansion-panel-content>
-              <template v-slot:header>
-                <div>Credit Card</div>
-              </template>
-              <v-radio-group v-model="creditSelected" row>
-                <v-radio v-for="(item, index) in payCredit" :key="index" :label="item.name" :value="item.name" color="pink"></v-radio>
-              </v-radio-group>
-            </v-expansion-panel-content>
-          </v-expansion-panel> -->
+
         </template>
 
-        <v-btn color="primary" @click="makeShop()">
+        <v-btn color="primary" @click="e1 = 4">
           Continue
         </v-btn>
         <v-btn @click="e1 = 2">Back</v-btn>
@@ -296,12 +251,9 @@ export default {
     exportpdf(){
       var columns = [{title: 'Cash', dataKey: 'name'}, {title: 'Price', dataKey: 'porc'}]
       var doc = new jsPDF('p', 'pt');
-      var mode = [];
-      for(var i in this.payCash){
-        if (this.payCash[i].v) {
-          mode.push(this.payCash[i]);
-        }
-      }
+      var mode = [{name: this.cashSelected, porc: this.porcCash},
+        {name: this.ahorrosSelected, porc: this.porcAhorros},
+        {name: this.creditSelected, porc: this.porcCredit}];
       console.log(mode);
       doc.autoTable(columns, mode);
       doc.save('table.pdf');
@@ -358,16 +310,34 @@ export default {
       }
 
       if (this.porTotal == 100 && a && b && c) {
-        this.e1 = 5;
+        // this.e1 = 5;
+        this.makeShop();
       }else{
         alert("Oye tranquilo viejo")
       }
     },
     makeShop(){
-      // if (this.porTotal==100) {
-      //   this.e1 = 4;
-      // }
-      this.e1 = 4;
+
+      let modals = [{type: null, mode: null, money: null},{type: null, mode: null, money: null}, {type: null, mode: null, money: null}];
+
+      if (this.cashSelected!=null && this.cashSelected!='none') {
+        modals[0]={type: 'cash', mode: this.cashSelected, money: parseInt(this.porcCash)};
+      }
+      if(this.ahorrosSelected!=null && this.ahorrosSelected!='none'){
+        modals[1]={type: 'Ahorros', mode: this.ahorrosSelected, money: parseInt(this.porcAhorros)};
+      }
+      if(this.creditSelected!=null && this.creditSelected!='none'){
+        modals[2]={type: 'Credit', mode: this.creditSelected, money: parseInt(this.porcCredit)};
+      }
+
+      let obj = {modals: modals, games: this.car, total: parseFloat(this.total)}
+      // console.log(obj);
+      this.$store.dispatch('purchase', obj)
+        .then(res => {
+          console.log(res);
+        })
+
+      // this.e1 = 5;
     },
     finishBuy(){
       this.e1 = 1;

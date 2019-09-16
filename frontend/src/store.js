@@ -508,6 +508,18 @@ export default new Vuex.Store({
             console.log(err);
           })
       });
+    },
+    purchase: (context, obj) => {
+      return new Promise((resolve, reject) => {
+        const decoded = jwtDecode(context.getters.token);
+        axios.post('http://localhost:8001/sales', {'allinfo': obj, "username": decoded.userExistent})
+          .then(res => {
+            resolve(res.data);
+          })
+          .catch(err => {
+            console.log(err);
+          })
+      });
     }
   }
 })

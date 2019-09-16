@@ -22,6 +22,9 @@ const subcategorias = sequelize.define('subcategorias', {
         type:Sequelize.INTEGER,
         allowNull:false
     },
+    subactivo: {
+      type: Sequelize.BOOLEAN
+    }
 },{
     timestamps: false
 });
