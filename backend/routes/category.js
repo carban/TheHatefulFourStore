@@ -8,7 +8,7 @@ router.get('/', async (req, res) => {
   const query = 'SELECT * FROM categorias WHERE catactivo=true ORDER BY catid';
   try {
     const cat = await pg.query(query);
-    res.status(200).send({'cats': cat.rows});
+    res.status(200).send({ 'cats': cat.rows });
   } catch (e) {
     console.log(e);
     res.sendStatus(400);
@@ -17,7 +17,7 @@ router.get('/', async (req, res) => {
 
 //Crear nuevas categorias
 router.post('/', async (req, res) => {
-  const {list} = req.body;
+  const { list } = req.body;
   try {
     for (var i = 0; i < list.length; i++) {
       const myquery = {
@@ -31,7 +31,7 @@ router.post('/', async (req, res) => {
     console.log(e);
   }
 
-  res.json({'msg':'created'});
+  res.json({ 'msg': 'created' });
 });
 
 //Modificar una categoria
@@ -72,6 +72,39 @@ router.delete('/:id', async (req, res) => {
     res.status(400).json({
       msg: 'No se pudo eliminar la categoria'
     });
+  }
+})
+
+//consultar categorias que han sido desactivadas
+router.get('/inactivas', async (req, res) => {
+  const query = 'SELECT * FROM categorias WHERE catactivo=false';
+  try {
+    const cat = await pg.query(query);
+    res.status(200).send({ 'cats': cat.rows });
+  } catch (e) {
+    console.log(e);
+    res.sendStatus(400);
+  }
+})
+
+//reactivar categoria
+router.put('/reactivate', async (req, res) => {
+  const { catid } = req.body;
+  
+  const query = {
+    text: 'UPDATE categorias SET catactivo=true WHERE catid=$1',
+    values: [catid]
+  }
+  try {
+    await pg.query(query);
+    res.status(200).json({
+      msg: 'Categoria reactivada con exito'
+    });
+  } catch (error) {
+    res.status(400).json({
+      msg: 'No se pudo reactivar la categoria'
+    });
+    console.log(error);
   }
 })
 

@@ -15,7 +15,7 @@
     </v-snackbar>
     <v-tabs v-model="active" color="dark" slider-color="primary">
       <v-tab>
-        Cateogories
+        Categories
       </v-tab>
       <v-tab-item>
         <v-card flat>
@@ -84,6 +84,23 @@
                   <v-container grid-list-xs,sm,md,lg,xl>
                   <center><h1>Are you sure to delete Category {{deleteCom}} ?</h1>
                   <v-btn color="error" v-on:click="deletedialog = false" @click="deleteCatego()">Sisas pri</v-btn></center>
+                  </v-container>
+                </v-card>
+            </v-dialog>
+            <h2>Reactivate</h2>
+            <v-card class="elevation-20">
+              <v-card-text>
+                <v-combobox :items="itemscatsinactivas" label="Select category to reactivate" v-model="catactivateCom"></v-combobox>
+              </v-card-text>
+              <center>
+                <v-btn color="green" @click="catactivatedialog = true">REACTIVATE</v-btn>
+              </center>
+            </v-card>
+            <v-dialog v-model="catactivatedialog" max-width="500px">
+                <v-card>
+                  <v-container grid-list-xs,sm,md,lg,xl>
+                  <center><h1>Are you sure to reactivate category {{catactivateCom}} ?</h1>
+                  <v-btn color="error" v-on:click="catactivatedialog = false" @click="reactivateCatego()">Sisas pri</v-btn></center>
                   </v-container>
                 </v-card>
             </v-dialog>
@@ -160,6 +177,24 @@
                   <v-container grid-list-xs,sm,md,lg,xl>
                   <center><h1>Are you sure to delete subcategory {{subdeleteCom}} ?</h1>
                   <v-btn color="error" v-on:click="subdeletedialog = false" @click="deleteSubcatego()">Sisas pri</v-btn></center>
+                  </v-container>
+                </v-card>
+            </v-dialog>
+            <br>
+            <h2>Reactivate</h2>
+            <v-card class="elevation-20">
+              <v-card-text>
+                <v-combobox :items="itemssubinactivas" label="Select Subcategory to reactivate" v-model="subactivateCom"></v-combobox>
+              </v-card-text>
+              <center>
+                <v-btn color="green" @click="subactivatedialog = true">REACTIVATE</v-btn>
+              </center>
+            </v-card>
+            <v-dialog v-model="subactivatedialog" max-width="500px">
+                <v-card>
+                  <v-container grid-list-xs,sm,md,lg,xl>
+                  <center><h1>Are you sure to reactivate subcategory {{subactivateCom}} ?</h1>
+                  <v-btn color="error" v-on:click="subactivatedialog = false" @click="reactivateSubcatego()">Sisas pri</v-btn></center>
                   </v-container>
                 </v-card>
             </v-dialog>
@@ -302,6 +337,8 @@ export default {
   created(){
     this.getCatsforCombo();
     this.getSubCatsforCombo();
+    this.getSubCatsInactivasforCombo();
+    this.getCatsInactivasforCombo();
   },
   data(){
     return{
@@ -326,15 +363,21 @@ export default {
       subeditCom: ' ',
       subeditSub: ' ',
       subdeleteCom: ' ',
+      subactivateCom: ' ',
+      catactivateCom:' ',
       sub: null,
       items: [],
       itemssub: [],
+      itemssubinactivas: [],
+      itemscatsinactivas: [],
       new_categos: [],
       new_subcategos: [],
       editdialog: false,
       deletedialog: false,
       subeditdialog: false,
       subdeletedialog: false,
+      subactivatedialog: false,
+      catactivatedialog: false,
       preImage: null,
 
       dialog: null,
@@ -418,7 +461,12 @@ export default {
       console.log(thecat.catnombre, thecat.catid);
       this.$store.dispatch('deleteCategory',thecat.catid)
       .then(res => {
-        removeCategory(thecat.catid)
+        //removeCategory(thecat.catid)
+        this.$store.dispatch('getCategories');
+        this.getCatsforCombo();
+        this.$store.dispatch('getSubcategories');
+        this.getSubCatsforCombo();
+        this.getCatsInactivasforCombo();
         console.log('Categoria eliminada'); ///esto provisionalmente mientras ponemos algun anuncio
       })
       .catch(err => {
@@ -439,6 +487,9 @@ export default {
       this.$store.dispatch('deleteSubcategory',thesubcat.subid)
       .then(res => {
         //removeCategory(thesubcat.subid)
+        this.$store.dispatch('getSubcategories');
+        this.getSubCatsforCombo();
+        this.getSubCatsInactivasforCombo();
         console.log('Subcategoria eliminada'); ///esto provisionalmente mientras ponemos algun anuncio
       })
       .catch(err => {
@@ -466,6 +517,32 @@ export default {
             ele.push(res[i].subnombre);
           }
           this.itemssub = ele;
+        })
+        .catch(err => {
+          console.log(err);
+        })
+    },
+    getCatsInactivasforCombo(){
+      this.$store.dispatch('getCategoriesInactivasCombo')
+        .then(res => {
+          var ele = [];
+          for (var i = 0; i < res.length; i++) {
+            ele.push(res[i].catnombre);
+          }
+          this.itemscatsinactivas = ele;
+        })
+        .catch(err => {
+          console.log(err);
+        })
+    },
+    getSubCatsInactivasforCombo(){
+      this.$store.dispatch('getSubcategoriesInactivasCombo')
+        .then(res => {
+          var ele = [];
+          for (var i = 0; i < res.length; i++) {
+            ele.push(res[i].subnombre);
+          }
+          this.itemssubinactivas = ele;
         })
         .catch(err => {
           console.log(err);
@@ -579,6 +656,54 @@ export default {
         .catch(err => {
           console.log(err);
         })
+    },
+    reactivateCatego(){
+      var cats = this.$store.getters.categoInactivas;
+      //console.log(cats[0].catid);
+      for (var i = 0; i < cats.length; i++) {
+        if (cats[i].catnombre == this.catactivateCom) {
+          var thecat = cats[i];
+          break;
+        }
+      }
+      console.log(thecat.catnombre, thecat.catid);
+      this.$store.dispatch('reactivateCategory',thecat.catid)
+      .then(res => {
+        //removeCategory(thecat.catid)
+        this.$store.dispatch('getCategories');
+        this.getCatsforCombo();
+        this.$store.dispatch('getSubcategories');
+        this.getSubCatsforCombo();
+        this.getCatsInactivasforCombo();
+        console.log('Categoria reactivada'); ///esto provisionalmente mientras ponemos algun anuncio
+      })
+      .catch(err => {
+        console.log('Categoria no reactivada');
+      })
+    },
+    reactivateSubcatego(){
+      var subcats = this.$store.getters.subCatsInactivas;
+      for (var i = 0; i < subcats.length; i++) {
+        if (subcats[i].subnombre == this.subactivateCom) {
+          var thesubcat = subcats[i];
+          break;
+        }
+      }
+      console.log(thesubcat.subnombre, thesubcat.subid);
+      this.$store.dispatch('reactivateSubcategory',thesubcat.subid)
+      .then(res => {
+        //removeCategory(thecat.catid)
+        //this.$store.dispatch('getCategories');
+        //this.getCatsforCombo();
+        this.$store.dispatch('getSubcategories');
+        this.getSubCatsforCombo();
+        this.getCatsInactivasforCombo();
+        this.getSubCatsInactivasforCombo();
+        console.log('Subcategoria reactivada'); ///esto provisionalmente mientras ponemos algun anuncio
+      })
+      .catch(err => {
+        console.log('Subcategoria no reactivada');
+      })
     }
 
   }
