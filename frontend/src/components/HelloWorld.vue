@@ -144,6 +144,8 @@
   var blade = require('@/assets/blade.gif');
   var spacegirl = require('@/assets/spacegirl.gif');
   var gaming = require('@/assets/gaming.jpg');
+  var drive = require('@/assets/drive.gif');
+  var pc = require('@/assets/pc.gif');
 
 
 
@@ -193,6 +195,8 @@
         {src: blade},
         {src: spacegirl},
         {src: gaming},
+        {src: pc},
+        {src: drive},
       ],
       dialog: false,
       current_product: {junombre: null, judescription: null},
@@ -243,6 +247,9 @@
     -moz-border-radius: 50px;
     -webkit-border-radius: 50px;
     border-radius: 50px;
+    -webkit-box-shadow: 0px 20px 41px -29px rgba(0,0,0,0.75);
+    -moz-box-shadow: 0px 20px 41px -29px rgba(0,0,0,0.75);
+    box-shadow: 0px 20px 41px -29px rgba(0,0,0,0.75);
   }
 
 </style>

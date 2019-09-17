@@ -1,5 +1,28 @@
 <template light>
   <div class="text-xs-center">
+
+    <template>
+      <v-layout row justify-center>
+        <v-btn color="primary" light @click.stop="succPay = true">
+          Open Dialog
+        </v-btn>
+        <v-dialog v-model="succPay" max-width="300">
+          <v-card>
+            <v-card-title class="headline">Successful Payment :D</v-card-title>
+            <img :src="imgcup" width="300px" height="300px"></img>
+            <v-card-text>
+              Now you can enjoy your games on your profile ;)
+            </v-card-text>
+            <v-card-actions>
+              <v-spacer></v-spacer>
+            </v-card-actions>
+          </v-card>
+        </v-dialog>
+      </v-layout>
+    </template>
+
+
+
     <v-bottom-sheet v-model="sheet" persistent>
 
         <template light>
@@ -200,6 +223,7 @@
 import jsPDF from 'jspdf';
 import 'jspdf-autotable';
 
+var cup = require('@/assets/cup.gif');
 var bbvaI = require('@/assets/bbva.png');
 
 export default {
@@ -230,6 +254,7 @@ export default {
   },
   data(){
     return{
+      imgcup: cup,
       e1: 0,
       total: 0,
       dividers: 8,
@@ -244,7 +269,8 @@ export default {
       porcCash: 0,
       porcAhorros: 0,
       porcCredit: 0,
-      bbva: bbvaI
+      bbva: bbvaI,
+      succPay: false
     }
   },
   methods: {
@@ -347,15 +373,29 @@ export default {
       // console.log(obj);
       this.$store.dispatch('purchase', obj)
         .then(res => {
-          console.log(res);
+          if (res.res == "SOLD") {
+            // alert("dfsdf")
+            this.productsToBuy = [];
+            this.cashSelected = null;
+            this.ahorrosSelected = null;
+            this.creditSelected = null;
+            this.porcCash = 0;
+            this.porcAhorros = 0;
+            this.porcCredit = 0;
+
+            this.$store.commit('setEmptyCar');
+            this.$store.dispatch('getGames');
+          }
+          // alert("Successful payment")
+          this.succPay = true;
+          this.commitSheet();
         })
 
-      // this.e1 = 5;
+
     },
     finishBuy(){
       this.e1 = 1;
       this.commitSheet();
-      // this.$store.commit('setEmptyCar');
     },
   }
 }
