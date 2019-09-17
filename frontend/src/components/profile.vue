@@ -43,7 +43,7 @@
 
             <!-- <v-card v-for="(item, index) in products" :key="index" dark
             :color=item.color :style="{'width': item.width, 'margin-right': '10px', 'margin-bottom':'10px'}"> -->
-            <v-card v-for="(item, index) in mygames" :key="index"
+            <v-card v-for="(item, index) in mygames" :key="index" @click = "opengamedialog(index)"
             :color=item.color :style="{'width':'350px', 'margin-right': '10px', 'margin-bottom':'10px'}">
 
               <v-layout class="product" justify-space-between>
@@ -66,6 +66,34 @@
               <v-divider dark></v-divider>
             </v-card>
           </v-layout>
+          <!-- DIALOG GAME -->
+          <!--  -->
+          <!--  -->
+          <!--  -->
+          <!--  -->
+          <v-dialog dark v-model="dialoggame" max-width="500px">
+            <v-card>
+              <v-card-text>
+                <center>
+                  <h1>{{gamecal.junombre}}</h1>
+                  <p>Rate this game:</p>
+                <span class="grey--text text--lighten-2 caption mr-2">
+                  ({{gamecal.jurating}})
+                </span>
+                <v-rating v-model="gamecal.jurating" background-color="white" color="yellow" half-increments hover size="38">
+                </v-rating>
+              </center>
+              </v-card-text>
+              <v-card-actions>
+                <center>
+                  <v-list-tile>
+                  </v-list-tile>
+                </center>
+                <v-spacer></v-spacer>
+                <v-btn color="blue darken-1" flat @click="dialoggame = false">Close</v-btn>
+              </v-card-actions>
+            </v-card>
+          </v-dialog>
           </v-container>
         </v-card>
       </v-tab-item>
@@ -245,20 +273,22 @@ export default {
         {game: "BILL 6", pagoid: "6", fechapago: "05/04/2019", valoruno: 40, valordos: 20, valortres: 70},
       ],
       headers: [
-               {
-                 text: 'List of games',
-                 sortable: false,
-               },
-               { text: 'Payment ID', value: 'pagoid' },
-               { text: 'Date', value: 'fechapago' },
-               { text: 'Fraction 1', value: 'valoruno' },
-               { text: 'Fraction 2', value: 'valordos' },
-               { text: 'Fraction 3', value: 'valortres' },
-               { text: 'Actions', value: 'Actions' },
-             ],
+        {
+          text: 'List of games',
+          sortable: false,
+        },
+        { text: 'Payment ID', value: 'pagoid' },
+        { text: 'Date', value: 'fechapago' },
+        { text: 'Fraction 1', value: 'valoruno' },
+        { text: 'Fraction 2', value: 'valordos' },
+        { text: 'Fraction 3', value: 'valortres' },
+        { text: 'Actions', value: 'Actions' },
+        ],
       rowsPerPage: 1,
       aBill: [{title: 'sds', price: '34343'}, {title: 'sds', price: '34343'}],
-      billdialog: false
+      billdialog: false,
+      dialoggame: false,
+      gamecal: {junombre: null, juyear: null, juprecio: null}
     }
   },
   beforeCreate(){
@@ -287,6 +317,12 @@ export default {
               this.snack2 = true;
           })
        })
+    },
+    opengamedialog(index){
+      this.gamecal.junombre = this.mygames[index].junombre;
+      this.gamecal.juyear = this.mygames[index].juyear;
+      this.gamecal.jurating = this.mygames[index].jurating;
+      this.dialoggame = true;
     },
     openAClaim(index){
       this.aClaim.title = this.claims[index].title;

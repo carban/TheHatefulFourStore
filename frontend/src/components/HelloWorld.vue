@@ -15,8 +15,6 @@
 
       <v-layout v-if="allgames.length > 0" row wrap>
 
-        <!-- <v-card v-for="(item, index) in products" :key="index" dark
-        :color=item.color :style="{'width': item.width, 'margin-right': '10px', 'margin-bottom':'10px'}"> -->
         <v-card v-for="(item, index) in allgames" :key="index" dark
         :color=item.color :style="{'width':'369px', 'margin-right': '10px', 'margin-bottom':'10px'}">
 
@@ -27,7 +25,15 @@
                   <div class="headline">{{item.junombre}}</div>
                   <div>{{item.jucompany}}</div>
                   <div>({{item.juyear}})</div>
-                  <div><b>{{item.juprecio}}</b></div>
+                  <div v-if="item.judescuentoactual > 0" ><del><b>{{item.juprecio}}</b></del></div>
+                  <div v-if="item.judescuentoactual > 0" class="price_style"><b>{{beirut(item.juprecio, item.judescuentoactual, index)}}</b></div>
+                  <div v-if="item.judescuentoactual > 0" class="oferta">
+                    <center>
+                      <b>{{item.judescuentoactual}}% OFF</b>
+                    </center>
+                  </div>
+
+                  <div v-if="item.judescuentoactual == 0" class="price_style"><b>{{item.juprecio}}</b></div>
                 </div>
               </v-card-title>
 
@@ -208,6 +214,12 @@
       setCurrent_product(proc){
         this.dialog = !this.dialog;
         this.current_product = proc;
+      },
+      beirut(real, desc, index){
+        let price = real.split("$");
+        let priceFloat = parseFloat(price[1]);
+        let priceWithDiscount = (priceFloat - (priceFloat * desc) / 100).toFixed(2);
+        return "$"+priceWithDiscount;
       }
     }
   }
@@ -217,4 +229,20 @@
   .product{
     cursor: pointer;
   }
+  .price_style{
+    font-size: 20px;
+  }
+  .oferta{
+    margin-left: 70px;
+    margin-top: -30px;
+    position: absolute;
+    height: 25px;
+    width: 80px;
+    background-color: yellow;
+    color: red;
+    -moz-border-radius: 50px;
+    -webkit-border-radius: 50px;
+    border-radius: 50px;
+  }
+
 </style>

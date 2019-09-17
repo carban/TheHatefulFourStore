@@ -268,7 +268,20 @@ export default {
     buyStep(){
       this.e1 = 2;
       let totaliva = 0;
-      this.productsToBuy = this.car.slice();
+      // this.productsToBuy = this.car.slice();
+      this.productsToBuy = JSON.parse(JSON.stringify(this.car));
+      // Actualiza los precios con descuento a los productos que se van a comprar
+      for (var i = 0; i < this.productsToBuy.length; i++) {
+        if (this.productsToBuy[i].judescuentoactual > 0) {
+          let desc = this.productsToBuy[i].judescuentoactual;
+          let real = this.productsToBuy[i].juprecio;
+          let price = real.split("$");
+          let priceFloat = parseFloat(price[1]);
+          let priceWithDiscount = (priceFloat - (priceFloat * desc) / 100).toFixed(2);
+          this.productsToBuy[i].juprecio = "$"+priceWithDiscount;
+        }
+      }
+
       this.productsToBuy.push({juprecio: this.iva, junombre: "Total IVA"});
       var aux = 0;
       for (var i = 0; i < this.productsToBuy.length; i++) {
@@ -343,7 +356,7 @@ export default {
       this.e1 = 1;
       this.commitSheet();
       // this.$store.commit('setEmptyCar');
-    }
+    },
   }
 }
 </script>

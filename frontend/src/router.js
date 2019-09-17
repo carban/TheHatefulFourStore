@@ -8,6 +8,7 @@ import register from './components/register.vue'
 import profile from './components/profile.vue'
 import logoutmsg from './components/logoutmsg.vue'
 import profileAdmin from './components/profileAdmin.vue'
+import support from './components/support.vue'
 import addcaridk from './components/addcaridk.vue'
 
 Vue.use(Router)
@@ -72,6 +73,14 @@ export default new Router({
       component: profileAdmin,
       meta: {
         requiresAdmin: true
+      }
+    },
+    {
+      path: '/support',
+      name: 'support',
+      component: support,
+      meta: {
+        // requiresSupport: true
       }
     },
   ]
