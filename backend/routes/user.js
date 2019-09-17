@@ -117,6 +117,47 @@ router.post('/updateProfile',async(req,res) => {
 })
 
 
+router.post('/billsForClient', async (req, res) => {
+  const {username} = req.body;
+
+  try {
+    const myquery = {
+      text: 'select fechapago, junombre, idcompra, juegos.juid, p1.cliusuario, p1.pagoid, p1.valoruno, p1.valordos, p1.valortres, juegos.juprecio from (select librerias.pagoid, cliusuario, juid, fechapago, idcompra, valoruno, valordos, valortres from pagos inner join librerias on pagos.pagoid = librerias.pagoid) as p1 inner join juegos on p1.juid = juegos.juid where cliusuario = $1',
+      values: [username]
+    }
+    const answ = await pg.query(myquery);
+
+    let allpagos = answ.rows;
+    console.log(allpagos);
+    allpagos.push({pagoid: 3147});
+    let f = allpagos[0].pagoid;
+    let resp = [];
+    let thebills = [];
+
+    for (var i = 0; i < allpagos.length; i++) {
+      if (allpagos[i].pagoid != f) {
+        f = allpagos[i].pagoid;
+        thebills.push({info: {fechapago: allpagos[i-1].fechapago, pagoid: allpagos[i-1].pagoid, valoruno: allpagos[i-1].valoruno, valordos: allpagos[i-1].valordos, valortres: allpagos[i-1].valortres}, games: resp});
+        resp = [];
+      }else{
+        resp.push({title: allpagos[i].junombre, price:allpagos[i].juprecio});
+      }
+    }
+    // CHECKEAR DESCUENTOS
+
+    //
+    //
+    //
+    // 
+
+    res.json({allbills: thebills});
+    // res.json(thebills);
+
+  } catch (e) {
+    console.log(e);
+   res.json(e);
+  }
+})
 
 
 

@@ -139,12 +139,12 @@
                   class="elevation-1"
                 >
                   <template v-slot:items="props">
-                    <td>{{ props.item.game }}</td>
-                    <td class="text-xs">{{ props.item.pagoid }}</td>
-                    <td class="text-xs">{{ props.item.fechapago }}</td>
-                    <td class="text-xs">{{ props.item.valoruno }}</td>
-                    <td class="text-xs">{{ props.item.valordos }}</td>
-                    <td class="text-xs">{{ props.item.valortres }}</td>
+                    <td>{{ props.item.pagoid }}</td>
+                    <td class="text-xs">{{ props.item.info.pagoid }}</td>
+                    <td class="text-xs">{{ props.item.info.fechapago }}</td>
+                    <td class="text-xs">{{ props.item.info.valoruno }}</td>
+                    <td class="text-xs">{{ props.item.info.valordos }}</td>
+                    <td class="text-xs">{{ props.item.info.valortres }}</td>
                     <td class="justify-center layout px-0">
                       <v-icon small class="mr-2" @click="showBill(props.item.games)">
                         edit
@@ -252,6 +252,9 @@ export default {
     },
     mygames(){
       return this.$store.getters.myGames;
+    },
+    bills(){
+      return this.$store.getters.bills;
     }
   },
   data(){
@@ -265,13 +268,13 @@ export default {
       aClaim: {title: null, description: null, state: null},
       claim_dialog: false,
       newClaim: {title: null, description: null, state: 'Active'},
-      bills: [
-        {game: "BILL 1", pagoid: "1", fechapago: "05/04/2019", valoruno: 40, valordos: 20, valortres: 70, games: [{title: "dfdfd", price: 23232}, {title: "dfdfd", price: 23232}]},
-        {game: "BILL 3", pagoid: "3", fechapago: "05/04/2019", valoruno: 40, valordos: 20, valortres: 70},
-        {game: "BILL 4", pagoid: "4", fechapago: "05/04/2019", valoruno: 40, valordos: 20, valortres: 70},
-        {game: "BILL 5", pagoid: "5", fechapago: "05/04/2019", valoruno: 40, valordos: 20, valortres: 70},
-        {game: "BILL 6", pagoid: "6", fechapago: "05/04/2019", valoruno: 40, valordos: 20, valortres: 70},
-      ],
+      // bills: [
+      //   {game: "BILL 1", pagoid: "1", fechapago: "05/04/2019", valoruno: 40, valordos: 20, valortres: 70, games: [{title: "dfdfd", price: 23232}, {title: "dfdfd", price: 23232}]},
+      //   {game: "BILL 3", pagoid: "3", fechapago: "05/04/2019", valoruno: 40, valordos: 20, valortres: 70},
+      //   {game: "BILL 4", pagoid: "4", fechapago: "05/04/2019", valoruno: 40, valordos: 20, valortres: 70},
+      //   {game: "BILL 5", pagoid: "5", fechapago: "05/04/2019", valoruno: 40, valordos: 20, valortres: 70},
+      //   {game: "BILL 6", pagoid: "6", fechapago: "05/04/2019", valoruno: 40, valordos: 20, valortres: 70},
+      // ],
       headers: [
         {
           text: 'List of games',
@@ -294,7 +297,9 @@ export default {
   beforeCreate(){
     //Consult Profile Info
     this.$store.dispatch('getGames');
-    this.$store.dispatch('profileInfo')
+    this.$store.dispatch('profileInfo');
+
+    this.$store.dispatch('getBills');
 
   },
   methods: {

@@ -3,9 +3,6 @@
 
     <template>
       <v-layout row justify-center>
-        <v-btn color="primary" light @click.stop="succPay = true">
-          Open Dialog
-        </v-btn>
         <v-dialog v-model="succPay" max-width="300">
           <v-card>
             <v-card-title class="headline">Successful Payment :D</v-card-title>

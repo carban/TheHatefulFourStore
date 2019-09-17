@@ -21,7 +21,8 @@ export default new Vuex.Store({
     games: [],
     myGames: [],
     categoInactivas: [],
-    subCatsInactivas: []
+    subCatsInactivas: [],
+    bills: []
   },
   getters: {
     token: state => {
@@ -38,6 +39,9 @@ export default new Vuex.Store({
     },
     profile: state => {
       return state.profile;
+    },
+    bills: state => {
+      return state.bills;
     },
     // getWordSearch: state => {
     //   return state.wordSearch;
@@ -89,6 +93,9 @@ export default new Vuex.Store({
     },
     setProfile: (state, pro) => {
       state.profile = pro;
+    },
+    setBills: (state, b) => {
+      state.bills = b;
     },
     // setWordSearch: (state, word) => {
     //
@@ -242,6 +249,16 @@ export default new Vuex.Store({
             reject(err);
           })
       });
+    },
+    getBills: context => {
+      const decoded = jwtDecode(context.getters.token);
+      axios.post('http://localhost:8001/user/billsForClient', { "username": decoded.userExistent })
+        .then(res => {
+          context.commit('setBills', res.data.allbills);
+        })
+        .catch(err => {
+          console.log(err);
+        })
     },
     getGames: context => {
 
