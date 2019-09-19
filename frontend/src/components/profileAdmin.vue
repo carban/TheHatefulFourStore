@@ -368,8 +368,54 @@
       <v-tab-item>
         <v-card flat>
          <v-container grid-list-xs,sm,md,lg,xl>
-           <h1>Reports</h1>
-           <bar-chart></bar-chart>
+           <h1>TOP 20 BEST SELLERS</h1>
+
+<!--  -->
+<template>
+  <div>
+      <v-divider
+        class="mx-2"
+        inset
+        vertical
+      ></v-divider>
+      <v-spacer></v-spacer>
+    </v-toolbar>
+    <v-data-table
+      :headers="headers"
+      :items="thetops"
+      class="elevation-1"
+    >
+      <template v-slot:items="props">
+        <td>Single Bill</td>
+        <td class="text-xs">{{ props.item.junombre }}</td>
+        <td class="text-xs">{{ props.item.count }}</td>
+        <td class="justify-center layout px-0">
+          <v-icon small class="mr-2">
+            remove_red_eye
+          </v-icon>
+        </td>
+      </template>
+      <template v-slot:no-data>
+        <v-btn color="primary" @click="">Reset</v-btn>
+      </template>
+    </v-data-table>
+  </div>
+</template>
+
+
+
+
+
+
+
+<!--  -->
+
+
+
+
+
+
+
          </v-container>
        </v-card>
       </v-tab-item>
@@ -378,21 +424,21 @@
 </template>
 
 <script>
+
 export default {
-
-  mounted () {
-		// this.chartData is created in the mixin
-		this.renderChart(this.datacollection, this.options)
-	},
-
 
   computed:{
     totalGames(){
       return this.$store.getters.games;
+    },
+    thetops(){
+      console.log(this.$store.getters.tops);
+      return this.$store.getters.tops;
     }
   },
   beforeCreate(){
     this.$store.dispatch('getGamesForAdmin');
+    this.$store.dispatch('getTops');
   },
   created(){
     this.getCatsforCombo();
@@ -403,21 +449,14 @@ export default {
   },
   data(){
     return{
-
-      datacollection: {
-    				labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
-    				datasets: [
-    					{
-    						label: 'Data One',
-    						backgroundColor: '#f87979',
-    						pointBackgroundColor: 'white',
-    						borderWidth: 1,
-    						pointBorderColor: '#249EBF',
-    						data: [40, 20, 30, 50, 90, 10, 20, 40, 50, 70, 90, 100]
-    					}
-    ]
-    			},
-  
+      headers: [
+        {
+          text: 'List of games',
+          sortable: true,
+        },
+        { text: 'TITLE ', value: 'junombre' },
+        { text: 'SALES', value: 'count' }
+      ],
       active: null,
       snack: false,
       snack2: false,
@@ -726,7 +765,6 @@ export default {
       this.editAGame = item;
     },
     editGame(){
-      // QUEDA PENDIENTE MODICAR LA SUBCATEGORIA
       this.$store.dispatch('editGame', this.editAGame)
         .then(res => {
           this.dialog = false;

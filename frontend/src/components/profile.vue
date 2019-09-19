@@ -157,7 +157,7 @@
                     <td class="text-xs">{{ props.item.info.valortres }}</td>
                     <td class="justify-center layout px-0">
                       <v-icon small class="mr-2" @click="showBill(props.item.games)">
-                        edit
+                        remove_red_eye
                       </v-icon>
                     </td>
                   </template>
@@ -264,7 +264,7 @@ export default {
       return this.$store.getters.myGames;
     },
     bills(){
-      console.log(this.$store.getters.bills);
+      // console.log(this.$store.getters.bills);
       return this.$store.getters.bills;
     },
   },

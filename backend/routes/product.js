@@ -40,7 +40,7 @@ router.get('/gamesAdmin', async (req, res) => {
 
 
     const myquery = {
-      text: 'select * from (select * from (select * from juegos natural join catjuegos) as p1) as p2 natural join subcategorias;'
+      text: 'select * from (select * from (select * from juegos natural join catjuegos) as p1) as p2 natural join subcategorias ORDER BY juid asc;'
     }
 
     const answ = await pg.query(myquery);
@@ -217,14 +217,29 @@ router.post('/crearGame', async (req, res) => {
 
 //Modificar un juego
 router.post('/editGame', async (req, res) => {
-    const { juid, junombre, jucompany, judescription, juprecio, juyear, jurating, subnombre, juimage } = req.body;
+    const { juid, junombre, jucompany, judescription, juprecio, juyear, jurating, subnombre, juimage} = req.body;
     // QUEDA PENDIENTE MODICAR LA SUBCATEGORIA
     const query = {
         text: 'UPDATE juegos SET junombre=$2, jucompany=$3, judescription=$4, juprecio=$5, juyear=$6, jurating=$7, juimage=$8 WHERE juid=$1',
         values: [juid, junombre, jucompany, judescription, juprecio, juyear, jurating, juimage]
     };
+
+    const querySUBID = {
+      text: 'SELECT subid from subcategorias where subnombre = $1',
+      values: [subnombre]
+    };
+
+    var subIDE= await pg.query(querySUBID);
+    var ide = subIDE.rows[0].subid;
+
+    const updateSub = {
+      text: 'update catjuegos SET subid = $1 where juid = $2',
+      values: [ide, juid]
+    };
+
     try {
         await pg.query(query);
+        await pg.query(updateSub);
         res.status(200).json({
             msg: 'Juego modificado satisfactoriamente'
         });

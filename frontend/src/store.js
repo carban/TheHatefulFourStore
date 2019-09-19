@@ -22,7 +22,8 @@ export default new Vuex.Store({
     myGames: [],
     categoInactivas: [],
     subCatsInactivas: [],
-    bills: []
+    bills: [],
+    tops: []
   },
   getters: {
     token: state => {
@@ -42,6 +43,9 @@ export default new Vuex.Store({
     },
     bills: state => {
       return state.bills;
+    },
+    tops: state => {
+      return state.tops;
     },
     // getWordSearch: state => {
     //   return state.wordSearch;
@@ -81,6 +85,9 @@ export default new Vuex.Store({
     }
   },
   mutations: {
+    tops: (state, t) => {
+      state.tops = t;
+    },
     tokenMutation: (state, token) => {
       state.token = token;
     },
@@ -96,6 +103,9 @@ export default new Vuex.Store({
     },
     setBills: (state, b) => {
       state.bills = b;
+    },
+    setTops: (state, t) => {
+      state.tops = t;
     },
     // setWordSearch: (state, word) => {
     //
@@ -255,6 +265,15 @@ export default new Vuex.Store({
       axios.post('http://localhost:8001/user/billsForClient', { "username": decoded.userExistent })
         .then(res => {
           context.commit('setBills', res.data.allbills);
+        })
+        .catch(err => {
+          console.log(err);
+        })
+    },
+    getTops: context => {
+      axios.get('http://localhost:8001/sales/tops')
+        .then(res => {
+          context.commit('setTops', res.data.tops);
         })
         .catch(err => {
           console.log(err);

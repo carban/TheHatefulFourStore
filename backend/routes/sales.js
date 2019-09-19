@@ -37,4 +37,13 @@ router.post('/', async (req, res) => {
   res.json({res: 'SOLD'})
 });
 
+router.get('/tops', async (req, res) => {
+  const myquery = {
+    text: 'select junombre, count(*) from librerias inner join juegos on librerias.juid = juegos.juid group by juegos.junombre order by count desc',
+  }
+  const prof = await pg.query(myquery);
+  console.log(prof.rows);
+  res.json({"tops": prof.rows});
+});
+
 module.exports = router;
