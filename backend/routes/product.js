@@ -143,11 +143,11 @@ router.post('/searchGamesKeyWordForClient', async (req, res) => {
 
 //Crear un nuevo juego
 router.post('/crearGame', async (req, res) => {
-    const { junombre, juprecio, jucompany, juyear, jurating, judescription, subnombre, juimage } = req.body;
+    const { junombre, juprecio, jucompany, juyear, jurating, judescription, subnombre, juimage, judescuentoactual} = req.body;
     console.log({ junombre, juprecio, jucompany, juyear, jurating, judescription, subnombre, juimage });
     const query = {
-        text: 'insert into juegos (junombre, juprecio, jucompany, juyear, jurating, judescription, juimage) values ($1, $2, $3, $4, $5, $6, $7)',
-        values: [junombre, juprecio, jucompany, juyear, jurating, judescription, juimage]
+        text: 'insert into juegos (junombre, juprecio, jucompany, juyear, jurating, judescription, juimage, judescuentoactual) values ($1, $2, $3, $4, $5, $6, $7, $8)',
+        values: [junombre, juprecio, jucompany, juyear, jurating, judescription, juimage, judescuentoactual]
     };
     const query2 = {
         text: 'select juid from juegos where junombre =  $1',

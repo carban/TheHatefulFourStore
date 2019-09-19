@@ -232,7 +232,7 @@
                     <v-card-text>
                       <p>No implement yet.........</p>
                       <v-combobox v-model="game.subnombre" :items="itemssub" label="Select Sub-category"></v-combobox>
-                      <v-combobox v-model="promo" :items="promotions" label="Select a promotion value"></v-combobox>
+                      <v-combobox v-model="game.judescuentoactual" :items="promotions" label="Select a promotion value"></v-combobox>
                       <v-text-field  v-model="game.juimage" name="login" label="URL" type="text" required></v-text-field>
                       <input type="file" @change="onFileSelected"></input>
                       <center>
@@ -392,6 +392,7 @@ export default {
         jurating: '',
         juimage: '',
         subnombre: '',
+        judescuentoactual: '',
       },
       promo: null,
       promotions: [0, 5, 10, 15, 20, 25, 30, 40, 45, 50]
@@ -480,7 +481,7 @@ export default {
           if (subcats[i][j].subnombre == this.subdeleteCom) {
             var thesubcat = subcats[i][j];
             break;
-          } 
+          }
         }
       }
       console.log(thesubcat.subnombre, thesubcat.subid);
@@ -619,6 +620,7 @@ export default {
           this.game.jurating = '';
           this.game.subnombre = '';
           this.game.juimage = '';
+          this.game.judescuentoactual = '';
         })
         .catch(err => {
           console.log(err);

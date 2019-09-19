@@ -17,12 +17,12 @@
                   <v-spacer></v-spacer>
                 </v-toolbar>
                 <v-card-text>
-                  <v-form>
+                  <v-form @submit.prevent="login()">
                     <v-text-field v-model="access.user" prepend-icon="person" name="login" label="Login" type="text" required></v-text-field>
                     <v-text-field v-model="access.password" prepend-icon="lock" name="password" label="Password" id="password" type="password" required></v-text-field>
                     <v-card-actions>
                       <v-spacer></v-spacer>
-                      <v-btn @click="login()" color="pink">Login</v-btn>
+                      <v-btn type="submit" color="pink">Login</v-btn>
                     </v-card-actions>
                   </v-form>
                 </v-card-text>

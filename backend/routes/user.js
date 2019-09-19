@@ -122,7 +122,7 @@ router.post('/billsForClient', async (req, res) => {
 
   try {
     const myquery = {
-      text: 'select fechapago, junombre, idcompra, juegos.juid, p1.cliusuario, p1.pagoid, p1.valoruno, p1.valordos, p1.valortres, juegos.juprecio from (select librerias.pagoid, cliusuario, juid, fechapago, idcompra, valoruno, valordos, valortres from pagos inner join librerias on pagos.pagoid = librerias.pagoid) as p1 inner join juegos on p1.juid = juegos.juid where cliusuario = $1',
+      text: 'select juegos.juimage, juegos.judescuentoactual, fechapago, junombre, idcompra, juegos.juid, p1.cliusuario, p1.pagoid, p1.valoruno, p1.valordos, p1.valortres, juegos.juprecio from (select librerias.pagoid, cliusuario, juid, fechapago, idcompra, valoruno, valordos, valortres from pagos inner join librerias on pagos.pagoid = librerias.pagoid) as p1 inner join juegos on p1.juid = juegos.juid where cliusuario = $1 order by p1.pagoid asc',
       values: [username]
     }
     const answ = await pg.query(myquery);
@@ -138,17 +138,36 @@ router.post('/billsForClient', async (req, res) => {
       if (allpagos[i].pagoid != f) {
         f = allpagos[i].pagoid;
         thebills.push({info: {fechapago: allpagos[i-1].fechapago, pagoid: allpagos[i-1].pagoid, valoruno: allpagos[i-1].valoruno, valordos: allpagos[i-1].valordos, valortres: allpagos[i-1].valortres}, games: resp});
-        resp = [];
+        if (allpagos[i].judescuentoactual > 0) {
+          let desc = allpagos[i].judescuentoactual;
+          let real = allpagos[i].juprecio;
+          let price = real.split("$");
+          let priceFloat = parseFloat(price[1]);
+          let priceWithDiscount = (priceFloat - (priceFloat * desc) / 100).toFixed(2);
+          allpagos[i].juprecio = "$"+priceWithDiscount;
+          resp = [{title: allpagos[i].junombre, price:allpagos[i].juprecio, juimage: allpagos[i].juimage}];
+        }else{
+          resp = [{title: allpagos[i].junombre, price:allpagos[i].juprecio, juimage: allpagos[i].juimage}];
+        }
       }else{
-        resp.push({title: allpagos[i].junombre, price:allpagos[i].juprecio});
+        if (allpagos[i].judescuentoactual > 0) {
+          let desc = allpagos[i].judescuentoactual;
+          let real = allpagos[i].juprecio;
+          let price = real.split("$");
+          let priceFloat = parseFloat(price[1]);
+          let priceWithDiscount = (priceFloat - (priceFloat * desc) / 100).toFixed(2);
+          allpagos[i].juprecio = "$"+priceWithDiscount;
+          resp.push({title: allpagos[i].junombre, price:allpagos[i].juprecio, juimage: allpagos[i].juimage});
+        }else{
+          resp.push({title: allpagos[i].junombre, price:allpagos[i].juprecio, juimage: allpagos[i].juimage});
+        }
       }
     }
+
     // CHECKEAR DESCUENTOS
 
-    //
-    //
-    //
-    // 
+
+
 
     res.json({allbills: thebills});
     // res.json(thebills);

@@ -82,6 +82,9 @@
                 </span>
                 <v-rating v-model="gamecal.jurating" background-color="white" color="yellow" half-increments hover size="38">
                 </v-rating>
+                <v-divider></v-divider>
+                <br>
+                <v-btn color="success" href="http://shellshockers.io" block>INSTALL GAME</v-btn>
               </center>
               </v-card-text>
               <v-card-actions>
@@ -113,22 +116,32 @@
                     vertical
                   ></v-divider>
                   <v-spacer></v-spacer>
-                  <v-dialog v-model="billdialog" max-width="500px">
+                  <v-dialog light v-model="billdialog" max-width="500px">
 
                     <v-card>
                       <v-card-text>
                         <v-container grid-list-md>
+                          <center>
+                            <h1>Description of Bill</h1>
+                          </center>
+                          <br><br>
                           <v-layout v-for="(item, index) in aBill" :key="index">
-                            <v-text-field v-model="item.title" label="Title name"></v-text-field>
-                            <v-text-field v-model="item.price" label="Price name"></v-text-field>
+                            <v-list-tile class="separate_bill">
+                              <img :src="item.juimage" width="90px" height="90px" class="billimage"></img>
+                              <v-text-field v-model="item.title" label="Title name" readonly></v-text-field>
+                              <v-text-field v-model="item.price" label="Price name" readonly></v-text-field>
+                            </v-list-tile>
                           </v-layout>
+                          <v-list-tile>
+                            <h1>Total: {{totalPriceBill}}</h1>
+                          </v-list-tile>
+
                         </v-container>
                       </v-card-text>
 
                       <v-card-actions>
                         <v-spacer></v-spacer>
                         <v-btn color="blue darken-1" flat @click="billdialog = false">Cancel</v-btn>
-                        <v-btn color="blue darken-1" flat @click="">Save</v-btn>
                       </v-card-actions>
                     </v-card>
                   </v-dialog>
@@ -139,7 +152,7 @@
                   class="elevation-1"
                 >
                   <template v-slot:items="props">
-                    <td>{{ props.item.pagoid }}</td>
+                    <td>Single Bill</td>
                     <td class="text-xs">{{ props.item.info.pagoid }}</td>
                     <td class="text-xs">{{ props.item.info.fechapago }}</td>
                     <td class="text-xs">{{ props.item.info.valoruno }}</td>
@@ -254,7 +267,18 @@ export default {
       return this.$store.getters.myGames;
     },
     bills(){
+      console.log(this.$store.getters.bills);
       return this.$store.getters.bills;
+    },
+    totalPriceBill(){
+      let l = 0.0;
+      for (var i = 0; i < this.aBill.length; i++) {
+        let real = this.aBill[i].price;
+        let price = real.split("$");
+        let priceFloat = parseFloat(price[1]);
+        l += priceFloat;
+      }
+      return "$"+l;
     }
   },
   data(){
@@ -282,13 +306,13 @@ export default {
         },
         { text: 'Payment ID', value: 'pagoid' },
         { text: 'Date', value: 'fechapago' },
-        { text: 'Fraction 1', value: 'valoruno' },
-        { text: 'Fraction 2', value: 'valordos' },
-        { text: 'Fraction 3', value: 'valortres' },
+        { text: 'Fraction in Cash', value: 'valoruno' },
+        { text: 'Fraction in Saving', value: 'valordos' },
+        { text: 'Fraction in Credit', value: 'valortres' },
         { text: 'Actions', value: 'Actions' },
         ],
       rowsPerPage: 1,
-      aBill: [{title: 'sds', price: '34343'}, {title: 'sds', price: '34343'}],
+      aBill: [{title: 'sds', price: '34343', juimage: 'sdf'}, {title: 'sds', price: '34343', juimage: 'fasfa'}],
       billdialog: false,
       dialoggame: false,
       gamecal: {junombre: null, juyear: null, juprecio: null}
@@ -357,5 +381,11 @@ export default {
 }
 .resolvedR{
   color: orange;
+}
+.separate_bill{
+  margin-bottom: 80px;
+}
+.billimage{
+  border-radius: 50%;
 }
 </style>
