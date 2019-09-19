@@ -283,6 +283,15 @@ export default new Vuex.Store({
       }
 
     },
+    getGamesForAdmin: context => {
+      axios.get('http://localhost:8001/game/gamesAdmin')
+        .then(res => {
+          context.commit('setGames', res.data.allgames);
+        })
+        .catch(err => {
+          console.log(err);
+        })
+    },
     searchWordKey: (context, value) => {
       if (context.getters.loggedIn) {
         const decoded = jwtDecode(context.getters.token);

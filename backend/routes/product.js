@@ -34,6 +34,32 @@ router.get('/', async (req, res) => {
 });
 
 
+router.get('/gamesAdmin', async (req, res) => {
+
+  try {
+
+
+    const myquery = {
+      text: 'select * from (select * from (select * from juegos natural join catjuegos) as p1) as p2 natural join subcategorias;'
+    }
+
+    const answ = await pg.query(myquery);
+    var colors = ['secondary', 'danger', 'accent', 'success', 'purple', 'info'];
+
+    for (var i = 0; i < answ.rows.length; i++) {
+      answ.rows[i].added = false;
+      answ.rows[i].color = colors[Math.floor(Math.random() * ((colors.length - 1) - 0) + 0)];
+    }
+    // console.log(answ.rows);
+    res.json({'allgames':answ.rows});
+  } catch (e) {
+    console.log(e);
+    res.json(e)
+  }
+});
+
+
+
 router.post('/gamesForClient', async (req, res) => {
   const {username} = req.body;
   console.log(username);

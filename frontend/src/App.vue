@@ -164,7 +164,12 @@ export default {
   beforeCreate(){
     this.$store.dispatch('getCategories');
     this.$store.dispatch('getSubcategories');
-    this.$store.dispatch('getGames');
+    if (this.admin) {
+      this.$store.dispatch('getGamesForAdmin');
+    }else{
+      this.$store.dispatch('getGames');
+    }
+
   },
   data () {
     return {

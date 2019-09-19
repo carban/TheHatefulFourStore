@@ -298,7 +298,7 @@
                         <v-card>
                           <v-card-text>
                             <v-combobox v-model="editAGame.subnombre" :items="itemssub" label="Select Sub-category"></v-combobox>
-                            <v-combobox v-model="promo" :items="promotions" label="Select a promotion value"></v-combobox>
+                            <v-combobox v-model="editAGame.judescuentoactual" :items="promotions" label="Select a promotion value"></v-combobox>
                             <v-text-field  v-model="editAGame.juimage" name="login" label="URL" type="text" required></v-text-field>
                             <input type="file" @change="onFileSelected"></input>
                             <center>
@@ -325,6 +325,43 @@
 
         </v-card>
       </v-tab-item>
+      <v-tab>
+        ALL GAMES
+      </v-tab>
+      <v-tab-item>
+        <v-card flat>
+         <v-container grid-list-xs,sm,md,lg,xl>
+          <v-layout row wrap>
+
+            <v-card v-for="(item, index) in totalGames" :key="index"
+            :color=item.color :style="{'width':'350px', 'margin-right': '10px', 'margin-bottom':'10px'}">
+
+              <v-layout class="product" justify-space-between>
+                <v-flex xs8>
+                  <v-card-title primary-title>
+                    <div>
+                      <div class="headline">{{item.junombre}}</div>
+                      <div>{{item.jucompany}}</div>
+                      <div>({{item.juyear}})</div>
+                      <div>{{item.juprecio}}</div>
+                      <div>
+                        <h2>{{item.subnombre}}</h2>
+                      </div>
+                    </div>
+                  </v-card-title>
+
+                </v-flex>
+                <v-img class="shrink ma-2" contain height="125px" :src="item.juimage"
+                  style="flex-basis: 125px"
+                ></v-img>
+
+              </v-layout>
+              <v-divider dark></v-divider>
+            </v-card>
+          </v-layout>
+          </v-container>
+        </v-card>
+      </v-tab-item>
     </v-tabs>
   </v-container>
 </template>
@@ -332,13 +369,19 @@
 <script>
 export default {
   computed:{
-
+    totalGames(){
+      return this.$store.getters.games;
+    }
+  },
+  beforeCreate(){
+    this.$store.dispatch('getGamesForAdmin');
   },
   created(){
     this.getCatsforCombo();
     this.getSubCatsforCombo();
     this.getSubCatsInactivasforCombo();
     this.getCatsInactivasforCombo();
+
   },
   data(){
     return{
@@ -621,6 +664,7 @@ export default {
           this.game.subnombre = '';
           this.game.juimage = '';
           this.game.judescuentoactual = '';
+          this.$store.dispatch('getGamesForAdmin');
         })
         .catch(err => {
           console.log(err);
@@ -654,6 +698,7 @@ export default {
         .then(res => {
           this.dialog = false;
           this.snack2 = true;
+          this.$store.dispatch('getGamesForAdmin');
         })
         .catch(err => {
           console.log(err);
