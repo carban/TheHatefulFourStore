@@ -369,6 +369,7 @@
         <v-card flat>
          <v-container grid-list-xs,sm,md,lg,xl>
            <h1>Reports</h1>
+           <bar-chart></bar-chart>
          </v-container>
        </v-card>
       </v-tab-item>
@@ -378,6 +379,13 @@
 
 <script>
 export default {
+
+  mounted () {
+		// this.chartData is created in the mixin
+		this.renderChart(this.datacollection, this.options)
+	},
+
+
   computed:{
     totalGames(){
       return this.$store.getters.games;
@@ -395,6 +403,21 @@ export default {
   },
   data(){
     return{
+
+      datacollection: {
+    				labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
+    				datasets: [
+    					{
+    						label: 'Data One',
+    						backgroundColor: '#f87979',
+    						pointBackgroundColor: 'white',
+    						borderWidth: 1,
+    						pointBorderColor: '#249EBF',
+    						data: [40, 20, 30, 50, 90, 10, 20, 40, 50, 70, 90, 100]
+    					}
+    ]
+    			},
+  
       active: null,
       snack: false,
       snack2: false,
