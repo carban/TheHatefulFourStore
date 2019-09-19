@@ -336,7 +336,7 @@ export default {
       e1: 0,
       total: 0,
       dividers: 8,
-      iva: "$3.00",
+      iva: 0.19,
       productsToBuy: [],
       payCash: [{name: "Efecty"}, {name: "Mercado Pago"}, {name: "Gane"}, {name: "Baloto"}],
       payAhorro: [{name: "Bancolombia"}, {name: "Davivienda"}, {name: "BBVA"}, {name: "Colpatria"}],
@@ -381,9 +381,10 @@ export default {
     },
     buyStep(){
       this.e1 = 2;
-      let totaliva = 0;
+      var sumatotal = 0;
       // this.productsToBuy = this.car.slice();
       this.productsToBuy = JSON.parse(JSON.stringify(this.car));
+      console.log(this.productsToBuy);
       // Actualiza los precios con descuento a los productos que se van a comprar
       for (var i = 0; i < this.productsToBuy.length; i++) {
         if (this.productsToBuy[i].judescuentoactual > 0) {
@@ -392,24 +393,21 @@ export default {
           let price = real.split("$");
           let priceFloat = parseFloat(price[1]);
           let priceWithDiscount = (priceFloat - (priceFloat * desc) / 100).toFixed(2);
+          sumatotal += parseFloat(priceWithDiscount);
           this.productsToBuy[i].juprecio = "$"+priceWithDiscount;
-        }
-      }
-
-      this.productsToBuy.push({juprecio: this.iva, junombre: "Total IVA"});
-      var aux = 0;
-      for (var i = 0; i < this.productsToBuy.length; i++) {
-        var s = this.productsToBuy[i].juprecio.split("$");
-        //Last element of productsToBuy, IVA * Number of products
-        if (i == this.productsToBuy.length-1) {
-          totaliva = parseFloat(this.productsToBuy.length-1)*parseFloat(s[1]);
-          this.productsToBuy[i].juprecio = "$"+totaliva+".00" //Update new IVA * Number of products
-          aux += totaliva;
         }else{
-          aux += parseFloat(s[1]);
+          let ireal = this.productsToBuy[i].juprecio;
+          let iprice = ireal.split("$");
+          let ipriceFloat = parseFloat(iprice[1]).toFixed(2);
+          sumatotal += parseFloat(ipriceFloat);
         }
       }
-      this.total = Math.round(aux * 100) / 100;
+      let ivaCompra = parseFloat(parseFloat(this.iva*parseFloat(sumatotal)).toFixed(2));
+      let totalAPagar = parseFloat(sumatotal)+ivaCompra;
+
+      this.productsToBuy.push({juprecio: "$"+ivaCompra, junombre: "Total IVA (19%)"});
+
+      this.total = Math.round(totalAPagar* 100) / 100;
     },
     verifyPercentages(){
 

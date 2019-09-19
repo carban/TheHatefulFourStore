@@ -362,6 +362,16 @@
           </v-container>
         </v-card>
       </v-tab-item>
+      <v-tab>
+        REPORTS
+      </v-tab>
+      <v-tab-item>
+        <v-card flat>
+         <v-container grid-list-xs,sm,md,lg,xl>
+           <h1>Reports</h1>
+         </v-container>
+       </v-card>
+      </v-tab-item>
     </v-tabs>
   </v-container>
 </template>
