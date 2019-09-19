@@ -8,7 +8,7 @@ const Sequelize = require('sequelize');
 const orm = require('../db/connection.js');
 
 //Consultar todos los productos
-router.get('/', async (req, res) => {
+router.get('/a', async (req, res) => {
   // const myquery = {
   //   text: 'select * from catjuegos natural join juegos order by subid',
   // }
@@ -33,6 +33,32 @@ router.get('/', async (req, res) => {
 
 });
 
+//Consultar todos los productos
+router.get('/', async (req, res) => {
+  const myquery = {
+      text: 'select juid,junombre,juprecio,jucompany,juyear,jurating,judescription,juimage,judescuentoactual,juactivo from subcategorias natural join catjuegos natural join juegos where subactivo=true and juactivo=true order by juid',
+    }
+  var colors = ['secondary', 'danger', 'accent', 'success', 'purple', 'info'];
+  const juegos = await pg.query(myquery);
+  try {
+    //const prof = await productMO.findAll({
+    //  raw: true,
+    //  order: [['juid', 'ASC']]
+    //});
+    // const prof = await orm.query('select', type: Sequelize.QueryTypes.SELECT)
+    const prof = juegos.rows;
+    for (var i = 0; i < prof.length; i++) {
+      prof[i].added = false;
+      prof[i].color = colors[Math.floor(Math.random() * ((colors.length - 1) - 0) + 0)];
+    }
+    console.log(prof);
+    res.json({'games':prof});
+  } catch (e) {
+    console.log(e);
+    res.json({'error': e})
+  }
+
+});
 
 router.get('/gamesAdmin', async (req, res) => {
 
@@ -64,7 +90,7 @@ router.post('/gamesForClient', async (req, res) => {
   const {username} = req.body;
   console.log(username);
   const myquery = {
-    text: 'select * from juegos except (select * from (select juid from librerias where cliusuario = $1) as ids natural join juegos)',
+    text: 'select * from juegos where juactivo=true except (select * from (select juid from librerias where cliusuario = $1) as ids natural join juegos)',
     values: [username]
   }
 
@@ -107,7 +133,7 @@ router.post('/gamesForClient', async (req, res) => {
 router.post('/searchGamesBy', async (req, res) => {
   const {subcat} = req.body;
   const myquery = {
-    text: 'select * from subcategorias natural join (select * from catjuegos natural join juegos order by subid) as col where subnombre = $1 order by col.subid',
+    text: 'select * from subcategorias natural join (select * from catjuegos natural join juegos order by subid) as col where subnombre = $1 and juactivo=true order by col.subid',
     values: [subcat]
   }
   var colors = ['secondary', 'danger', 'accent', 'success', 'purple', 'info'];
@@ -123,7 +149,7 @@ router.post('/searchGamesBy', async (req, res) => {
 router.post('/searchGamesByForClient', async (req, res) => {
   const {username, subcat} = req.body;
   const myquery = {
-    text: 'select * from subcategorias natural join (select * from catjuegos natural join ( select * from juegos except (select * from (select juid from librerias where cliusuario = $1) as ids natural join juegos)) as cli order by subid) as col where subnombre = $2 order by col.subid',
+    text: 'select * from subcategorias natural join (select * from catjuegos natural join ( select * from juegos where juactivo=true except (select * from (select juid from librerias where cliusuario = $1) as ids natural join juegos)) as cli order by subid) as col where subnombre = $2 order by col.subid',
     values: [username, subcat]
   }
   var colors = ['secondary', 'danger', 'accent', 'success', 'purple', 'info'];
@@ -155,7 +181,7 @@ router.post('/searchGamesKeyWord', async (req, res) => {
 router.post('/searchGamesKeyWordForClient', async (req, res) => {
   const {username, kword} = req.body;
   const myquery = {
-    text: 'select * from subcategorias natural join (select * from catjuegos natural join ( select * from juegos except (select * from (select juid from librerias where cliusuario = $1) as ids natural join juegos)) as cli order by subid) as col where junombre like $2 order by col.subid',
+    text: 'select * from subcategorias natural join (select * from catjuegos natural join ( select * from juegos where juactivo=true except (select * from (select juid from librerias where cliusuario = $1) as ids natural join juegos)) as cli order by subid) as col where junombre like $2 order by col.subid',
     values: [username, "%"+kword+"%"]
   }
   var colors = ['secondary', 'danger', 'accent', 'success', 'purple', 'info'];
@@ -172,7 +198,7 @@ router.post('/crearGame', async (req, res) => {
     const { junombre, juprecio, jucompany, juyear, jurating, judescription, subnombre, juimage, judescuentoactual} = req.body;
     console.log({ junombre, juprecio, jucompany, juyear, jurating, judescription, subnombre, juimage });
     const query = {
-        text: 'insert into juegos (junombre, juprecio, jucompany, juyear, jurating, judescription, juimage, judescuentoactual) values ($1, $2, $3, $4, $5, $6, $7, $8)',
+        text: 'insert into juegos (junombre, juprecio, jucompany, juyear, jurating, judescription, juimage, judescuentoactual,juactivo) values ($1, $2, $3, $4, $5, $6, $7, $8,true)',
         values: [junombre, juprecio, jucompany, juyear, jurating, judescription, juimage, judescuentoactual]
     };
     const query2 = {
@@ -255,7 +281,7 @@ router.post('/editGame', async (req, res) => {
 router.delete('/:id', async (req, res) => {
     const id = req.params.id;
     query = {
-        text: 'DELETE FROM juegos WHERE juid=$1',
+        text: 'UPDATE juegos SET juactivo=false WHERE juid=$1',
         values: [id]
     };
     try {

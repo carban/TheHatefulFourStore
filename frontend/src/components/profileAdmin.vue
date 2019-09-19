@@ -269,6 +269,14 @@
 
 
               </v-card>
+              <v-dialog v-model="gamedeletedialog" max-width="500px">
+                <v-card>
+                  <v-container grid-list-xs,sm,md,lg,xl>
+                  <center><h1>Are you sure to delete game {{editAGame.junombre}} ?</h1>
+                  <v-btn color="error" v-on:click="gamedeletedialog = false" @click="deleteGames()">Sisas pri</v-btn></center>
+                  </v-container>
+                </v-card>
+              </v-dialog>
 
               <!-- DIALOG EDIT PANEL -->
               <!--  -->
@@ -313,7 +321,7 @@
                     <center>
                       <v-list-tile>
                         <v-btn color="success" @click="editGame()">Update</v-btn>
-                        <v-btn color="error">Delete</v-btn>
+                        <v-btn color="error" v-on:click="gamedeletedialog = true">Delete</v-btn>
                       </v-list-tile>
                     </center>
                     <v-spacer></v-spacer>
@@ -493,6 +501,7 @@ export default {
       subdeletedialog: false,
       subactivatedialog: false,
       catactivatedialog: false,
+      gamedeletedialog:false,
       preImage: null,
 
       dialog: null,
@@ -821,6 +830,29 @@ export default {
       })
       .catch(err => {
         console.log('Subcategoria no reactivada');
+      })
+    },
+    deleteGames(){
+      var games = this.$store.getters.games;
+      for (var i = 0; i < games.length; i++) {
+        if (games[i].junombre == this.editAGame.junombre) {
+          var thegame = games[i];
+          break;
+        }
+      }
+      console.log(thegame.junombre, thegame.juid);
+      this.$store.dispatch('deleteGame',thegame.juid)
+      .then(res => {
+        //removeCategory(thecat.catid)
+        //this.$store.dispatch('getCategories');
+        //this.getCatsforCombo();
+        //this.$store.dispatch('getSubcategories');
+        //this.getSubCatsforCombo();
+        //this.getCatsInactivasforCombo();
+        console.log('Juego eliminado'); ///esto provisionalmente mientras ponemos algun anuncio
+      })
+      .catch(err => {
+        console.log('Juego no eliminado');
       })
     }
 

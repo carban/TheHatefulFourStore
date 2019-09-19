@@ -565,6 +565,17 @@ export default new Vuex.Store({
             console.log(err);
           })
       });
+    },
+    deleteGame: (context, cat) => {
+      return new Promise((resolve, reject) => {
+        axios.delete('http://localhost:8001/game/' + cat)
+          .then(res => {
+            resolve(res);
+          })
+          .catch(err => {
+            console.log(err);
+          })
+      });
     }
   }
 })
