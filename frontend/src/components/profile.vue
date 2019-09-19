@@ -132,9 +132,6 @@
                               <v-text-field v-model="item.price" label="Price name" readonly></v-text-field>
                             </v-list-tile>
                           </v-layout>
-                          <v-list-tile>
-                            <h1>Total: {{totalPriceBill}}</h1>
-                          </v-list-tile>
 
                         </v-container>
                       </v-card-text>
@@ -270,16 +267,6 @@ export default {
       console.log(this.$store.getters.bills);
       return this.$store.getters.bills;
     },
-    totalPriceBill(){
-      let l = 0.0;
-      for (var i = 0; i < this.aBill.length; i++) {
-        let real = this.aBill[i].price;
-        let price = real.split("$");
-        let priceFloat = parseFloat(price[1]);
-        l += priceFloat;
-      }
-      return "$"+l;
-    }
   },
   data(){
     return{
